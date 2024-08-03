@@ -1,0 +1,61 @@
+import Footer from "../Components/Footer.jsx";
+
+const HomePage = () => {
+    return (
+        <div>
+            <div className="text-center mt-10 mb-8">
+                <p className="text-5xl text-blue-700 font-bold">Short URL</p>
+            </div>
+            <div className="max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg">
+                <div className="text-center">
+                    <p className="text-3xl text-gray-700 font-bold">Paste the URL to be shortened</p>
+                </div>
+                <div>
+                    <div className="flex justify-center mt-10">
+                        <form className="border-2 flex items-center">
+                            <input
+                                type="text"
+                                name="url"
+                                placeholder="Enter the link here"
+                                className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
+                            />
+                            <button
+                                className="ml-4 text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
+                                Shorten URL
+                            </button>
+                        </form>
+                    </div>
+                    <div className="text-center mt-4">
+                        <p>
+                            ShortURL is a free tool to shorten URLs and generate short links
+                        </p>
+                        <p>
+                            URL shortener allows to create a shortened link making it easy to share
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className="max-w-3xl mx-auto border-2 p-6 bg-white shadow-lg rounded-lg mt-10">
+                <div className="text-center">
+                    <p className="text-3xl text-gray-700 font-bold">Want More? Try Premium Features!</p>
+                </div>
+                <div>
+                    <div className="text-center mt-4">
+                        <p>
+                            Custom short links, powerful dashboard, detailed analytics, API, UTM builder, QR codes,
+                        </p>
+                        <p>
+                            browser extension, app integrations and support
+                        </p>
+                        <button className="ml-4 text-white bg-blue-600 font-bold w-44 h-14 hover:bg-blue-800 transition duration-200 rounded mt-8">
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <Footer />
+        </div>
+    );
+}
+
+export default HomePage;
