@@ -1,10 +1,15 @@
 const express = require("express");
 const app = express();
+const cors = require("cors")
 const urlRoutes = require("./routes/url");
 const URL = require("./models/url");
 const { connectToMongoDB } = require("./connect")
 app.use(express.json());
-
+app.use(cors({
+    origin: "*",
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
+}));
 
 connectToMongoDB('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/short-url')
     .then(() => console.log("MongoDB Connected"))

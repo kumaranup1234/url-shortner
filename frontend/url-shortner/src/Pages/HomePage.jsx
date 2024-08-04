@@ -1,6 +1,41 @@
 import Footer from "../Components/Footer.jsx";
+import {useState} from "react";
+import {useNavigate} from 'react-router-dom'
+import axiosInstance from "../utils/axiosInstance.js";
 
 const HomePage = () => {
+
+    const [link, setLink] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!link) {
+            setError("Please enter a valid link!");
+            return;
+        }
+        setError(" ")
+        try {
+
+            const response = await axiosInstance.post("/url", {
+                url: link
+            })
+            const id = response.data.id;
+            console.log(id)
+
+            if (response.data){
+                navigate("/shortened", {
+                    state: {
+                        link,
+                        shortId: id
+                    }
+                });
+            }
+        } catch (error){
+            setError("An unexpected error occurred. Please try again");
+        }
+    }
     return (
         <div>
             <div className="text-center mt-10 mb-8">
@@ -17,14 +52,18 @@ const HomePage = () => {
                                 type="text"
                                 name="url"
                                 placeholder="Enter the link here"
+                                value={link}
+                                onChange={(e) => {setLink(e.target.value)}}
                                 className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
                             />
                             <button
+                                onClick={handleSubmit}
                                 className="ml-4 text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
                                 Shorten URL
                             </button>
                         </form>
                     </div>
+                    {error && <p className="text-red-500 text-xl text-center mt-2">{error}</p>}
                     <div className="text-center mt-4">
                         <p>
                             ShortURL is a free tool to shorten URLs and generate short links
