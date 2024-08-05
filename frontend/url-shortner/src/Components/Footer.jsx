@@ -23,22 +23,22 @@ const Footer = () => {
             </div>
             <div className="flex justify-center mt-10 space-x-6">
                 <div>
-                    <img src={Like} alt="Shorten" className="ml-20"/>
-                    <h3 className="font-bold text-gray-600 ml-24">Easy</h3>
+                    <img src={Like} alt="Shorten" className="ml-24"/>
+                    <h3 className="font-bold text-gray-600 ml-28">Easy</h3>
                     <p className="mt-4 text-center mr-4">ShortURL is easy and fast, enter the long <br/>
                         link to get your shortened link</p>
                 </div>
                 <div>
-                    <img src={URL} alt="Url" className="ml-16" />
-                    <h3 className="font-bold text-gray-600 ml-14">Shortened</h3>
+                    <img src={URL} alt="Url" className="ml-20" />
+                    <h3 className="font-bold text-gray-600 ml-20">Shortened</h3>
                     <p className="mt-4 text-center mr-4">
                         Use any link, no matter what size,<br/>
                         ShortURL always shortens
                     </p>
                 </div>
                 <div>
-                    <img src={Stats} alt="statistics" className="ml-16"/>
-                    <h3 className="font-bold text-gray-600 ml-12">Statistics</h3>
+                    <img src={Stats} alt="statistics" className="ml-20"/>
+                    <h3 className="font-bold text-gray-600 ml-20">Statistics</h3>
                     <p className="mt-4 text-center">
                         Check the number of clicks that your<br/>
                         shortened URL received

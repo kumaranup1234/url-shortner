@@ -3,7 +3,7 @@ import {useState} from "react";
 import {useNavigate} from 'react-router-dom'
 import axiosInstance from "../utils/axiosInstance.js";
 
-const HomePage = () => {
+const LandingPage = () => {
 
     const [link, setLink] = useState("");
     const [error, setError] = useState("");
@@ -35,6 +35,10 @@ const HomePage = () => {
         } catch (error){
             setError("An unexpected error occurred. Please try again");
         }
+    }
+
+    const handleCreate = () => {
+        navigate("/login")
     }
     return (
         <div>
@@ -86,7 +90,9 @@ const HomePage = () => {
                         <p>
                             browser extension, app integrations and support
                         </p>
-                        <button className="ml-4 text-white bg-blue-600 font-bold w-44 h-14 hover:bg-blue-800 transition duration-200 rounded mt-8">
+                        <button className="ml-4 text-white bg-blue-600 font-bold w-44 h-14 hover:bg-blue-800 transition duration-200 rounded mt-8"
+                                onClick={handleCreate}
+                        >
                             Create Account
                         </button>
                     </div>
@@ -97,4 +103,4 @@ const HomePage = () => {
     );
 }
 
-export default HomePage;
+export default LandingPage;
