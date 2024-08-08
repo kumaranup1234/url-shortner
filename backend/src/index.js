@@ -1,40 +1,44 @@
-const express = require("express");
+const express = require('express');
+const mongoose = require('mongoose');
+const userRoutes = require('./routes/userRoutes');
+const urlRoutes = require('./routes/urlRoutes');
+const apiRoutes = require('./routes/apiRoutes'); // For public API
+const clickRoutes = require('./routes/clickRoutes'); // For click analytics
+const redirectRoutes = require('./routes/redirectRoutes'); // For URL redirection
+const { authenticateUser } = require('./middleware/auth');
+const { authenticateApiKey } = require('./middleware/authenticate'); // Middleware for API key authentication
+
 const app = express();
-const cors = require("cors")
-const urlRoutes = require("./routes/url");
-const URL = require("./models/url");
-const { connectToMongoDB } = require("./connect")
+
+// Middleware for parsing JSON request bodies
 app.use(express.json());
-app.use(cors({
-    origin: "*",
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true
-}));
 
-connectToMongoDB('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/short-url')
-    .then(() => console.log("MongoDB Connected"))
-
-app.use("/url", urlRoutes);
-app.get('/:shortId', async (req, res) => {
-    const shortId = req.params.shortId;
-    const entry = await URL.findOneAndUpdate(
-        {
-            shortId
-        },
-        {
-            $push: {
-                visitHistory: {
-                    timestamp: Date.now()
-                }
-            }
-        }
-    );
-    res.redirect(entry.redirectURL)
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/urlShortener', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
 })
+    .then(() => console.log('MongoDB Connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
+// User-related routes (for internal use)
+app.use('/api/users', userRoutes);
 
-const PORT = 8000;
+// URL-related routes (for internal use)
+app.use('/api/urls/manage', authenticateUser, urlRoutes);
 
+// Public API routes (for external users using API key)
+app.use('/api', authenticateApiKey, apiRoutes);
+
+// Click analytics routes (for internal use, nested under URL management routes)
+app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
+
+// URL redirection route (publicly accessible)
+app.use('/', redirectRoutes);
+
+// Start the server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is listening on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
