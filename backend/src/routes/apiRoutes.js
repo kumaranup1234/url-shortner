@@ -10,18 +10,18 @@ const {
 const { authenticateApiKey } = require('../middleware/authenticate');
 
 // Create Short URL
-router.post('/shorten', authenticateApiKey, createShortUrl);
+//router.post('/shorten', authenticateApiKey, createShortUrl);
 
 // Get Short URL Details
-router.get('/details/:shortUrlId', authenticateApiKey, getShortUrlDetails);
+//router.get('/details/:shortUrlId', authenticateApiKey, getShortUrlDetails);
 
 // Get Clicks Analytics for a URL
-router.get('/analytics/:shortUrlId', authenticateApiKey, getAnalytics);
+//router.get('/analytics/:shortUrlId', authenticateApiKey, getAnalytics);
 
 // Update a Short URL
-router.put('/update/:shortUrlId', authenticateApiKey, updateShortUrl);
+//router.put('/update/:shortUrlId', authenticateApiKey, updateShortUrl);
 
 // Delete Short URL
-router.delete('/delete/:shortUrlId', authenticateApiKey, deleteShortUrl);
+//router.delete('/delete/:shortUrlId', authenticateApiKey, deleteShortUrl);
 
 module.exports = router;

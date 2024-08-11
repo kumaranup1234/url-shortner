@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const ApiKeySchema = new mongoose.Schema({
     key: {
@@ -36,4 +36,4 @@ ApiKeySchema.methods.incrementUsage = async function () {
 
 const ApiKey = mongoose.model("ApiKey", ApiKeySchema);
 
-export default ApiKey;
+module.exports = ApiKey;

@@ -14,18 +14,18 @@ const { authenticateUser } = require('../middleware/authenticate');
 router.post('/shorten', authenticateUser, createShortUrl);
 
 // Redirect Short URL
-router.get('/:shortUrl', redirectShortUrl);
+//router.get('/:shortUrl', redirectShortUrl);
 
 // Get URL Details
-router.get('/details/:shortUrlId', authenticateUser, getUrlDetails);
+//router.get('/details/:shortUrlId', authenticateUser, getUrlDetails);
 
 // Delete URL
-router.delete('/:shortUrlId', authenticateUser, deleteUrl);
+//router.delete('/:shortUrlId', authenticateUser, deleteUrl);
 
 // Get User's URLs
-router.get('/user-urls', authenticateUser, getUserUrls);
+//router.get('/user-urls', authenticateUser, getUserUrls);
 
 // Get Clicks Analytics for a URL
-router.get('/analytics/:shortUrlId', authenticateUser, getClicksAnalytics);
+//router.get('/analytics/:shortUrlId', authenticateUser, getClicksAnalytics);
 
 module.exports = router;

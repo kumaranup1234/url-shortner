@@ -1,5 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const urlRoutes = require('./routes/urlRoutes');
 const apiRoutes = require('./routes/apiRoutes'); // For public API
@@ -10,15 +12,13 @@ const { authenticateApiKey } = require('./middleware/authenticate'); // Middlewa
 
 const app = express();
 
+app.use(cookieParser());
+
 // Middleware for parsing JSON request bodies
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/urlShortener', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-})
+mongoose.connect('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/urlShortener')
     .then(() => console.log('MongoDB Connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -26,13 +26,13 @@ mongoose.connect('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/ur
 app.use('/api/users', userRoutes);
 
 // URL-related routes (for internal use)
-app.use('/api/urls/manage', authenticateUser, urlRoutes);
+app.use('/api/urls/manage', urlRoutes);
 
 // Public API routes (for external users using API key)
-app.use('/api', authenticateApiKey, apiRoutes);
+//app.use('/api', authenticateApiKey, apiRoutes);
 
 // Click analytics routes (for internal use, nested under URL management routes)
-app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
+//app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
 
 // URL redirection route (publicly accessible)
 app.use('/', redirectRoutes);

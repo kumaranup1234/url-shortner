@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const ClickSchema = new mongoose.Schema({
     url: {
@@ -38,4 +38,4 @@ const ClickSchema = new mongoose.Schema({
 
 const Click = mongoose.model("Click", ClickSchema);
 
-export default Click;
+module.exports = Click;
