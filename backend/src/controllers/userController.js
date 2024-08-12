@@ -1,6 +1,8 @@
 const User = require('../models/User');
+const ApiKey = require('../models/ApiKey');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { v4: UUIDv4} = require("uuid")
 
 // Signup Handler
 async function handleSignup(req, res) {
@@ -122,7 +124,152 @@ async function handleLogin(req, res) {
     }
 }
 
+async function getUserProfile(req, res){
+    try {
+        const userId = req.user._id;
+        //console.log(userId);
+
+        const user = await User.findById(userId).populate({
+            path: 'urls',
+            select: 'originalUrl shortUrl totalClicks createdAt',
+        });
+
+        //console.log(user);
+
+        if (!user){
+            return res.status(404).json({ error: true, message: 'User not found' });
+        }
+
+        return res.status(200).json({
+            error: false,
+            data: {
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt,
+                apiKey: user.apiKey,
+                urls: user.urls
+            }
+        })
+    } catch (error){
+        console.log(error);
+        return res.status(500).json({
+            error: true,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+async function updateUserProfile(req, res){
+    const userId = req.user._id;
+    const updates = req.body;
+
+    if (!updates) {
+        return res.status(400).json({
+            error: true,
+            message: "No data provided"
+        })
+    }
+
+    if (updates.email){
+        const email = updates.email;
+        const isPresent = await User.findOne({email});
+        if (isPresent) {
+            return res.status(400).json({
+                error: true,
+                message: 'Email already exists',
+            })
+        }
+    }
+
+    try {
+        // Find the user and update with only the fields provided in the request body
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+            new: true, // Return the updated document
+            runValidators: true, // Run validation on the updated fields
+            select: '-password -urls' // exclude the password and urls no need as of now
+        });
+
+        if (!updatedUser){
+            return res.status(404).json({
+                error: true,
+                message: "User already exist"
+            })
+        }
+        // respond with the updated data
+
+        return res.status(200).json({
+            error: false,
+            data: updatedUser
+        })
+    } catch (error) {
+        console.log("Error updating profile", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        })
+
+    }
+}
+
+async function generateApiKey(req, res) {
+    const userId = req.user._id;
+
+    // Check if the user exists
+    const isUser = await User.findById(userId);
+    if (!isUser) {
+        return res.status(404).json({
+            error: true,
+            message: 'User not found',
+        });
+    }
+
+    try {
+        // Generate a new API key
+        const apiKey = UUIDv4();
+
+        // Create a new API key document
+        const newApiKey = new ApiKey({
+            user: userId,
+            key: apiKey,
+            expiresAt: new Date(Date.now() + 360 * 24 * 60 * 60 * 1000), // 360 days from now
+        });
+
+        // Save the new API key document
+        await newApiKey.save();
+
+        // Update the user's API key field
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: { apiKey: apiKey } },
+            { new: true } // Return the updated user document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                error: true,
+                message: 'Error occurred during API key generation',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            data: {
+                apiKey: updatedUser.apiKey,
+                expiresAt: newApiKey.expiresAt,
+            },
+        });
+    } catch (error) {
+        console.log('Error generating API key', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
 module.exports = {
     handleSignup,
     handleLogin,
+    getUserProfile,
+    updateUserProfile,
+    generateApiKey,
 };
