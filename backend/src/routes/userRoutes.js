@@ -27,6 +27,6 @@ router.put('/profile', authenticateUser, updateUserProfile);
 router.post('/generate-api-key', authenticateUser, generateApiKey);
 
 // Regenerate API Key
-//router.post('/regenerate-api-key', regenerateApiKey);
+router.post('/regenerate-api-key', authenticateUser, regenerateApiKey);
 
 module.exports = router;

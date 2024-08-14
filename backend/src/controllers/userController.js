@@ -266,10 +266,66 @@ async function generateApiKey(req, res) {
         });
     }
 }
+
+async function regenerateApiKey(req, res) {
+    const userId = req.user._id;
+
+    // Check if the user exists
+    const isUser = await User.findById(userId);
+    if (!isUser) {
+        return res.status(404).json({
+            error: true,
+            message: 'User not found',
+        });
+    }
+
+    try {
+        // Generate a new API key
+        const newApiKey = UUIDv4();
+
+        // Find the user's API key record and update it
+        const updatedApiKey = await ApiKey.findOneAndUpdate(
+            { user: userId },
+            { $set: { key: newApiKey, expiresAt: new Date(Date.now() + 360 * 24 * 60 * 60 * 1000) } },
+            { new: true }
+        );
+
+        if (!updatedApiKey) {
+            return res.status(404).json({
+                error: true,
+                message: 'API key not found',
+            });
+        }
+
+        // Update the user's API key reference
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: { apiKey: newApiKey } },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            error: false,
+            data: {
+                apiKey: updatedApiKey.key,
+                expiresAt: updatedApiKey.expiresAt,
+            },
+        });
+    } catch (error) {
+        console.log('Error regenerating API key', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+
 module.exports = {
     handleSignup,
     handleLogin,
     getUserProfile,
     updateUserProfile,
     generateApiKey,
+    regenerateApiKey
 };
