@@ -1,6 +1,7 @@
 const shortid = require('shortid');
 const Url = require("../models/Url");
 const User = require("../models/User");
+const { generateQRCodeForUrl } = require("../utils/generateQrCode");
 
 async function createShortUrl(req, res) {
     const { url } = req.body;
@@ -23,11 +24,14 @@ async function createShortUrl(req, res) {
             });
         }
 
+        const qrCode = await generateQRCodeForUrl(shortId);
+
         // Create a new shortened URL entry
         const newUrl = new Url({
             originalUrl: url,
             shortUrl: shortId,
             user: req.user._id,
+            qrCode: qrCode,
         });
 
         // Save the URL to the database
@@ -58,6 +62,102 @@ async function createShortUrl(req, res) {
     }
 }
 
+async function getUrlDetails(req, res) {
+    const shortId = req.params.shortUrlId;
+
+    try {
+        const details = await Url.findOne({ shortUrl: shortId });
+
+        return res.status(200).json({
+            error: false,
+            details
+        })
+
+    } catch (error){
+        console.error('Error getting URL details:', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+
+async function deleteUrl(req, res){
+    const shortId = req.params.shortUrlId;
+
+    try {
+        const deleteUrl = await Url.deleteOne({ shortUrl: shortId });
+        return res.status(200).json({
+            error: false,
+            deleteUrl
+        })
+
+    } catch (error){
+        console.error('Error getting URL details:', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+async function getUserUrls(req, res){
+    const userId = req.user._id;
+
+    try {
+        // Fetch all URLs associated with the user
+        const userUrls = await Url.find({ user: userId });
+
+        // If no URLs found
+        if (!userUrls || userUrls.length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'No URLs found for this user',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            userUrls
+        })
+    } catch (error){
+        console.error('Error getting URLs:', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+async function getClicksAnalytics(req, res) {
+    const shortId = req.params.shortUrlId;
+
+    try {
+
+        const urlData = await Url.findOne({
+            shortUrl: shortId,
+        }).select('totalClicks');
+
+        return res.status(200).json({
+            error:false,
+            urlData
+        })
+
+    }catch (error){
+        console.error('Error getting URL total clicks details:', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+
+}
+
 module.exports = {
-    createShortUrl
+    createShortUrl,
+    getUrlDetails,
+    deleteUrl,
+    getUserUrls,
+    getClicksAnalytics
 };

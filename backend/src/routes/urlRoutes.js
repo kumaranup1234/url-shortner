@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const {
     createShortUrl,
-    redirectShortUrl,
     getUrlDetails,
     deleteUrl,
     getUserUrls,
@@ -13,19 +12,16 @@ const { authenticateUser } = require('../middleware/authenticate');
 // Create Short URL
 router.post('/shorten', authenticateUser, createShortUrl);
 
-// Redirect Short URL
-//router.get('/:shortUrl', redirectShortUrl);
-
 // Get URL Details
-//router.get('/details/:shortUrlId', authenticateUser, getUrlDetails);
+router.get('/details/:shortUrlId', authenticateUser, getUrlDetails);
 
 // Delete URL
-//router.delete('/:shortUrlId', authenticateUser, deleteUrl);
+router.delete('/delete/:shortUrlId', authenticateUser, deleteUrl);
 
 // Get User's URLs
-//router.get('/user-urls', authenticateUser, getUserUrls);
+router.get('/user-urls', authenticateUser, getUserUrls);
 
-// Get Clicks Analytics for a URL
-//router.get('/analytics/:shortUrlId', authenticateUser, getClicksAnalytics);
+// Get Total Clicks for a URL
+router.get('/total-clicks/:shortUrlId', authenticateUser, getClicksAnalytics);
 
 module.exports = router;

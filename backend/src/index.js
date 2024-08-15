@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://admin:7635074651@cluster0.8rccap1.mongodb.net/urlShortener')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
