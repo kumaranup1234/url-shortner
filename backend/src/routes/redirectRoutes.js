@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Url = require('../models/Url'); // Your URL model
-const Click = require('../models/Click'); // Your Click model
+const Url = require('../models/Url');
+const Click = require('../models/Click');
 const { getDeviceType } = require('../utils/deviceUtils');
 const {getClientIp} = require("../utils/ipFinder"); // Utility to determine device type
 
