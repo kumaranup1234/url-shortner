@@ -7,7 +7,7 @@ const urlRoutes = require('./routes/urlRoutes');
 const apiRoutes = require('./routes/apiRoutes'); // For public API
 const clickRoutes = require('./routes/clickRoutes'); // For click analytics
 const redirectRoutes = require('./routes/redirectRoutes'); // For URL redirection
-const { authenticateUser } = require('./middleware/auth');
+const { authenticateUser } = require('./middleware/authenticate');
 const { authenticateApiKey } = require('./middleware/authenticate'); // Middleware for API key authentication
 
 const app = express();
@@ -32,7 +32,7 @@ app.use('/api/urls/manage', urlRoutes);
 //app.use('/api', authenticateApiKey, apiRoutes);
 
 // Click analytics routes (for internal use, nested under URL management routes)
-//app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
+app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
 
 // URL redirection route (publicly accessible)
 app.use('/', redirectRoutes);
