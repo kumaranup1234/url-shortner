@@ -32,7 +32,7 @@ const Shortened = () => {
 
     return (
         <div>
-            <div className="text-center mt-10 mb-8 border-b-1 border-gray-500 shadow-md pb-4">
+            <div className="text-center mt-6 mb-8 border-b-1 border-gray-500 shadow-md pb-4">
                 <p className="text-5xl text-blue-700 font-bold">Short URL</p>
             </div>
             <div className="text-center">

@@ -1,23 +1,74 @@
 const Url = require("../models/Url");
-const mongoose = require('mongoose');
 const Click = require("../models/Click");
 
 async function getAllClicks(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        const url = await Url.findOne({ shortUrl: shortUrlId }).select('totalClicks');
+        // Find the URL document to get the ObjectId
+        const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id totalClicks');
 
-        if (!url) {
+        if (!urlDoc) {
             return res.status(404).json({
                 error: true,
                 message: 'URL not found',
             });
         }
 
+        const totalClicks = urlDoc.totalClicks;
+
+        // Get today's date and calculate the date 7 days ago
+        const today = new Date();
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+
+        // Aggregate clicks for the past 7 days
+        const clicks = await Click.aggregate([
+            {
+                $match: {
+                    url: urlDoc._id,
+                    timestamp: { $gte: sevenDaysAgo }
+                }
+            },
+            {
+                $project: {
+                    date: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } }
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        // Prepare data for the last 7 days
+        const dateCounts = {};
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+            const dateString = date.toISOString().split('T')[0];
+            dateCounts[dateString] = 0; // Default count is 0
+        }
+
+        // Fill the counts from the aggregation result
+        clicks.forEach(click => {
+            dateCounts[click._id] = click.count;
+        });
+
+        // Create an array of objects with dates and counts for the frontend
+        const clicksByDate = Object.keys(dateCounts).map(date => ({
+            date,
+            count: dateCounts[date]
+        }));
+
         return res.status(200).json({
             error: false,
-            click: url
+            totalClicks,
+            clicksByDate
         });
     } catch (error) {
         console.log(error);
@@ -27,7 +78,6 @@ async function getAllClicks(req, res) {
         });
     }
 }
-
 
 async function getClicksByDevice(req, res) {
     const shortUrlId = req.params.shortUrlId;

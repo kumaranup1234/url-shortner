@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
 const Click = require('../models/Click');
+const AnonymousUrl = require('../models/AnonymousUrl');
 const { getDeviceType } = require('../utils/deviceUtils');
 const { getClientIp } = require('../utils/ipFinder');
 const uaParser = require('ua-parser-js');
@@ -11,7 +12,12 @@ const geoip = require('geoip-lite');
 router.get('/:shortUrlId', async (req, res) => {
     try {
         const { shortUrlId } = req.params;
-        const url = await Url.findOne({ shortUrl: shortUrlId });
+        let url = await Url.findOne({ shortUrl: shortUrlId });
+
+        if (!url) {
+            url = await AnonymousUrl.findOne({ shortUrl: shortUrlId });
+            return res.redirect(url.originalUrl);
+        }
 
         if (!url) {
             return res.status(404).json({ success: false, message: 'URL not found' });

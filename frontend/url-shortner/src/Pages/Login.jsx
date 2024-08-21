@@ -1,12 +1,54 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PasswordInput from "../Components/PasswordInput.jsx";
+import {useSetRecoilState} from "recoil";
+import {validateEmail} from "../utils/helper.js";
+import axiosInstance from "../utils/axiosInstance.js";
+import {authState} from "../recoil/atoms.js";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const setAuthState = useSetRecoilState(authState);
     const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        if (!validateEmail(email)) {
+            setError("Please enter a valid email");
+            return;
+        }
+        if (!password) {
+            setError("Please enter a valid password!");
+        }
+
+        setError("");
+
+        // Login Api call
+
+        try {
+            const response = await axiosInstance.post('/api/users/login', {
+                email: email,
+                password: password
+            })
+
+            console.log(response)
+
+            if (response.data.success === true){
+                setAuthState({ isLoggedIn: true, user: response.data.user });
+
+                navigate("/")
+            }
+        } catch (error){
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("An unexpected error occurred. Please try again");
+            }
+        }
+    }
 
 
     return (
@@ -18,7 +60,7 @@ const Login = () => {
             </div>
             <div className="flex items-center justify-center">
                 <div className="w-96 border rounded-lg bg-white px-7 py-10 shadow-lg">
-                    <form>
+                    <form onSubmit={handleLogin}>
                         <h4 className="text-2xl font-semibold mb-7 text-gray-800 text-center">Login</h4>
                         <input
                             type="text"

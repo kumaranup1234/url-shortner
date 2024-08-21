@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const urlRoutes = require('./routes/urlRoutes');
@@ -14,6 +15,11 @@ const app = express();
 
 app.use(cookieParser());
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
+}));
 // Middleware for parsing JSON request bodies
 app.use(express.json());
 

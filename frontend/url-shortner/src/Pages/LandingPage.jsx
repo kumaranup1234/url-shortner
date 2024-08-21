@@ -2,11 +2,20 @@ import Footer from "../Components/Footer.jsx";
 import {useState} from "react";
 import {useNavigate} from 'react-router-dom'
 import axiosInstance from "../utils/axiosInstance.js";
+import {isAuthenticated} from "../recoil/selectors.js";
+import {useRecoilValue} from "recoil";
 
 const LandingPage = () => {
 
     const [link, setLink] = useState("");
     const [error, setError] = useState("");
+    const isLoggedIn = useRecoilValue(isAuthenticated);
+
+    let route = "/api/urls/manage/shorten";
+    if (!isLoggedIn) {
+        route = "/api/urls/manage/anon/shorten";
+    }
+
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,10 +27,11 @@ const LandingPage = () => {
         setError(" ")
         try {
 
-            const response = await axiosInstance.post("/url", {
+            const response = await axiosInstance.post(route, {
                 url: link
             })
-            const id = response.data.id;
+            console.log(response)
+            const id = response.data.shortUrl;
             console.log(id)
 
             if (response.data){
@@ -42,7 +52,7 @@ const LandingPage = () => {
     }
     return (
         <div>
-            <div className="text-center mt-10 mb-8">
+            <div className="text-center mt-6 mb-8 border-b-1 border-gray-500 shadow-md pb-4">
                 <p className="text-5xl text-blue-700 font-bold">Short URL</p>
             </div>
             <div className="max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg">
@@ -57,12 +67,14 @@ const LandingPage = () => {
                                 name="url"
                                 placeholder="Enter the link here"
                                 value={link}
-                                onChange={(e) => {setLink(e.target.value)}}
+                                onChange={(e) => {
+                                    setLink(e.target.value)
+                                }}
                                 className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
                             />
                             <button
                                 onClick={handleSubmit}
-                                className="ml-4 text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
+                                className="text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
                                 Shorten URL
                             </button>
                         </form>
@@ -90,15 +102,16 @@ const LandingPage = () => {
                         <p>
                             browser extension, app integrations and support
                         </p>
-                        <button className="ml-4 text-white bg-blue-600 font-bold w-44 h-14 hover:bg-blue-800 transition duration-200 rounded mt-8"
-                                onClick={handleCreate}
+                        <button
+                            className="ml-4 text-white bg-blue-600 font-bold w-44 h-14 hover:bg-blue-800 transition duration-200 rounded mt-8"
+                            onClick={handleCreate}
                         >
                             Create Account
                         </button>
                     </div>
                 </div>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 }
