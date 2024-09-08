@@ -3,13 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const userRoutes = require('./routes/userRoutes');
-const urlRoutes = require('./routes/urlRoutes');
-const apiRoutes = require('./routes/apiRoutes'); // For public API
-const clickRoutes = require('./routes/clickRoutes'); // For click analytics
-const redirectRoutes = require('./routes/redirectRoutes'); // For URL redirection
-const { authenticateUser } = require('./middleware/authenticate');
-const { authenticateApiKey } = require('./middleware/authenticate'); // Middleware for API key authentication
+const userRoutes = require('./src/routes/userRoutes');
+const urlRoutes = require('./src/routes/urlRoutes');
+const apiRoutes = require('./src/routes/apiRoutes'); // For public API
+const clickRoutes = require('./src/routes/clickRoutes'); // For click analytics
+const redirectRoutes = require('./src/routes/redirectRoutes'); // For URL redirection
+const { authenticateUser } = require('./src/middleware/authenticate');
+const { authenticateApiKey } = require('./src/middleware/authenticate'); // Middleware for API key authentication
 
 const app = express();
 
