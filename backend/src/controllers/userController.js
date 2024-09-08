@@ -101,7 +101,7 @@ async function handleLogin(req, res) {
 
         // Generate JWT token
         console.log(process.env.JWT_SECRET)
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '12h' });
 
         // Set the token as a cookie
         res.cookie('authToken', token, {

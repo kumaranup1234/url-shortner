@@ -38,7 +38,7 @@ app.use('/api/urls/manage', urlRoutes);
 //app.use('/api', authenticateApiKey, apiRoutes);
 
 // Click analytics routes (for internal use, nested under URL management routes)
-app.use('/api/urls/:shortUrlId', authenticateUser, clickRoutes);
+app.use('/api/urls', authenticateUser, clickRoutes);
 
 // URL redirection route (publicly accessible)
 app.use('/', redirectRoutes);

@@ -10,18 +10,18 @@ const {
 const { authenticateUser } = require('../middleware/authenticate');
 
 // Get All Clicks for a URL
-router.get('/:shortUrlId/clicks', authenticateUser, getAllClicks);
+router.get('/clicks/:shortUrlId', authenticateUser, getAllClicks);
 
 // Get Clicks by Device Type
-router.get('/:shortUrlId/clicks/devices', authenticateUser, getClicksByDevice);
+router.get('/clicks/devices/:shortUrlId', authenticateUser, getClicksByDevice);
 
 // Get Clicks by Browser
-router.get('/:shortUrlId/clicks/browsers', authenticateUser, getClicksByBrowser);
+router.get('/clicks/browsers/:shortUrlId', authenticateUser, getClicksByBrowser);
 
 // Get Clicks by Location
-router.get('/:shortUrlId/clicks/locations', authenticateUser, getClicksByLocation);
+router.get('/clicks/locations/:shortUrlId', authenticateUser, getClicksByLocation);
 
 // Get Clicks by Referrer
-router.get('/:shortUrlId/clicks/referrers', authenticateUser, getClicksByReferrer);
+router.get('/clicks/referrers/:shortUrlId', authenticateUser, getClicksByReferrer);
 
 module.exports = router;

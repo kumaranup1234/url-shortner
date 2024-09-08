@@ -190,6 +190,7 @@ async function getUserUrls(req, res){
                 message: 'No URLs found for this user',
             });
         }
+        //console.log(userUrls)
 
         return res.status(200).json({
             error: false,
