@@ -1,5 +1,6 @@
 const Url = require("../models/Url");
 const Click = require("../models/Click");
+const { getName } = require('country-list');
 
 async function getAllClicks(req, res) {
     const shortUrlId = req.params.shortUrlId;
@@ -175,7 +176,7 @@ async function getClicksByLocation(req, res) {
 
         // Aggregate the locations by country and city
         const locationCounts = clicks.reduce((acc, click) => {
-            const country = click.location?.country || 'Unknown Country';
+            const country = getName(click.location?.country) || 'Unknown Country';
             const city = click.location?.city || 'Unknown City';
 
             const locationKey = `${country}, ${city}`;
