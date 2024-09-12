@@ -6,6 +6,7 @@ const {
     getClicksByBrowser,
     getClicksByLocation,
     getClicksByReferrer,
+    getClicksByOs
 } = require('../controllers/clickController');
 const { authenticateUser } = require('../middleware/authenticate');
 
@@ -24,4 +25,6 @@ router.get('/clicks/locations/:shortUrlId', authenticateUser, getClicksByLocatio
 // Get Clicks by Referrer
 router.get('/clicks/referrers/:shortUrlId', authenticateUser, getClicksByReferrer);
 
+// Get Clicks by OS
+router.get('/clicks/os/:shortUrlId', authenticateUser, getClicksByOs);
 module.exports = router;

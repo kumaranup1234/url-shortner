@@ -235,7 +235,6 @@ async function getClicksByReferrer(req, res){
             return acc;
         }, {});
 
-        // Log the retrieved clicks to see the actual data
         // console.log("Retrieved clicks:", referrerCounts);
 
         return res.status(200).json({
@@ -251,6 +250,46 @@ async function getClicksByReferrer(req, res){
     }
 }
 
+async function getClicksByOs(req, res) {
+    const shortUrlId = req.params.shortUrlId;
+
+    try {
+        // Find the URL document to get the ObjectId
+        const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
+
+        if (!urlDoc) {
+            return res.status(404).json({
+                error: true,
+                message: 'URL not found',
+            });
+        }
+
+        const objectId = urlDoc._id;
+        const clicks = await Click.find({ url: objectId });
+
+        // Count the occurrences of each deviceType
+        const osCounts = clicks.reduce((acc, click) => {
+            const osType = click.os || 'Unknown'; // Default to 'Unknown' if os is missing
+            acc[osType] = (acc[osType] || 0) + 1;
+            return acc;
+        }, {});
+
+        // console.log("Retrieved clicks:", osCounts);
+
+        return res.status(200).json({
+            error: false,
+            osCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+
+}
+
 
 
 module.exports = {
@@ -258,5 +297,6 @@ module.exports = {
     getClicksByDevice,
     getClicksByBrowser,
     getClicksByLocation,
-    getClicksByReferrer
+    getClicksByReferrer,
+    getClicksByOs
 }
