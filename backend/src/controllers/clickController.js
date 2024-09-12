@@ -21,7 +21,7 @@ async function getAllClicks(req, res) {
         // Get today's date and calculate the date 7 days ago
         const today = new Date();
         const sevenDaysAgo = new Date(today);
-        sevenDaysAgo.setDate(today.getDate() - 7);
+        sevenDaysAgo.setDate(today.getDate() - 10);
 
         // Aggregate clicks for the past 7 days
         const clicks = await Click.aggregate([
@@ -49,7 +49,7 @@ async function getAllClicks(req, res) {
 
         // Prepare data for the last 7 days
         const dateCounts = {};
-        for (let i = 6; i >= 0; i--) {
+        for (let i = 9; i >= 0; i--) {
             const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
             const dateString = date.toISOString().split('T')[0];
             dateCounts[dateString] = 0; // Default count is 0
