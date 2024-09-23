@@ -344,10 +344,8 @@ async function getAllCount(req, res) {
 
         return res.status(200).json({
             error: false,
-            data: {
                 totalUrls,
                 totalClicksSum,
-            }
         });
     } catch (error) {
         console.log('Error getting data', error);
