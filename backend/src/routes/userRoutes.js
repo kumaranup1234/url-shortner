@@ -30,7 +30,7 @@ router.post('/generate-api-key', authenticateUser, generateApiKey);
 // Regenerate API Key
 router.post('/regenerate-api-key', authenticateUser, regenerateApiKey);
 
-// Get all Links and all total clicks
+// Get all Links count and all total clicks count
 router.get("/getAll", authenticateUser, getAllCount);
 
 module.exports = router;

@@ -339,7 +339,7 @@ async function getAllCount(req, res) {
 
         const totalClicks = await Url.find({ user: userId }).select('totalClicks');
 
-        const totalClicksArray = totalClicks.map((doc) => doc.clicks);
+        const totalClicksArray = totalClicks.map((doc) => doc.totalClicks);
         const totalClicksSum = totalClicksArray.reduce((acc, clicks) => acc + clicks, 0);
 
         return res.status(200).json({
