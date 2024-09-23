@@ -44,9 +44,9 @@ const BrowserBarChart = ({ shortUrl }) => {
     };
 
     return (
-        <div className="bg-gray-200 p-4 border rounded-lg mx-auto">
+        <div className="bg-gray-200 p-4 border rounded-lg mx-auto w-1/2">
             <h2 className="ml-12 text-xl font-bold mb-4">Clicks + Scans by Browser</h2>
-            <ResponsiveContainer width="40%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
                 <BarChart
                     data={browserData}
                     margin={{ top: 10, right: 10, left: 10, bottom: 10 }}

@@ -10,15 +10,19 @@ import ReferrerBarChart from "./Components/ReferrerBarChart.jsx";
 import BrowserBarChart from "./Components/BrowserBarChart.jsx";
 import LocationList from "./Components/LocationList.jsx";
 import TopPerformance from "./Cards/TopPerformance.jsx";
+import Analytics from "./Pages/Analytics.jsx";
+import Navbar from "./Pages/Navbar.jsx";
 
 function App() {
     return (
         <>
+            <Navbar />
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/shortened" element={<Shortened />} />
                 <Route path="/links" element={<Links />} />
+                <Route path="/analytics/:shortenedUrl" element={<Analytics/>} />
                 <Route path="/charts" element={<ClicksLineChart shortUrl="lu9yK_QGi" />} />
                 <Route path="/pie" element={<DevicePieChart shortUrl="lu9yK_QGi" />} />
                 <Route path="/bar" element={<ReferrerBarChart shortUrl="lu9yK_QGi" />} />

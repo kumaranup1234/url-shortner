@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PasswordInput from "../Components/PasswordInput.jsx";
-import {useSetRecoilState} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {validateEmail} from "../utils/helper.js";
 import axiosInstance from "../utils/axiosInstance.js";
 import {authState} from "../recoil/atoms.js";
@@ -10,7 +10,8 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
-    const setAuthState = useSetRecoilState(authState);
+    const setAuth = useSetRecoilState(authState);
+    const { isLoggedIn } = useRecoilValue(authState);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -27,20 +28,19 @@ const Login = () => {
         setError("");
 
         // Login Api call
-
         try {
             const response = await axiosInstance.post('/api/users/login', {
                 email: email,
                 password: password
             })
 
-            console.log(response)
-
-            if (response.data.success === true){
-                setAuthState({ isLoggedIn: true, user: response.data.user });
-
-                navigate("/")
+            //console.log(response)
+            //console.log(response.data.success)
+            if (response.data.success){
+                setAuth({ isLoggedIn: true, user: response.data.user });
             }
+            console.log(isLoggedIn)
+            navigate("/")
         } catch (error){
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);

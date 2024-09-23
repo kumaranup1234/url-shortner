@@ -39,7 +39,7 @@ const ClicksLineChart = ({ shortUrl }) => {
     }, [shortUrl]);
 
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-lg mx-auto" style={{ width: '45%', height: '300px', overflow: 'hidden' }}>
+        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-lg mx-auto" style={{ width: '45%', height: '35w0px', overflow: 'hidden' }}>
             <p className="font-semibold text-xl mb-2 text-left ml-10">Clicks & Scans Over Time</p>
             <ResponsiveContainer width="90%" height="90%">
                 <LineChart data={clickData} >
