@@ -2,6 +2,7 @@ const User = require('../models/User');
 const ApiKey = require('../models/ApiKey');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Url = require('../models/Url');
 const { v4: UUIDv4} = require("uuid")
 
 // Signup Handler
@@ -109,6 +110,7 @@ async function handleLogin(req, res) {
             secure: process.env.NODE_ENV === 'production', // Ensure cookie is sent over HTTPS only in production
             maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days expiration time
             sameSite: 'none' // 'none' for cross-domain, 'strict' for same-site
+            // strict for localHost
         });
 
         return res.json({
@@ -320,6 +322,34 @@ async function regenerateApiKey(req, res) {
     }
 }
 
+async function getAllCount(req, res) {
+    const userId = req.user._id;
+
+    try {
+        const user = User.findById({ userId });
+        const totalUrls = user.urls.length;
+
+        const totalClicks = await Url.find({ user: userId }).select('clicks');
+        const totalClicksArray = totalClicks.map((doc) => doc.clicks);
+        const totalClicksSum = totalClicksArray.reduce((acc, clicks) => acc + clicks, 0);
+
+
+        return res.status(200).json({
+            error: false,
+            data: {
+                totalUrls,
+                totalClicksSum,
+            }
+        })
+    } catch (error){
+        console.log('Error getting data', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
 
 module.exports = {
     handleSignup,
@@ -327,5 +357,6 @@ module.exports = {
     getUserProfile,
     updateUserProfile,
     generateApiKey,
-    regenerateApiKey
+    regenerateApiKey,
+    getAllCount
 };
