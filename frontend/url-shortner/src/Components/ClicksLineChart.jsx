@@ -28,6 +28,7 @@ const ClicksLineChart = ({ shortUrl }) => {
     const getClickData = async () => {
         try {
             const response = await axiosInstance.get(`/api/urls/clicks/${shortUrl}`);
+            console.log(response);
             setClickData(response.data.clicksByDate);
         } catch (e) {
             console.error('Error fetching click data:', e);

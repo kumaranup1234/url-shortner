@@ -18,17 +18,17 @@ async function getAllClicks(req, res) {
 
         const totalClicks = urlDoc.totalClicks;
 
-        // Get today's date and calculate the date 7 days ago
+        // Get today's date and calculate the date 10 days ago
         const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        sevenDaysAgo.setDate(today.getDate() - 10);
+        const tenDaysAgo = new Date(today);
+        tenDaysAgo.setDate(today.getDate() - 9);
 
         // Aggregate clicks for the past 7 days
         const clicks = await Click.aggregate([
             {
                 $match: {
                     url: urlDoc._id,
-                    timestamp: { $gte: sevenDaysAgo }
+                    timestamp: { $gte: tenDaysAgo }
                 }
             },
             {
