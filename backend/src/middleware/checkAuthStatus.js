@@ -1,6 +1,7 @@
 import {verifyToken} from "../utils/verifyToken";
 const checkAuthStatus = (req, res, next) => {
     const token = req.cookies.authToken;
+    console.log(token);
     if (token) {
         const user = verifyToken(token);
         console.log(user);
