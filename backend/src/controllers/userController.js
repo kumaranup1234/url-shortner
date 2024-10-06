@@ -47,7 +47,7 @@ async function handleSignup(req, res) {
         });
 
         await newUser.save();
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '12h' });
+        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '12h' });
 
         // Set the token as a cookie
         res.cookie('authToken', token, {
