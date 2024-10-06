@@ -8,7 +8,8 @@ const {
     updateUserProfile,
     generateApiKey,
     regenerateApiKey,
-    getAllCount
+    getAllCount,
+    handleStatus
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
@@ -21,6 +22,9 @@ router.post('/login', handleLogin);
 
 // User Logout
 router.post("/logout", handleLogout);
+
+// User Status
+router.get("/status", handleStatus)
 
 // Get User Profile
 router.get('/profile', authenticateUser, getUserProfile);

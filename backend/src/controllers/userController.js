@@ -140,6 +140,7 @@ async function handleLogin(req, res) {
     }
 }
 
+
 async function handleLogout(req, res) {
     // Clear the authToken cookie
     res.clearCookie('authToken', {
@@ -151,6 +152,13 @@ async function handleLogout(req, res) {
     res.status(200).json({ success: true, message: 'Logged out successfully' });
 }
 
+async function handleStatus(req, res) {
+    if (req.user) {
+        return res.status(200).json({ isLoggedIn: true, user: req.user });
+    } else {
+        return res.status(200).json({ isLoggedIn: false, user: null });
+    }
+}
 
 async function getUserProfile(req, res){
     try {
@@ -391,5 +399,6 @@ module.exports = {
     updateUserProfile,
     generateApiKey,
     regenerateApiKey,
-    getAllCount
+    getAllCount,
+    handleStatus
 };
