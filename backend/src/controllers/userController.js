@@ -50,6 +50,10 @@ async function handleSignup(req, res) {
 
         return res.status(201).json({
             success: true,
+            user: {
+                username,
+                email
+            },
             message: 'User created successfully',
         });
     } catch (error) {
