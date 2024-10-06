@@ -3,6 +3,7 @@ const router = express.Router();
 const {
     handleSignup,
     handleLogin,
+    handleLogout,
     getUserProfile,
     updateUserProfile,
     generateApiKey,
@@ -17,6 +18,9 @@ router.post('/signup', handleSignup);
 
 // User Login
 router.post('/login', handleLogin);
+
+// User Logout
+router.post("/logout", handleLogout);
 
 // Get User Profile
 router.get('/profile', authenticateUser, getUserProfile);

@@ -140,6 +140,18 @@ async function handleLogin(req, res) {
     }
 }
 
+async function handleLogout(req, res) {
+    // Clear the authToken cookie
+    res.clearCookie('authToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+    });
+
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+}
+
+
 async function getUserProfile(req, res){
     try {
         const userId = req.user._id;
@@ -374,6 +386,7 @@ async function getAllCount(req, res) {
 module.exports = {
     handleSignup,
     handleLogin,
+    handleLogout,
     getUserProfile,
     updateUserProfile,
     generateApiKey,
