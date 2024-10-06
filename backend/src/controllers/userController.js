@@ -47,6 +47,16 @@ async function handleSignup(req, res) {
         });
 
         await newUser.save();
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '12h' });
+
+        // Set the token as a cookie
+        res.cookie('authToken', token, {
+            httpOnly: true,   // Prevents JavaScript access on the client side
+            secure: process.env.NODE_ENV === 'production', // Ensure cookie is sent over HTTPS only in production
+            maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days expiration time
+            sameSite: 'none' // 'none' for cross-domain, 'strict' for same-site
+            // strict for localHost
+        });
 
         return res.status(201).json({
             success: true,
