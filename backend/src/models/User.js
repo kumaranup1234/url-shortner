@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
     apiKey: {
         type: String,
         unique: true,
+        default: null,
     },
     urls: [
         {
