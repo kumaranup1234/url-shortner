@@ -3,6 +3,7 @@ const checkAuthStatus = (req, res, next) => {
     const token = req.cookies.authToken;
     if (token) {
         const user = verifyToken(token);
+        console.log(user);
         if (user) {
             req.user = user;
         } else {
