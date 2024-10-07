@@ -123,7 +123,7 @@ async function handleLogin(req, res) {
             httpOnly: true,   // Prevents JavaScript access on the client side
             secure: process.env.NODE_ENV === 'production', // Ensure cookie is sent over HTTPS only in production
             maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days expiration time
-            sameSite: 'strict' // 'none' for cross-domain, 'strict' for same-site
+            sameSite: 'none' // 'none' for cross-domain, 'strict' for same-site
             // strict for localHost
         });
 
