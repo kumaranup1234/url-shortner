@@ -13,6 +13,7 @@ const {
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
+const { checkAuthStatus } = require('../middleware/checkAuthStatus');
 
 // User Registration
 router.post('/signup', handleSignup);
@@ -24,7 +25,7 @@ router.post('/login', handleLogin);
 router.post("/logout", handleLogout);
 
 // User Status
-router.get("/status", handleStatus)
+router.get("/status", checkAuthStatus, handleStatus)
 
 // Get User Profile
 router.get('/profile', authenticateUser, getUserProfile);
