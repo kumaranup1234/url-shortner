@@ -1,4 +1,4 @@
-import {verifyToken} from "../utils/verifyToken";
+const {verifyToken} = require("../utils/verifyToken");
 const checkAuthStatus = (req, res, next) => {
     const token = req.cookies.authToken;
     console.log(token);
