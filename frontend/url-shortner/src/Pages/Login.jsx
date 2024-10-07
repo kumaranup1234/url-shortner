@@ -26,8 +26,6 @@ const Login = () => {
         }
 
         setError("");
-
-        // Login Api call
         try {
             const response = await axiosInstance.post('/api/users/login', {
                 email: email,
@@ -40,7 +38,7 @@ const Login = () => {
                 setAuth({ isLoggedIn: true, user: response.data.user });
             }
             console.log(isLoggedIn)
-            navigate("/")
+            navigate("/links")
         } catch (error){
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);

@@ -10,12 +10,16 @@ import { BASE_URL } from "../utils/constants.js";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../Components/QRCodePopup.jsx";
+import toast from "react-hot-toast";
+import EditLink from "../Components/EditLink.jsx";
+import ShareButton from "../Components/ShareButton.jsx";
 
-const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode }) => {
+const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) => {
     const maxLength = 50;
     const [showPopup, setShowPopup] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
-
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isShareModalOpen, setShareModalOpen] = useState(false);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
 
@@ -31,10 +35,30 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode }) => {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(fullUrl);
+        toast.success("Copied");
     };
 
+    const handleEditClick = () => {
+        setEditModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setEditModalOpen(false);
+    };
+
+    const handleShareModalClick = () => {
+        setShareModalOpen(true);
+    };
+
+    const handleShareModalClose = () => {
+        setShareModalOpen(false);
+    };
+
+
+
+
     return (
-        <div className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-16 mr-16 mt-6 relative">
+        <div className="bg-gray-200 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-6 mr-1 relative">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">
@@ -82,27 +106,38 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode }) => {
 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10 border-2 border-gray-200">
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            <img src={copyIcon} className="h-5 w-5 mr-2" alt="Copy Icon" onClick={handleCopy}/>
+                    <div className="absolute right-0 w-40 bg-white rounded-lg shadow-lg z-10 border-2 border-gray-200">
+                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleCopy}>
+                            <img src={copyIcon} className="h-5 w-5 mr-2" alt="Copy Icon"/>
                             <button className="text-sm">Copy</button>
                         </div>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            <img src={shareIcon} className="h-5 w-5 mr-2" alt="Share Icon" />
+                        <hr className="border-t border-gray-200"/>
+                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleShareModalClick}>
+                            <img src={shareIcon} className="h-5 w-5 mr-2" alt="Share Icon"/>
                             <button className="text-sm">Share</button>
                         </div>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            <img src={editIcon} className="h-5 w-5 mr-2" alt="Edit Icon" />
+                        <hr className="border-t border-gray-200"/>
+                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleEditClick}>
+                            <img src={editIcon} className="h-5 w-5 mr-2" alt="Edit Icon"/>
                             <button className="text-sm">Edit</button>
                         </div>
+                        <hr className="border-t border-gray-200"/>
                         <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            <img src={deleteIcon} className="h-5 w-5 mr-2" alt="Delete Icon" />
+                            <img src={deleteIcon} className="h-5 w-5 mr-2" alt="Delete Icon"/>
                             <button className="text-sm">Delete</button>
                         </div>
                     </div>
                 )}
             </div>
 
+            <EditLink
+                isOpen={isEditModalOpen}
+                onClose={handleModalClose}
+                link={{ originalUrl, shortUrlId: shortenedUrl }}
+                onEditSuccess={onEditSuccess}
+            />
+
+            {isShareModalOpen && <ShareButton linkToShare={fullUrl} isModalOpen={isShareModalOpen} onClose={handleShareModalClose} />}
             {/* QR Code Popup */}
             {showPopup && <QRCodePopup qrCode={qrCode} onClose={() => setShowPopup(false)} shortUrl={shortenedUrl} />}
         </div>
