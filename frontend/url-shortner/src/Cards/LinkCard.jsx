@@ -7,13 +7,12 @@ import deleteIcon from "../assets/deleteIcon.svg";
 import qrIcon from "../assets/qrIcon.svg";
 import threeDotsIcon from "../assets/threeDotsIcon.svg";
 import { BASE_URL } from "../utils/constants.js";
-import {useRef, useState} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../Components/QRCodePopup.jsx";
 import toast from "react-hot-toast";
 import EditLink from "../Components/EditLink.jsx";
 import ShareButton from "../Components/ShareButton.jsx";
-import useOutsideClick from "../hooks/useOutsideClick.jsx";
 
 const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) => {
     const maxLength = 50;
@@ -21,13 +20,8 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) =>
     const [showDropdown, setShowDropdown] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isShareModalOpen, setShareModalOpen] = useState(false);
-    const dropdownRef = useRef(null);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
-
-
-    // custom hook for outside click detection
-    useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
     const handleQrIconClick = () => {
         if (qrCode) {
@@ -105,7 +99,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) =>
             </div>
 
             {/* Right Section - Three Dot Menu */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative">
                 <button onClick={toggleDropdown} className="focus:outline-none">
                     <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
                 </button>

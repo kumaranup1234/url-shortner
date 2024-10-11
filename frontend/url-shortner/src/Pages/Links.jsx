@@ -62,6 +62,7 @@ const Links = () => {
                                             qrCode={link?.qrCode}
                                             date={new Date(link.createdAt).toLocaleDateString()}
                                             onEditSuccess={getAllLinks}
+                                            onDeleteSuccess={getAllLinks}
                                         />
                                     ))
                                 )}
@@ -72,7 +73,7 @@ const Links = () => {
                 </div>
 
                 {/* SummaryCard section */}
-                <div className="w-1/3 ml-24 mt-10">
+                <div className="w-1/3 ml-40 mt-10">
                     <SummaryCard/>
                     <div className="mt-12">
                         <AboutCard/>
