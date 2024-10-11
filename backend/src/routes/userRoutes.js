@@ -9,7 +9,8 @@ const {
     generateApiKey,
     regenerateApiKey,
     getAllCount,
-    handleStatus
+    handleStatus,
+    updateProfileImage
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
@@ -32,6 +33,9 @@ router.get('/profile', authenticateUser, getUserProfile);
 
 // Update User Profile
 router.put('/profile', authenticateUser, updateUserProfile);
+
+// Update User Image
+router.post('/profile-image', authenticateUser, updateProfileImage)
 
 // Generate New API Key
 router.post('/generate-api-key', authenticateUser, generateApiKey);

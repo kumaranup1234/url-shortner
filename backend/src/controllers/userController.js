@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Url = require('../models/Url');
 const { v4: UUIDv4} = require("uuid")
+const cloudinary = require('../config/cloudinaryConfig');
+const upload = require('../utils/multerConfig');
 
 // Signup Handler
 async function handleSignup(req, res) {
@@ -142,6 +144,44 @@ async function handleLogin(req, res) {
             message: 'Server error during login',
         });
     }
+}
+
+// Update Image
+async function updateProfileImage (req, res) {
+    const userId = req.user._id;
+    upload.single('profileImage')(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+
+        try {
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload_stream(
+                { folder: 'profile-images', public_id: `${Date.now()}_${req.file.originalname}` },
+                async (error, result) => {
+                    if (error) {
+                        return res.status(500).json({ error: 'Error uploading image to Cloudinary.' });
+                    }
+
+                    // Save image URL to MongoDB
+                    const user = await User.findById(userId);
+                    user.profileImageUrl = result.secure_url;
+                    await user.save();
+
+                    res.json({
+                        success: true,
+                        message: 'Profile image updated successfully!',
+                        imageUrl: result.secure_url,
+                    });
+                }
+            ).end(req.file.buffer);
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Server error while uploading profile image.' });
+        }
+    });
+
+
 }
 
 
@@ -403,5 +443,6 @@ module.exports = {
     generateApiKey,
     regenerateApiKey,
     getAllCount,
-    handleStatus
+    handleStatus,
+    updateProfileImage
 };

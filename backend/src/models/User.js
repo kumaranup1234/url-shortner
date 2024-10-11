@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength: 6, // Minimum password length
     },
+    profileImageUrl: {
+        type: String,
+        default: null, // Initially no profile image
+    },
     createdAt: {
         type: Date,
         default: Date.now,
