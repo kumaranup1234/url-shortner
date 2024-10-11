@@ -197,9 +197,11 @@ async function handleLogout(req, res) {
 }
 
 async function handleStatus(req, res) {
+    console.log(req.user);
     if (req.user) {
         try {
             const isUser = await User.findById(req.userId);
+            console.log("user is ", isUser);
             if (!isUser) {
                 return res.status(404).json({ isLoggedIn: false, user: null });
             }
