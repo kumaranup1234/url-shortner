@@ -198,7 +198,23 @@ async function handleLogout(req, res) {
 
 async function handleStatus(req, res) {
     if (req.user) {
-        return res.status(200).json({ isLoggedIn: true, user: req.user });
+        try {
+            const isUser = await User.findById(req.userId);
+            if (!isUser) {
+                return res.status(404).json({ isLoggedIn: false, user: null });
+            }
+
+            const user = {
+                username: isUser.username,
+                email: isUser.email,
+                profileImage: isUser.profileImageUrl || null,
+            };
+
+            return res.status(200).json({ isLoggedIn: true, user: user });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
     } else {
         return res.status(200).json({ isLoggedIn: false, user: null });
     }
