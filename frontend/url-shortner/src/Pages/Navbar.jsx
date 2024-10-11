@@ -1,16 +1,21 @@
 import { FaUserCircle, FaCog, FaSignOutAlt } from "react-icons/fa";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import { authState } from "../recoil/atoms.js";
-import { useState } from "react";
+import {useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import Cookies from 'js-cookie';
 import LogoutButton from "../Components/LogoutButton.jsx";
+import useOutsideClick from "../hooks/useOutsideClick.jsx";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const { isLoggedIn } = useRecoilValue(authState);
     const setAuthState = useSetRecoilState(authState);
     const navigate = useNavigate();
+    const dropdownRef = useRef(null);
+
+    // custom hook for outside click detection
+    useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -75,7 +80,7 @@ const Navbar = () => {
                             onClick={toggleDropdown}
                         />
                         {showDropdown && (
-                            <div className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
+                            <div ref={dropdownRef} className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
                                 {/* Dropdown Menu */}
                                 <NavLink
                                     to="/settings"

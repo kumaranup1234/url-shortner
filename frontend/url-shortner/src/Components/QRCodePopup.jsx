@@ -47,7 +47,7 @@ const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
                 {/* Buttons Section */}
                 <div className="flex space-x-4 justify-center">
                     <div className="bg-blue-500 flex items-center justify-start px-4 py-2 hover:bg-green-700 cursor-pointer rounded" onClick={handleDownload}>
-                        <img src={downloadIcon} className="h-5 w-4" alt="Download Icon"/>
+                        <img src={downloadIcon} className="h-5 w-5" alt="Download Icon"/>
                         <button
                             className="text-white px-4 py-2"
                         >
