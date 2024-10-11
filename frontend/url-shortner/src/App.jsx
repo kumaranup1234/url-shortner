@@ -18,6 +18,8 @@ import axiosInstance from "./utils/axiosInstance.js";
 import {useRecoilState} from "recoil";
 import {authState} from "./recoil/atoms.js";
 import {Toaster} from "react-hot-toast";
+import Settings from "./Pages/Settings.jsx";
+import Footer from "./Components/Footer.jsx";
 
 const App = () => {
     // Set default state to indicate not logged in
@@ -54,6 +56,7 @@ const App = () => {
                 <Route path="/signup" element={<SignUp/>}/>
                 <Route path="/shortened" element={<Shortened/>}/>
                 <Route path="/links" element={<Links/>}/>
+                <Route path="/settings" element={<Settings/>} />
                 <Route path="/analytics/:shortenedUrl" element={<Analytics/>}/>
                 <Route path="/charts" element={<ClicksLineChart shortUrl="lu9yK_QGi"/>}/>
                 <Route path="/pie" element={<DevicePieChart shortUrl="lu9yK_QGi"/>}/>

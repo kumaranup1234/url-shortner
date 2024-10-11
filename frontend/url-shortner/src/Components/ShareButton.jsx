@@ -1,4 +1,4 @@
-import { FaFacebookF, FaInstagram, FaTwitter, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import toast from "react-hot-toast";
 import twitter from "../assets/twitterx.svg"
 

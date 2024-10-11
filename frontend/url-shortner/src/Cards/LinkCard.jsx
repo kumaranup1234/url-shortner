@@ -7,21 +7,28 @@ import deleteIcon from "../assets/deleteIcon.svg";
 import qrIcon from "../assets/qrIcon.svg";
 import threeDotsIcon from "../assets/threeDotsIcon.svg";
 import { BASE_URL } from "../utils/constants.js";
-import { useState } from "react";
+import {useRef, useState} from "react";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../Components/QRCodePopup.jsx";
 import toast from "react-hot-toast";
 import EditLink from "../Components/EditLink.jsx";
 import ShareButton from "../Components/ShareButton.jsx";
+import UseOutsideClick from "../hooks/useOutsideClick.jsx";
+import axiosInstance from "../utils/axiosInstance.js";
 
-const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) => {
+const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess, onDeleteSuccess }) => {
     const maxLength = 50;
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isShareModalOpen, setShareModalOpen] = useState(false);
+    const dropdownRef = useRef(null);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
+
+
+    // custom hook for outside click detection
+    UseOutsideClick(dropdownRef, () => setShowDropdown(false));
 
     const handleQrIconClick = () => {
         if (qrCode) {
@@ -54,8 +61,21 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) =>
         setShareModalOpen(false);
     };
 
+    const handleDeleteClick = () => {
+        const myPromise = axiosInstance.delete(`/api/urls/manage/delete/${shortenedUrl}`);
 
+        toast.promise(myPromise, {
+            loading: 'Deleting...',
+            success: 'URL deleted successfully!',
+            error: 'Error deleting URL'
+        });
 
+        myPromise.then(() => {
+            onDeleteSuccess();
+        }).catch((e) => {
+            console.error(e);
+        });
+    };
 
     return (
         <div className="bg-gray-200 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-6 mr-1 relative">
@@ -99,7 +119,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) =>
             </div>
 
             {/* Right Section - Three Dot Menu */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
                 <button onClick={toggleDropdown} className="focus:outline-none">
                     <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
                 </button>
@@ -122,7 +142,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess }) =>
                             <button className="text-sm">Edit</button>
                         </div>
                         <hr className="border-t border-gray-200"/>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleDeleteClick}>
                             <img src={deleteIcon} className="h-5 w-5 mr-2" alt="Delete Icon"/>
                             <button className="text-sm">Delete</button>
                         </div>

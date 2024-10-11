@@ -9,8 +9,7 @@ import useOutsideClick from "../hooks/useOutsideClick.jsx";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
-    const { isLoggedIn } = useRecoilValue(authState);
-    const setAuthState = useSetRecoilState(authState);
+    const { isLoggedIn, user } = useRecoilValue(authState);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
@@ -79,6 +78,7 @@ const Navbar = () => {
                             className="w-10 h-9 mr-2 cursor-pointer"
                             onClick={toggleDropdown}
                         />
+                        <h1>{user.username}</h1>
                         {showDropdown && (
                             <div ref={dropdownRef} className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
                                 {/* Dropdown Menu */}
