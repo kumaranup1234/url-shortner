@@ -129,6 +129,10 @@ async function handleLogin(req, res) {
 
         return res.json({
             success: true,
+            user: {
+                username: user.username,
+                email: user.email
+            },
             message: 'Login successful',
         });
     } catch (error) {
@@ -231,7 +235,6 @@ async function updateUserProfile(req, res){
                 message: "User already exist"
             })
         }
-        // respond with the updated data
 
         return res.status(200).json({
             error: false,
