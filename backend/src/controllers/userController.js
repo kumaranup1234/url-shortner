@@ -146,42 +146,65 @@ async function handleLogin(req, res) {
     }
 }
 
-// Update Image
-async function updateProfileImage (req, res) {
+// Update Profile Image
+async function updateProfileImage(req, res) {
     const userId = req.user._id;
+
+    // Use multer to handle file upload
     upload.single('profileImage')(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
 
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided.' });
+        }
+
         try {
-            // Upload to Cloudinary
-            const result = await cloudinary.uploader.upload_stream(
-                { folder: 'profile-images', public_id: `${Date.now()}_${req.file.originalname}` },
-                async (error, result) => {
-                    if (error) {
-                        return res.status(500).json({ error: 'Error uploading image to Cloudinary.' });
-                    }
+            // Upload image to Cloudinary using a Promise wrapper
+            const uploadImage = () => {
+                return new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        {
+                            folder: 'profile-images',
+                            public_id: `${Date.now()}_${req.file.originalname}`, // Unique identifier
+                        },
+                        (error, result) => {
+                            if (error) {
+                                reject(error);
+                            } else {
+                                resolve(result);
+                            }
+                        }
+                    );
 
-                    // Save image URL to MongoDB
-                    const user = await User.findById(userId);
-                    user.profileImageUrl = result.secure_url;
-                    await user.save();
+                    stream.end(req.file.buffer); // End the stream by passing file buffer
+                });
+            };
 
-                    res.json({
-                        success: true,
-                        message: 'Profile image updated successfully!',
-                        imageUrl: result.secure_url,
-                    });
-                }
-            ).end(req.file.buffer);
+            // Wait for the Cloudinary upload to complete
+            const result = await uploadImage();
+
+            // Find the user and update their profile image URL
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found.' });
+            }
+
+            user.profileImageUrl = result.secure_url; // Save the Cloudinary URL in MongoDB
+            await user.save();
+
+            return res.json({
+                success: true,
+                message: 'Profile image updated successfully!',
+                imageUrl: result.secure_url,
+            });
+
         } catch (error) {
             console.error('Error:', error);
-            res.status(500).json({ error: 'Server error while uploading profile image.' });
+            return res.status(500).json({ error: 'Server error while uploading profile image.' });
         }
     });
-
-
 }
 
 
