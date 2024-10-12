@@ -152,18 +152,18 @@ async function updateProfileImage(req, res) {
 
     upload.single('profileImage')(req, res, async (err) => {
         if (err) {
-            console.log('Multer error:', err);
+            //console.log('Multer error:', err);
             return res.status(400).json({ error: err.message });
         }
 
         if (!req.file) {
-            console.log('No file received in the request.');
+            //console.log('No file received in the request.');
             return res.status(400).json({ error: 'No image file provided.' });
         }
 
         try {
             // Log the incoming file details
-            console.log('File received:', req.file.originalname);
+            //console.log('File received:', req.file.originalname);
 
             const uploadImage = () => {
                 return new Promise((resolve, reject) => {
@@ -174,10 +174,10 @@ async function updateProfileImage(req, res) {
                         },
                         (error, result) => {
                             if (error) {
-                                console.log('Cloudinary upload error:', error);
+                                //console.log('Cloudinary upload error:', error);
                                 reject(error);
                             } else {
-                                console.log('Cloudinary upload result:', result);
+                                //console.log('Cloudinary upload result:', result);
                                 resolve(result);
                             }
                         }
@@ -189,21 +189,21 @@ async function updateProfileImage(req, res) {
             const result = await uploadImage();
 
             // Log the Cloudinary URL
-            console.log('Cloudinary URL:', result.secure_url);
+            //console.log('Cloudinary URL:', result.secure_url);
 
             const user = await User.findById(userId);
             if (!user) {
-                console.log('User not found:', userId);
+                //console.log('User not found:', userId);
                 return res.status(404).json({ error: 'User not found.' });
             }
 
             // Log if user exists and before updating
-            console.log('User found, updating profileImageUrl');
+            //console.log('User found, updating profileImageUrl');
 
             user.profileImageUrl = result.secure_url;
             await user.save();
 
-            console.log('Profile image updated successfully for user:', userId);
+            //console.log('Profile image updated successfully for user:', userId);
 
             return res.json({
                 success: true,
@@ -212,7 +212,7 @@ async function updateProfileImage(req, res) {
             });
 
         } catch (error) {
-            console.error('Error in updateProfileImage:', error);
+            //console.error('Error in updateProfileImage:', error);
             return res.status(500).json({ error: 'Server error while uploading profile image.' });
         }
     });
