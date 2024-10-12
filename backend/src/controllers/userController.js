@@ -150,49 +150,60 @@ async function handleLogin(req, res) {
 async function updateProfileImage(req, res) {
     const userId = req.user._id;
 
-    // Use multer to handle file upload
     upload.single('profileImage')(req, res, async (err) => {
         if (err) {
+            console.log('Multer error:', err);
             return res.status(400).json({ error: err.message });
         }
 
         if (!req.file) {
+            console.log('No file received in the request.');
             return res.status(400).json({ error: 'No image file provided.' });
         }
 
         try {
-            // Upload image to Cloudinary using a Promise wrapper
+            // Log the incoming file details
+            console.log('File received:', req.file.originalname);
+
             const uploadImage = () => {
                 return new Promise((resolve, reject) => {
                     const stream = cloudinary.uploader.upload_stream(
                         {
                             folder: 'profile-images',
-                            public_id: `${Date.now()}_${req.file.originalname}`, // Unique identifier
+                            public_id: `${Date.now()}_${req.file.originalname}`,
                         },
                         (error, result) => {
                             if (error) {
+                                console.log('Cloudinary upload error:', error);
                                 reject(error);
                             } else {
+                                console.log('Cloudinary upload result:', result);
                                 resolve(result);
                             }
                         }
                     );
-
-                    stream.end(req.file.buffer); // End the stream by passing file buffer
+                    stream.end(req.file.buffer);
                 });
             };
 
-            // Wait for the Cloudinary upload to complete
             const result = await uploadImage();
 
-            // Find the user and update their profile image URL
+            // Log the Cloudinary URL
+            console.log('Cloudinary URL:', result.secure_url);
+
             const user = await User.findById(userId);
             if (!user) {
+                console.log('User not found:', userId);
                 return res.status(404).json({ error: 'User not found.' });
             }
 
-            user.profileImageUrl = result.secure_url; // Save the Cloudinary URL in MongoDB
+            // Log if user exists and before updating
+            console.log('User found, updating profileImageUrl');
+
+            user.profileImageUrl = result.secure_url;
             await user.save();
+
+            console.log('Profile image updated successfully for user:', userId);
 
             return res.json({
                 success: true,
@@ -201,11 +212,12 @@ async function updateProfileImage(req, res) {
             });
 
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error in updateProfileImage:', error);
             return res.status(500).json({ error: 'Server error while uploading profile image.' });
         }
     });
 }
+
 
 
 async function handleLogout(req, res) {
