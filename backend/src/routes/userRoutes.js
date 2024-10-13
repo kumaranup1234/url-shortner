@@ -44,7 +44,7 @@ router.post("/password-reset", resetPasswordLimiter, authenticateUser, resetPass
 // Update Password through Link
 router.post("/reset", resetPasswordLimiter, forgotPassword);
 
-// Update password
+// Update password through link
 router.post("/reset/:resetToken", forgotPasswordReset)
 
 // Update User Image

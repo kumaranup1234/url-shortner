@@ -159,11 +159,18 @@ async function UpdateUrl(req, res) {
 
 async function deleteUrl(req, res){
     const shortId = req.params.shortUrlId;
+    const userId = req.user._id;
 
     try {
         const deleteUrl = await Url.deleteOne({ shortUrl: shortId });
+
+        // delete the url from the user url array
+        await User.updateOne(
+            { id: userId },
+            { $pull: { urls: shortId } },
+        )
         return res.status(200).json({
-            error: false,
+            success: true,
             deleteUrl
         })
 
@@ -191,7 +198,6 @@ async function getUserUrls(req, res){
             });
         }
         //console.log(userUrls)
-
         return res.status(200).json({
             error: false,
             userUrls
