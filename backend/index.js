@@ -12,6 +12,7 @@ const { authenticateUser } = require('./src/middleware/authenticate');
 const { authenticateApiKey } = require('./src/middleware/authenticate'); // Middleware for API key authentication
 
 const app = express();
+app.set('trust proxy', 1)
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
