@@ -10,7 +10,8 @@ const {
     regenerateApiKey,
     getAllCount,
     handleStatus,
-    updateProfileImage
+    updateProfileImage,
+    resetPassword
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
@@ -33,6 +34,9 @@ router.get('/profile', authenticateUser, getUserProfile);
 
 // Update User Profile
 router.put('/profile', authenticateUser, updateUserProfile);
+
+// Update Password Without OTP
+router.post("/password-reset", authenticateUser, resetPassword)
 
 // Update User Image
 router.post('/profile-image', authenticateUser, updateProfileImage)
