@@ -162,7 +162,10 @@ async function deleteUrl(req, res){
     const userId = req.user._id;
 
     try {
-        const urlToDelete = await Url.deleteOne({ shortUrl: shortId });
+        const urlToDelete = await Url.findOne({ shortUrl: shortId });
+
+        // Delete the URL document
+        await Url.deleteOne({ shortUrl: shortId });
 
         // delete the url from the user url array
         await User.updateOne(
@@ -171,7 +174,7 @@ async function deleteUrl(req, res){
         )
         return res.status(200).json({
             success: true,
-            urlToDelete
+            message: "URL deleted successfully",
         })
 
     } catch (error){
