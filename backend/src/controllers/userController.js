@@ -133,7 +133,8 @@ async function handleLogin(req, res) {
             success: true,
             user: {
                 username: user.username,
-                email: user.email
+                email: user.email,
+                profileImage: user.profileImageUrl
             },
             message: 'Login successful',
         });
