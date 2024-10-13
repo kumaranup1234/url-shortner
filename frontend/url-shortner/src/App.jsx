@@ -19,7 +19,8 @@ import {useRecoilState} from "recoil";
 import {authState} from "./recoil/atoms.js";
 import {Toaster} from "react-hot-toast";
 import Settings from "./Pages/Settings.jsx";
-import Footer from "./Components/Footer.jsx";
+import ForgotPassword from "./Pages/ForgotPassword.jsx";
+import ResetPassword from "./Pages/ResetPassword.jsx";
 
 const App = () => {
     // Set default state to indicate not logged in
@@ -57,6 +58,8 @@ const App = () => {
                 <Route path="/shortened" element={<Shortened/>}/>
                 <Route path="/links" element={<Links/>}/>
                 <Route path="/settings" element={<Settings/>} />
+                <Route path="/reset" element={<ForgotPassword />} />
+                <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
                 <Route path="/analytics/:shortenedUrl" element={<Analytics/>}/>
                 <Route path="/charts" element={<ClicksLineChart shortUrl="lu9yK_QGi"/>}/>
                 <Route path="/pie" element={<DevicePieChart shortUrl="lu9yK_QGi"/>}/>

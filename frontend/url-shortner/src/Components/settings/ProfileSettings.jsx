@@ -7,14 +7,29 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 import {authState} from "../../recoil/atoms.js";
 
 const ProfileSettings = () => {
-    const [email, setEmail] = useState("")
-    const [name, setName] = useState("")
-    const setAuthState = useSetRecoilState(authState);
     const { user } = useRecoilValue(authState);
+    const [email, setEmail] = useState(user.email || "")
+    const [name, setName] = useState(user.username || "")
+    const [selectedImage, setSelectedImage] = useState("")
+    const setAuthState = useSetRecoilState(authState);
+
+
+    const initialEmail = user.email || "";
+    const initialName = user.username || "";
+
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedImage(URL.createObjectURL(file));
+        }
+    };
 
     // Handle profile image upload with size validation
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
+        // Get the file from the input directly
+        const fileInput = document.querySelector('input[type="file"]');
+        const file = fileInput.files[0]; // Accessing the file directly from the input
 
         // Check if file size is larger than 2MB (2 * 1024 * 1024 bytes)
         const fileSizeLimit = 2 * 1024 * 1024;
@@ -57,10 +72,21 @@ const ProfileSettings = () => {
             return;
         }
 
-        const myPromise = axiosInstance.put('/api/users/profile', {
-            username: name,
-            email: email,
-        });
+        // Prepare data to be sent
+        const dataToSend = {};
+        if (name !== initialName) {
+            dataToSend.username = name; // Only include if changed
+        }
+        if (email !== initialEmail) {
+            dataToSend.email = email; // Only include if changed
+        }
+
+        if (Object.keys(dataToSend).length === 0) {
+            toast.success("No changes detected!");
+            return; // No changes to send
+        }
+
+        const myPromise = axiosInstance.put('/api/users/profile', dataToSend);
 
         toast.promise(myPromise, {
             loading: 'Updating...',
@@ -86,13 +112,20 @@ const ProfileSettings = () => {
                     </p>
                 </div>
                 <div className="flex justify-center p-8">
-                    <img src={user.profileImage || userIcon} alt="user icon" className="w-10 h-10 rounded-full"/>
+                    {selectedImage ? (
+                        <img src={selectedImage} alt="Selected" className="w-10 h-10 rounded-full" />
+                    ) : (
+                        <img src={user.profileImage || userIcon} alt="user icon" className="w-10 h-10 rounded-full" />
+                    )}
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageUpload}
+                        onChange={handleImageChange}
                         className="ml-5 mt-1"
                     />
+                    <button onClick={handleImageUpload} className="border-gray-300 bg-teal-900 text-white ml-1 rounded border p-2">
+                        Upload
+                    </button>
                 </div>
             </div>
 
@@ -111,7 +144,7 @@ const ProfileSettings = () => {
                             <input
                                 id="name"
                                 type="text"
-                                value={user.username}
+                                value={name}
                                 placeholder="Enter your name"
                                 className="p-2 border border-gray-300 rounded-md w-full"
                                 onChange={(e) => setName(e.target.value)}
@@ -125,7 +158,7 @@ const ProfileSettings = () => {
                             <input
                                 id="email"
                                 type="email"
-                                value={user.email}
+                                value={email}
                                 placeholder="Enter your email"
                                 className="p-2 border border-gray-300 rounded-md w-full"
                                 onChange={(e) => setEmail(e.target.value)}

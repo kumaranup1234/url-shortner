@@ -73,12 +73,19 @@ const Navbar = () => {
                         </NavLink>
                     </div>
                 ) : (
-                    <div className="relative flex items-center text-white">
-                        <FaUserCircle
-                            className="w-10 h-9 mr-2 cursor-pointer"
-                            onClick={toggleDropdown}
-                        />
-                        <h1>{user.username}</h1>
+                    <div className="relative flex items-center text-white" onClick={toggleDropdown}>
+                        {user?.profileImage ? (
+                            <img
+                                src={user.profileImage}
+                                alt="User Profile"
+                                className="w-10 h-9 rounded-full mr-2 cursor-pointer"
+                            />
+                        ) : (
+                            <FaUserCircle
+                                className="w-10 h-9 mr-2 cursor-pointer"
+                            />
+                        )}
+                        <h1 className="cursor-pointer">{user.username}</h1>
                         {showDropdown && (
                             <div ref={dropdownRef} className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
                                 {/* Dropdown Menu */}

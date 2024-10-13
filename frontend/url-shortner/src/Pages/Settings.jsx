@@ -33,7 +33,9 @@ const Settings = () => {
                     {Object.keys(componentMap).map((option) => (
                         <button
                             key={option}
-                            className="flex items-center space-x-2"
+                            className={`flex items-center space-x-2 p-2 rounded ${
+                                activeOption === option ? `bg-teal-600 text-white` : `bg-gray-200 text-black`
+                            }`}
                             onClick={() => setActiveOption(option)}>
                             <img src={componentMap[option].icon} alt={`${option} icon`}
                                  className="w-6 h-6"/> {/* Render the icon */}
