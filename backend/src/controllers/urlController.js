@@ -166,7 +166,7 @@ async function deleteUrl(req, res){
 
         // delete the url from the user url array
         await User.updateOne(
-            { id: userId },
+            { _id: userId },
             { $pull: { urls: shortId } },
         )
         return res.status(200).json({
