@@ -6,6 +6,7 @@ const Url = require('../models/Url');
 const { v4: UUIDv4} = require("uuid")
 const cloudinary = require('../config/cloudinaryConfig');
 const upload = require('../utils/multerConfig');
+const {sendEmail} = require("../utils/sendEmail");
 
 // Signup Handler
 async function handleSignup(req, res) {
@@ -524,6 +525,51 @@ async function getAllCount(req, res) {
     }
 }
 
+async function forgotPassword(req, res) {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({
+            error: true,
+            message: 'Email is required',
+        });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        return res.status(400).json({
+            error: true,
+            message: 'Email not registered',
+        });
+    }
+
+    const resetToken = await user.generatePasswordResetToken();
+    await user.save();
+
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const subject = 'Reset Password';
+    const message = `You can reset your password by clicking <a href="${resetPasswordUrl}" target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this, kindly ignore.`;
+
+    try {
+        await sendEmail(email, subject, message);
+
+        res.status(200).json({
+            success: true,
+            message: `Reset password token has been sent to ${email} successfully`,
+        });
+    } catch (error) {
+        user.forgotPasswordToken = undefined;
+        user.forgotPasswordExpiry = undefined;
+        await user.save();
+
+        return res.status(500).json({
+            error: true,
+            message: 'Something wrong try again',
+        });
+    }
+}
+
 
 module.exports = {
     handleSignup,
@@ -536,5 +582,6 @@ module.exports = {
     getAllCount,
     handleStatus,
     updateProfileImage,
-    resetPassword
+    resetPassword,
+    forgotPassword
 };

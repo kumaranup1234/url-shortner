@@ -11,11 +11,13 @@ const {
     getAllCount,
     handleStatus,
     updateProfileImage,
-    resetPassword
+    resetPassword,
+    forgotPassword
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
 const { checkAuthStatus } = require('../middleware/checkAuthStatus');
+const resetPasswordLimiter = require("../middleware/resetPasswordRateLimiter");
 
 // User Registration
 router.post('/signup', handleSignup);
@@ -35,8 +37,11 @@ router.get('/profile', authenticateUser, getUserProfile);
 // Update User Profile
 router.put('/profile', authenticateUser, updateUserProfile);
 
-// Update Password Without OTP
-router.post("/password-reset", authenticateUser, resetPassword)
+// Update Password Without Link
+router.post("/password-reset", resetPasswordLimiter, authenticateUser, resetPassword)
+
+// Update Password through Link
+router.post("/reset", resetPasswordLimiter, forgotPassword);
 
 // Update User Image
 router.post('/profile-image', authenticateUser, updateProfileImage)

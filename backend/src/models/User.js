@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
+const crypto = require("crypto");
 
 const SALT_ROUNDS = 10;
 
@@ -28,6 +29,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: null, // Initially no profile image
     },
+    forgotPasswordToken: String,
+    forgotPasswordExpiry: Date,
     createdAt: {
         type: Date,
         default: Date.now,
@@ -56,6 +59,15 @@ UserSchema.pre("save", async function (next) {
 UserSchema.methods.validatePassword = async function (inputPassword) {
     return bcrypt.compare(inputPassword, this.password);
 };
+
+UserSchema.methods.generatePasswordResetToken = async function() {
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    this.forgotPasswordToken = crypto.createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+    this.forgotPasswordExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes from now
+    return resetToken;
+}
 
 const User = mongoose.model("User", UserSchema);
 
