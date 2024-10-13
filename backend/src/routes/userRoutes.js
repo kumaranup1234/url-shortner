@@ -12,7 +12,8 @@ const {
     handleStatus,
     updateProfileImage,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    forgotPasswordReset
 } = require('../controllers/userController');
 
 const { authenticateUser } = require('../middleware/authenticate');
@@ -42,6 +43,9 @@ router.post("/password-reset", resetPasswordLimiter, authenticateUser, resetPass
 
 // Update Password through Link
 router.post("/reset", resetPasswordLimiter, forgotPassword);
+
+// Update password
+router.post("/reset/:resetToken", forgotPasswordReset)
 
 // Update User Image
 router.post('/profile-image', authenticateUser, updateProfileImage)

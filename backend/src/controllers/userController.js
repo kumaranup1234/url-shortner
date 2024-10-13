@@ -571,6 +571,43 @@ async function forgotPassword(req, res) {
 }
 
 
+async function forgotPasswordReset(req, res) {
+    const { resetToken } = req.params;
+    const { password } = req.body;
+
+    const forgotPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    if (!password) {
+        return res.status(400).json({
+            error: true,
+            message: 'Password is required',
+        });
+    }
+
+    const user = await User.findOne({
+        forgotPasswordToken,
+        forgotPasswordExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        return res.status(400).json({
+            error: true,
+            message: 'Token is invalid or expired Please try again!',
+        });
+    }
+
+    user.password = password;
+    user.forgotPasswordExpiry = undefined;
+    user.forgotPasswordToken = undefined;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Password changed successfully',
+    });
+}
+
+
 module.exports = {
     handleSignup,
     handleLogin,
@@ -583,5 +620,6 @@ module.exports = {
     handleStatus,
     updateProfileImage,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    forgotPasswordReset
 };
