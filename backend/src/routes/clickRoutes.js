@@ -10,7 +10,7 @@ const {
 } = require('../controllers/clickController');
 const { authenticateUser } = require('../middleware/authenticate');
 
-// Get All Clicks for a URL
+// Get All Clicks for a URL for a span of 10 days
 router.get('/clicks/:shortUrlId', authenticateUser, getAllClicks);
 
 // Get Clicks by Device Type

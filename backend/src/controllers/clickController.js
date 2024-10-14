@@ -17,6 +17,8 @@ async function getAllClicks(req, res) {
         }
 
         const totalClicks = urlDoc.totalClicks;
+        let maxClick = 0;
+        let maxClicksDate = 0;
 
         // Get today's date and calculate the date 10 days ago
         const today = new Date();
@@ -61,14 +63,24 @@ async function getAllClicks(req, res) {
         });
 
         // Create an array of objects with dates and counts for the frontend
-        const clicksByDate = Object.keys(dateCounts).map(date => ({
-            date,
-            count: dateCounts[date]
-        }));
+        const clicksByDate = Object.keys(dateCounts).map((date) => {
+            const totalClicks = dateCounts[date];
+            if (totalClicks > maxClick){
+                maxClick = totalClicks;
+                maxClicksDate = date;
+            }
+
+            return{
+                date,
+                count: totalClicks
+            }
+        });
 
         return res.status(200).json({
             error: false,
             totalClicks,
+            maxClick,
+            maxClicksDate,
             clicksByDate
         });
     } catch (error) {
