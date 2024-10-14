@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import axiosInstance from "../utils/axiosInstance.js";
+import {topDateState, totalClicksState} from "../recoil/atoms.js";
+import {useSetRecoilState} from "recoil";
 
 // Custom Tooltip Component
 const CustomTooltip = ({ active, payload, label }) => {
@@ -24,12 +26,19 @@ const formatXAxis = (tickItem) => {
 
 const ClicksLineChart = ({ shortUrl }) => {
     const [clickData, setClickData] = useState([]);
+    const setTopDate = useSetRecoilState(topDateState);
+    const setTotalClicks = useSetRecoilState(totalClicksState);
 
     const getClickData = async () => {
         try {
             const response = await axiosInstance.get(`/api/urls/clicks/${shortUrl}`);
-            console.log(response);
+            console.log("response of the clicks line chart",response);
             setClickData(response.data.clicksByDate);
+            setTopDate({
+                date: response.data.maxClicksDate,
+                clicks: response.data.maxClick
+            })
+            setTotalClicks(response.data.totalClicks);
         } catch (e) {
             console.error('Error fetching click data:', e);
         }
@@ -40,8 +49,8 @@ const ClicksLineChart = ({ shortUrl }) => {
     }, [shortUrl]);
 
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-lg mx-auto" style={{ width: '45%', height: '35w0px', overflow: 'hidden' }}>
-            <p className="font-semibold text-xl mb-2 text-left ml-10">Clicks & Scans Over Time</p>
+        <div className="bg-gray-200 border border-gray-200 rounded p-4 shadow-lg mx-auto" style={{ width: '100%', height: '365px', overflow: 'hidden' }}>
+            <h2 className="text-xl font-bold text-center mb-2 ml-10">Clicks & Scans Over Time</h2>
             <ResponsiveContainer width="90%" height="90%">
                 <LineChart data={clickData} >
                     <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false} />

@@ -52,9 +52,9 @@ const ReferrerBarChart = ({ shortUrl }) => {
     };
 
     return (
-        <div className="bg-gray-200 p-4 border rounded w-1/2">
-            <h2 className="text-xl font-bold mb-4">Referrer Bar Chart</h2>
-            <ResponsiveContainer width="100%" height={300}>
+        <div className="bg-gray-200 p-4 border rounded w-full">
+            <h2 className="text-xl text-center font-bold mb-4">Referrer Bar Chart</h2>
+            <ResponsiveContainer width="100%" height={340}>
                 <BarChart
                     data={referrerData}
                     margin={{ top: 10, right: 10, left: 10, bottom: 10 }}

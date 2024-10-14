@@ -11,7 +11,7 @@ const SecuritySettings = () => {
     };
 
     return (
-        <div>
+        <div className="h-screen">
             <div className="mt-10 bg-gray-100 mr-24 w-10/12">
                 <div className="flex mb-4 bg-teal-900 text-white p-4">
                     <p className="text-white text-center">Update password</p>

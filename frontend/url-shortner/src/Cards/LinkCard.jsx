@@ -16,7 +16,8 @@ import ShareButton from "../Components/ShareButton.jsx";
 import UseOutsideClick from "../hooks/useOutsideClick.jsx";
 import axiosInstance from "../utils/axiosInstance.js";
 
-const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess, onDeleteSuccess }) => {
+
+const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEditSuccess, onDeleteSuccess }) => {
     const maxLength = 50;
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -107,7 +108,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, onEditSuccess, onDe
                     <div className="flex items-center">
                         <img src={graphIcon} alt="Graph Icon" className="mr-1"/>
                         <Link to={`/analytics/${shortenedUrl}`} className="text-sm text-gray-700">
-                            Click data
+                            {totalClicks}
                         </Link>
                     </div>
 

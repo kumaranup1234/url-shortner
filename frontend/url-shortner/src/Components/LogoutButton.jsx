@@ -1,5 +1,5 @@
 import {useRecoilState, useSetRecoilState} from 'recoil';
-import { authState } from '../recoil/atoms';
+import {authState, topDateState, topLocationState, totalClicksState} from '../recoil/atoms';
 import axiosInstance from '../utils/axiosInstance.js';
 import {FaSignOutAlt} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
@@ -7,6 +7,9 @@ import {useNavigate} from "react-router-dom";
 const LogoutButton = ({ setShowDropdown }) => {
     const [auth, setAuth] = useRecoilState(authState);
     const setAuthState = useSetRecoilState(authState);
+    const setTopLocation = useSetRecoilState(topLocationState);
+    const setTopDate = useSetRecoilState(topDateState)
+    const setTotalClicks = useSetRecoilState(totalClicksState)
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -19,6 +22,15 @@ const LogoutButton = ({ setShowDropdown }) => {
                     ...prevState,
                     isLoggedIn: false
                 }));
+                setTotalClicks(0);
+                setTopLocation({
+                    name: "",
+                    clicks: 0
+                })
+                setTopDate({
+                    date: "",
+                    clicks: 0
+                })
                 setShowDropdown(false);
                 navigate("/")
             }

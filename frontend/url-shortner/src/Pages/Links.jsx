@@ -60,6 +60,7 @@ const Links = () => {
                                             originalUrl={link.originalUrl}
                                             shortenedUrl={link.shortUrl}
                                             qrCode={link?.qrCode}
+                                            totalClicks={link.totalClicks}
                                             date={new Date(link.createdAt).toLocaleDateString()}
                                             onEditSuccess={getAllLinks}
                                             onDeleteSuccess={getAllLinks}

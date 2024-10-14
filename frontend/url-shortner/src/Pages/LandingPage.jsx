@@ -52,10 +52,7 @@ const LandingPage = () => {
     }
     return (
         <div>
-            <div className="text-center mt-6 mb-8 border-b-1 border-gray-500 shadow-md pb-4">
-                <p className="text-5xl text-blue-700 font-bold">Short URL</p>
-            </div>
-            <div className="max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg">
+            <div className="max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg mt-16">
                 <div className="text-center">
                     <p className="text-3xl text-gray-700 font-bold">Paste the URL to be shortened</p>
                 </div>

@@ -21,6 +21,10 @@ import {Toaster} from "react-hot-toast";
 import Settings from "./Pages/Settings.jsx";
 import ForgotPassword from "./Pages/ForgotPassword.jsx";
 import ResetPassword from "./Pages/ResetPassword.jsx";
+import ApiDocs from "./Pages/ApiDocs.jsx";
+import MainFooter from "./Components/MainFooter.jsx";
+import TermsOfService from "./Components/TermsOfService.jsx";
+import PrivacyPolicy from "./Components/PrivacyPolicy.jsx";
 
 const App = () => {
     // Set default state to indicate not logged in
@@ -60,15 +64,12 @@ const App = () => {
                 <Route path="/settings" element={<Settings/>} />
                 <Route path="/reset" element={<ForgotPassword />} />
                 <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+                <Route path="/api-docs" element={<ApiDocs />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/analytics/:shortenedUrl" element={<Analytics/>}/>
-                <Route path="/charts" element={<ClicksLineChart shortUrl="lu9yK_QGi"/>}/>
-                <Route path="/pie" element={<DevicePieChart shortUrl="lu9yK_QGi"/>}/>
-                <Route path="/bar" element={<ReferrerBarChart shortUrl="lu9yK_QGi"/>}/>
-                <Route path="/barBrowser" element={<BrowserBarChart shortUrl="lu9yK_QGi"/>}/>
-                <Route path="/location" element={<LocationList shortUrl="lu9yK_QGi"/>}/>
-                <Route path="/top" element={<TopPerformance startingDate="Sep 6" endingDate="Sep 12, 2024" clicks={205}
-                                                            bestDay="Sep 05, 2024" place=""/>}/>
             </Routes>
+            <MainFooter />
         </>
     );
 };

@@ -4,7 +4,7 @@ import Stats from "../assets/icon-statistics.png"
 const Footer = () => {
     return (
         <div>
-            <div className="mt-8">
+            <div className="mt-8 ml-20">
                 <p className="text-2xl text-gray-700 font-bold ml-64">Simple and fast URL shortener!</p>
                 <p className="text-left ml-64 mt-2">
                     ShortURL allows to shorten long links from Instagram, Facebook, YouTube, Twitter, Linked In,
@@ -13,7 +13,7 @@ const Footer = () => {
                     <br/>check how many clicks it received.
                 </p>
             </div>
-            <div className="mt-8">
+            <div className="mt-8 ml-20">
                 <p className="text-2xl text-gray-700 font-bold ml-64">Shorten, share and track</p>
                 <p className="text-left ml-64 mt-2">
                     Your shortened URLs can be used in publications, documents, advertisements, blogs, forums, instant<br/>
@@ -21,7 +21,7 @@ const Footer = () => {
                     number of hits from your URL with our click counter.
                 </p>
             </div>
-            <div className="flex justify-center mt-10 space-x-6">
+            <div className="flex justify-center mt-10 space-x-6 p-6">
                 <div>
                     <img src={Like} alt="Shorten" className="ml-24"/>
                     <h3 className="font-bold text-gray-600 ml-28">Easy</h3>
@@ -43,12 +43,6 @@ const Footer = () => {
                         Check the number of clicks that your<br/>
                         shortened URL received
                     </p>
-                </div>
-            </div>
-            <div className="mt-20 bg-gray-800 pb-6">
-                <div className="w-full h-1 bg-blue-600 my-4"></div>
-                <div>
-                    <p className="text-center text-white">© 2024 ShortUrl - Tool to shorten a long link</p>
                 </div>
             </div>
         </div>

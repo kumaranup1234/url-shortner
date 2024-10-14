@@ -28,7 +28,7 @@ const Navbar = () => {
         <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
             {/* Left: Logo */}
             <div className="flex items-center space-x-6 ml-16">
-                <div className="text-white font-bold text-3xl">T.LY</div>
+                <div className="text-white font-bold text-3xl">Trim.URL</div>
                 {isLoggedIn && (
                     <div className="hidden md:flex space-x-4">
                         <NavLink
@@ -40,7 +40,7 @@ const Navbar = () => {
                             Your Links
                         </NavLink>
                         <NavLink
-                            to="/docs"
+                            to="/api-docs"
                             className={({ isActive }) =>
                                 isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
                             }

@@ -78,9 +78,9 @@ const DevicePieChart = ({ shortUrl }) => {
     };
 
     return (
-        <div className="bg-gray-200 p-4 border rounded-lg inline-flex items-center space-x-6">
+        <div className="bg-gray-200 p-4 border rounded-lg flex items-center space-x-6">
             {/* Pie Chart */}
-            <div className="relative w-60 h-60 flex items-center justify-center">
+            <div className="relative w-96 h-96 flex items-center justify-center">
                 <ResponsiveContainer width="100%" height={400}>
                     <PieChart>
                         <Pie
