@@ -1,49 +1,46 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PasswordInput from "../Components/PasswordInput.jsx";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useSetRecoilState} from "recoil";
 import {validateEmail} from "../utils/helper.js";
 import axiosInstance from "../utils/axiosInstance.js";
 import {authState} from "../recoil/atoms.js";
+import toast from "react-hot-toast";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
     const setAuth = useSetRecoilState(authState);
-    const { isLoggedIn } = useRecoilValue(authState);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         if (!validateEmail(email)) {
-            setError("Please enter a valid email");
+            toast.error("Please enter a valid email")
             return;
         }
         if (!password) {
-            setError("Please enter a valid password!");
+            toast.error("Please enter a valid password!");
+            return;
         }
-
-        setError("");
+        const toastId = toast.loading("Logging in...");
         try {
             const response = await axiosInstance.post('/api/users/login', {
                 email: email,
                 password: password
             })
-
-            //console.log(response)
-            //console.log(response.data.success)
             if (response.data.success){
                 setAuth({ isLoggedIn: true, user: response.data.user });
             }
-            console.log(isLoggedIn)
+            toast.dismiss(toastId);
             navigate("/links")
         } catch (error){
+            toast.dismiss(toastId);
             if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
+                toast.error(error.response.data.message);
             } else {
-                setError("An unexpected error occurred. Please try again");
+                toast.error("An unexpected error occurred. Please try again");
             }
         }
     }
@@ -51,11 +48,6 @@ const Login = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <div className="flex items-center justify-center mb-10">
-                <p className="text-4xl text-blue-700 font-extrabold tracking-widest border-b-4 border-blue-700 pb-2">
-                    Short URL
-                </p>
-            </div>
             <div className="flex items-center justify-center">
                 <div className="w-96 border rounded-lg bg-white px-7 py-10 shadow-lg">
                     <form onSubmit={handleLogin}>
@@ -76,10 +68,9 @@ const Login = () => {
                                 Forgot password?
                             </Link>
                         </div>
-                        {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
                         <button
                             type="submit"
-                            className="w-full text-sm bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-800 transition-colors duration-300"
+                            className="w-full text-sm bg-teal-900 text-white py-2 rounded-lg hover:bg-blue-800 transition-colors duration-300"
                         >
                             Login
                         </button>

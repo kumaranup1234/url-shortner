@@ -24,11 +24,19 @@ const Navbar = () => {
         navigate(path);
     };
 
+    const handleLogoClick = () => {
+        if (isLoggedIn){
+            navigate("/links");
+        }else{
+            navigate("/");
+        }
+    }
+
     return (
         <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
             {/* Left: Logo */}
             <div className="flex items-center space-x-6 ml-16">
-                <div className="text-white font-bold text-3xl">Trim.URL</div>
+                <div onClick={handleLogoClick} className="text-white font-bold text-2xl cursor-pointer">Trim.URL</div>
                 {isLoggedIn && (
                     <div className="hidden md:flex space-x-4">
                         <NavLink
@@ -73,7 +81,7 @@ const Navbar = () => {
                         </NavLink>
                     </div>
                 ) : (
-                    <div className="relative flex items-center text-white" onClick={toggleDropdown}>
+                    <div ref={dropdownRef} className="relative flex items-center text-white" onClick={toggleDropdown}>
                         {user?.profileImage ? (
                             <img
                                 src={user.profileImage}
@@ -87,7 +95,7 @@ const Navbar = () => {
                         )}
                         <h1 className="cursor-pointer">{user.username}</h1>
                         {showDropdown && (
-                            <div ref={dropdownRef} className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
+                            <div className="absolute right-2 mt-36 w-40 bg-white shadow-lg rounded py-2">
                                 {/* Dropdown Menu */}
                                 <NavLink
                                     to="/settings"

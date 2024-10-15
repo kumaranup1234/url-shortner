@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import axiosInstance from "../utils/axiosInstance.js";
+import {InfinitySpin} from "react-loader-spinner";
 
 const DevicePieChart = ({ shortUrl }) => {
     const [deviceData, setDeviceData] = useState([]);
     const [totalClicks, setTotalClicks] = useState(0);
     const [activeIndex, setActiveIndex] = useState(null);
     const [centerText, setCenterText] = useState('Total: 0');
+    const [loading, setLoading] = useState(true);
 
      // Dummy data for testing
      const dummyData = [
@@ -37,6 +39,8 @@ const DevicePieChart = ({ shortUrl }) => {
             console.log("Total Clicks: ", total);
         } catch (error) {
             console.error('Error fetching device data:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -78,55 +82,74 @@ const DevicePieChart = ({ shortUrl }) => {
     };
 
     return (
-        <div className="bg-gray-200 p-4 border rounded-lg flex items-center space-x-6">
-            {/* Pie Chart */}
-            <div className="relative w-96 h-96 flex items-center justify-center">
-                <ResponsiveContainer width="100%" height={400}>
-                    <PieChart>
-                        <Pie
-                            data={deviceData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={90}
-                            outerRadius={110}
-                            activeIndex={activeIndex}
-                            activeShape={renderActiveShape}
-                            dataKey="value"
-                            onMouseEnter={onPieEnter}
-                            onMouseLeave={onPieLeave}
-                        >
-                            {deviceData.map((entry, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={COLORS[index % COLORS.length]}
-                                    stroke="none"
-                                />
-                            ))}
-                        </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
-
-                {/* Centered text */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <p className="text-xl font-bold">{centerText}</p>
+        <div className="shadow-lg rounded-lg">
+            {loading ?
+                <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                    <InfinitySpin
+                        visible={true}
+                        width="200"
+                        color="#4fa94d"
+                        ariaLabel="infinity-spin-loading"
+                    />
+                    <p>Preparing your graph data...</p>
                 </div>
-            </div>
+                : deviceData.length > 0 ? <div className="bg-gray-200 rounded-lg p-4">
+                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
+                    <div className="flex items-center space-x-6">
+                        {/* Pie Chart */}
+                        <div className="relative w-96 flex items-center justify-center">
+                            <ResponsiveContainer width="100%" height={345}>
+                                <PieChart>
+                                    <Pie
+                                        data={deviceData}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={90}
+                                        outerRadius={110}
+                                        activeIndex={activeIndex}
+                                        activeShape={renderActiveShape}
+                                        dataKey="value"
+                                        onMouseEnter={onPieEnter}
+                                        onMouseLeave={onPieLeave}
+                                    >
+                                        {deviceData.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={COLORS[index % COLORS.length]}
+                                                stroke="none"
+                                            />
+                                        ))}
+                                    </Pie>
+                                </PieChart>
+                            </ResponsiveContainer>
 
-            {/* List of devices and colors */}
-            <div className="flex flex-col justify-center items-start space-y-2">
-                <ul>
-                    {deviceData.map((entry, index) => (
-                        <li key={index} className="flex items-center space-x-2">
+                            {/* Centered text */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <p className="text-xl font-bold">{centerText}</p>
+                            </div>
+                        </div>
+
+                        {/* List of devices and colors */}
+                        <div className="flex flex-col justify-center items-start space-y-2">
+                            <ul>
+                                {deviceData.map((entry, index) => (
+                                    <li key={index} className="flex items-center space-x-2">
                             <span
                                 className="inline-block w-4 h-4 rounded"
                                 style={{backgroundColor: COLORS[index % COLORS.length]}}
                             ></span>
-                            <span className="font-semibold">{entry.name}</span>
-                            <span>{entry.value}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                                        <span className="font-semibold">{entry.name}</span>
+                                        <span>{entry.value}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div> : <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                    <p className="text-lg font-semibold">
+                        No data available.
+                    </p>
+                </div>}
         </div>
     );
 };

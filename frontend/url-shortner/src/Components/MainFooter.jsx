@@ -14,8 +14,13 @@ const MainFooter = () => {
                     <Link to="/terms-of-service" className="text-white hover:text-teal-300 text-sm">
                         Terms of Service
                     </Link>
-                    <a href="https://github.com/kumaranup1234" target="_blank" className="text-white hover:text-teal-300 text-sm">
+                    <a href="https://github.com/kumaranup1234" target="_blank"
+                       className="text-white hover:text-teal-300 text-sm">
                         GitHub
+                    </a>
+                    <a href="https://icons8.com/" target="_blank"
+                       className="text-white hover:text-teal-300 text-sm underline">
+                        Icons by Icons8
                     </a>
                 </div>
             </div>

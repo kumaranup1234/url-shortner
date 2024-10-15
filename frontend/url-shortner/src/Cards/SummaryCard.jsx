@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axiosInstance from "../utils/axiosInstance.js";
 
 
-const SummaryCard = () =>  {
+const SummaryCard = ({ refresh }) =>  {
     const [links, setLinks] = useState(0);
     const [statsTracked, setStatsTracked] = useState(0);
 
@@ -18,7 +18,7 @@ const SummaryCard = () =>  {
     }
     useEffect(() => {
         getAllData();
-    }, []);
+    }, [refresh]);
 
     const linksPercentage = Math.min((links / 1000) * 100, 100);
     const clicksPercentage = Math.min((statsTracked / 50000) * 100, 100);

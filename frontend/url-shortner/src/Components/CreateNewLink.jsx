@@ -12,14 +12,17 @@ const CreateNewLink = ({ onSuccess }) => {
             return;
         }
         try {
+            const toastId = toast.loading('Creating new link');
             const response = await axiosInstance.post("/api/urls/manage/shorten", { url: originalUrl });
             if (response.data.success === true) {
                 setOriginalUrl("");
                 onSuccess();
+                toast.dismiss(toastId);
                 toast.success("Short URL Created successfully!");
             }
         } catch (error) {
             console.error("Error creating new link", error);
+            toast.error("Failed while creating a new link.");
         }
     }
 

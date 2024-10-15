@@ -10,6 +10,7 @@ import SkeletonLoader from "../Components/SkeletonLoader.jsx";
 
 const Links = () => {
     const { isLoggedIn } = useRecoilValue(authState);
+    const [refresh, setRefresh] = useState(false);
     console.log("is logged in value", isLoggedIn);
     const [allLinks, setAllLinks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,13 +29,18 @@ const Links = () => {
 
     useEffect(() => {
         getAllLinks();
-    }, []);
+    }, [refresh]);
+
+    // Trigger refresh by toggling the state
+    const triggerRefresh = () => {
+        setRefresh(prev => !prev);
+    };
 
     return (
         <div className="mx-16 mt-2">
             <div className="flex">
                 <div className="grid">
-                    <CreateNewLink onSuccess={getAllLinks} />
+                    <CreateNewLink onSuccess={triggerRefresh} />
                     {/* <div className="border mt-6 w-8/12 ml-6"></div> */}
                     <div className="flex space-x-10 mt-10">
                         {/* Links section */}
@@ -63,7 +69,7 @@ const Links = () => {
                                             totalClicks={link.totalClicks}
                                             date={new Date(link.createdAt).toLocaleDateString()}
                                             onEditSuccess={getAllLinks}
-                                            onDeleteSuccess={getAllLinks}
+                                            onDeleteSuccess={triggerRefresh}
                                         />
                                     ))
                                 )}
@@ -75,7 +81,7 @@ const Links = () => {
 
                 {/* SummaryCard section */}
                 <div className="w-1/3 ml-40 mt-10">
-                    <SummaryCard/>
+                    <SummaryCard refresh={refresh}/>
                     <div className="mt-12">
                         <AboutCard/>
                     </div>

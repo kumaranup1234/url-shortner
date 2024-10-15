@@ -5,8 +5,6 @@ import TopPerformance from "../Cards/TopPerformance.jsx";
 const TopPerformanceParent = () => {
     const topDate = useRecoilValue(topDateState);
     const topLocation = useRecoilValue(topLocationState);
-    console.log("top date state",topDate);
-    console.log("top location state",topLocation);
 
 
     return (
