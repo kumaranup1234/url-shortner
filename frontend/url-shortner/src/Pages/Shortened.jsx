@@ -32,9 +32,6 @@ const Shortened = () => {
 
     return (
         <div>
-            <div className="text-center mt-6 mb-8 border-b-1 border-gray-500 shadow-md pb-4">
-                <p className="text-5xl text-blue-700 font-bold">Short URL</p>
-            </div>
             <div className="text-center">
                 <h1 className="text-3xl text-gray-700 font-bold mr-80">Your shortened URL</h1>
                 <p className="mt-3 ml-2">
@@ -42,7 +39,7 @@ const Shortened = () => {
                     locations.
                 </p>
             </div>
-            <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-2xl ml-72 mt-14">
+            <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-2xl ml-80 mt-14">
                 <div className="flex justify-center mt-10">
                     <form className="border-2 flex items-center">
                         <input
@@ -82,12 +79,6 @@ const Shortened = () => {
                     <p className="mt-8 ml-24 text-xs">
                         * Short URLs that do not have at least one click per month are disabled
                     </p>
-                </div>
-            </div>
-            <div className="mt-20 bg-gray-800 pb-6">
-                <div className="w-full h-1 bg-blue-600 my-4"></div>
-                <div>
-                    <p className="text-center text-white">© 2024 ShortUrl - Tool to shorten a long link</p>
                 </div>
             </div>
         </div>

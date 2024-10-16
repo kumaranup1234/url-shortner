@@ -4,11 +4,11 @@ import {useNavigate} from 'react-router-dom'
 import axiosInstance from "../utils/axiosInstance.js";
 import {isAuthenticated} from "../recoil/selectors.js";
 import {useRecoilValue} from "recoil";
+import toast from "react-hot-toast";
 
 const LandingPage = () => {
 
     const [link, setLink] = useState("");
-    const [error, setError] = useState("");
     const isLoggedIn = useRecoilValue(isAuthenticated);
 
     let route = "/api/urls/manage/shorten";
@@ -21,20 +21,19 @@ const LandingPage = () => {
         e.preventDefault();
 
         if (!link) {
-            setError("Please enter a valid link!");
+            toast.error("Please enter a valid link")
             return;
         }
-        setError(" ")
+        const toastId = toast.loading("Trimming your URL. Please wait!")
         try {
-
             const response = await axiosInstance.post(route, {
                 url: link
             })
-            console.log(response)
             const id = response.data.shortUrl;
-            console.log(id)
 
             if (response.data){
+                toast.dismiss(toastId);
+                toast.success("URL trimmed successfully!");
                 navigate("/shortened", {
                     state: {
                         link,
@@ -43,7 +42,11 @@ const LandingPage = () => {
                 });
             }
         } catch (error){
-            setError("An unexpected error occurred. Please try again");
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("An unexpected error occurred. Please try again");
+            }
         }
     }
 
@@ -76,7 +79,6 @@ const LandingPage = () => {
                             </button>
                         </form>
                     </div>
-                    {error && <p className="text-red-500 text-xl text-center mt-2">{error}</p>}
                     <div className="text-center mt-4">
                         <p>
                             ShortURL is a free tool to shorten URLs and generate short links
