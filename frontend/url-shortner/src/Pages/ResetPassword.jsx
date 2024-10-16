@@ -21,10 +21,11 @@ const Login = () => {
             if (response.data.success) {
                 toast.success(response.data.message);
                 setTimeout(() => {
-                    toast.success("Redirecting to login Page");
+                    const toastId = toast.loading("Redirecting to login Page");
 
                     // Redirect to the login page after 2 seconds
                     setTimeout(() => {
+                        toast.dismiss(toastId);
                        navigate("/login");
                     }, 2000);  // Delay redirect by 2 seconds
                 }, 2000);

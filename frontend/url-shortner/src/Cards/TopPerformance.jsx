@@ -26,9 +26,11 @@ const TopPerformance = ({ heading, name, clicks, location }) => {
                             {startingDate.toLocaleDateString()} - {endingDate.toLocaleDateString()}
                         </p>}
                 </div> : <div className="bg-gray-200 rounded-lg p-6 mb-2 flex items-center justify-center mt-4">
-                    <p className="text-lg font-semibold">
+                    {!location ? <p className="text-lg font-semibold">
+                        No clicks in the past 10 days.
+                    </p> : <p className="text-lg font-semibold">
                         No data available.
-                    </p>
+                    </p>}
                 </div>}
             </div>
         </>

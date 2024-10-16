@@ -4,9 +4,9 @@ import {validateEmail} from "../utils/helper.js";
 import axiosInstance from "../utils/axiosInstance.js";
 import toast from "react-hot-toast";
 
+
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
 
@@ -14,11 +14,10 @@ const ForgotPassword = () => {
         e.preventDefault();
 
         if (!email || !validateEmail(email)) {
-            setError("Please enter a valid email");
+            toast.error("Please enter a valid email");
             return;
         }
 
-        setError("");
         try {
             const myPromise = axiosInstance.post('/api/users/reset', {
                 email: email,
@@ -29,9 +28,11 @@ const ForgotPassword = () => {
                 error: (err) => err.response?.data?.message || "Error occurred. Please try again!"
             })
                 .then(() => {
+                    const toastId = toast.loading("Redirecting to Login")
                     setTimeout(() => {
+                        toast.dismiss(toastId);
                         navigate("/login")
-                    }, 2000);
+                    }, 3000);
                 })
         } catch (error) {
             if (error.response && error.response.data.message) {
@@ -55,7 +56,6 @@ const ForgotPassword = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
                         <button
                             type="submit"
                             className="w-full text-sm bg-teal-900 text-white py-2 rounded-lg hover:bg-blue-800 transition-colors duration-300"

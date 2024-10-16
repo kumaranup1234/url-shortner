@@ -104,7 +104,7 @@ const ClicksLineChart = ({ shortUrl }) => {
                     </ResponsiveContainer>
                 </div> : <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
                     <p className="text-lg font-semibold">
-                        No data available.
+                        No clicks in the past 10 days.
                     </p>
                 </div>}
         </>
