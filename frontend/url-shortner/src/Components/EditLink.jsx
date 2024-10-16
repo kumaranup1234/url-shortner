@@ -23,8 +23,11 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
                 onClose();
             }
         } catch (error) {
-            console.error("Error updating link", error);
-            toast.error("Failed to update link.");
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Failed to update link!");
+            }
         }
     };
 

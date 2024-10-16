@@ -144,7 +144,7 @@ async function UpdateUrl(req, res) {
         }
 
         return res.status(200).json({
-            error: false,
+            success: true,
             message: 'URL updated successfully',
         });
     } catch (error){
