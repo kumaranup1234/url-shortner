@@ -20,7 +20,7 @@ const ProtectedRoute = ({ element }) => {
     }
 
     // Handle routes that should only be accessible for logged-in users
-    if (!isLoggedIn && !isResetRoute && !isLoginRoute && !isSignUpRoute) {
+    if (!isLoggedIn && !isResetRoute && !isLoginRoute && !isSignUpRoute && !isHomeRoute) {
         return <Navigate to="/login" />; // Redirect non-logged-in users to login for protected routes
     }
 
