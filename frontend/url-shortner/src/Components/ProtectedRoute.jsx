@@ -12,9 +12,10 @@ const ProtectedRoute = ({ element }) => {
     const isResetRoute = currentPath === "/reset" || currentPath.startsWith("/reset-password/");
     const isLoginRoute = currentPath === "/login";
     const isSignUpRoute = currentPath === "/signup";
+    const isHomeRoute = currentPath === "/";
 
     // Handle routes that should be accessible only for non-logged-in users (login, signup, reset)
-    if (isLoggedIn && (isResetRoute || isLoginRoute || isSignUpRoute)) {
+    if (isLoggedIn && (isResetRoute || isLoginRoute || isSignUpRoute || isHomeRoute)) {
         return <Navigate to="/links" />; // Redirect logged-in users to the main page if they try to access reset, login, or signup
     }
 

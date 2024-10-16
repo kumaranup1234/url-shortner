@@ -33,7 +33,6 @@ const App = () => {
         const checkAuthStatus = async () => {
             try {
                 const response = await axiosInstance.get('/api/users/status');
-                console.log(response.data);
                 setAuth({ isLoggedIn: response.data.isLoggedIn, user: response.data.user });
             } catch (error) {
                 console.error('Error verifying authentication:', error);
@@ -55,7 +54,7 @@ const App = () => {
             <div><Toaster/></div>
             <Navbar/>
             <Routes>
-                <Route path="/" element={<LandingPage/>}/>
+                <Route path="/" element={<ProtectedRoute element={<LandingPage/>} />}/>
                 <Route path="/login" element={<ProtectedRoute element={<Login/>} />}/>
                 <Route path="/signup" element={<ProtectedRoute element={<SignUp/>} />}/>
                 <Route path="/shortened" element={<Shortened/>}/>
