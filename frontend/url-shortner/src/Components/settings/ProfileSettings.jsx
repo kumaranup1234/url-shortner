@@ -27,6 +27,7 @@ const ProfileSettings = () => {
 
     // Handle profile image upload with size validation
     const handleImageUpload = async (e) => {
+        e.preventDefault();
         // Get the file from the input directly
         const fileInput = document.querySelector('input[type="file"]');
         const file = fileInput.files[0]; // Accessing the file directly from the input
@@ -85,6 +86,7 @@ const ProfileSettings = () => {
             toast.success("No changes detected!");
             return; // No changes to send
         }
+
 
         const myPromise = axiosInstance.put('/api/users/profile', dataToSend);
 
