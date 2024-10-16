@@ -20,6 +20,7 @@ import MainFooter from "./Components/MainFooter.jsx";
 import TermsOfService from "./Components/TermsOfService.jsx";
 import PrivacyPolicy from "./Components/PrivacyPolicy.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import { inject } from '@vercel/analytics';
 import protectedRoute from "./Components/ProtectedRoute.jsx";
 import NotFound from "./Pages/NotFound.jsx";
 
@@ -44,6 +45,7 @@ const App = () => {
         checkAuthStatus();
     }, [setAuth]);
 
+    inject();
     if (loading) {
         return <div className="h-screen w-screen"></div>; // Blank full-screen div
     }
