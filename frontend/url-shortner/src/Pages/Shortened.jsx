@@ -32,51 +32,51 @@ const Shortened = () => {
 
     return (
         <div>
-            <div className="text-center">
+            <div className="text-center p-4 mt-2">
                 <h1 className="text-3xl text-gray-700 font-bold mr-80">Your shortened URL</h1>
                 <p className="mt-3 ml-2">
                     Copy the short link and share it in messages, texts, posts, websites and other
                     locations.
                 </p>
             </div>
-            <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-2xl ml-80 mt-14">
+            <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-2xl ml-96 mt-10 mb-10">
                 <div className="flex justify-center mt-10">
-                    <form className="border-2 flex items-center">
+                    <form className="border-2 flex items-center w-full">
                         <input
                             type="text"
                             name="url"
                             placeholder="Enter the link here"
                             value={shortenedUrl}
                             readOnly
-                            className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[300px] h-14 px-4 text-lg outline-none"
+                            className="border-none focus:ring-2 focus:ring-blue-500 flex-grow h-14 px-4 text-md outline-none"
                         />
                         <button
-                            className={`ml-4 font-bold w-28 h-14 transition duration-200 ${buttonText === "Copied!" ? "bg-green-600 hover:bg-green-800 text-white" : "bg-blue-600 hover:bg-blue-800 text-white"}`}
+                            className={`font-bold w-28 h-14 transition duration-200 ${buttonText === "Copied!" ? "bg-green-600 hover:bg-green-800 text-white" : "bg-blue-600 hover:bg-blue-800 text-white"}`}
                             onClick={handleCopyClick}
                         >
                             {buttonText}
                         </button>
                     </form>
                 </div>
-                <div className="text-left mt-10">
-                    <div className="ml-24 flex space-x-2 items-start">
+                <div className="mt-10">
+                    <div className="flex space-x-2 items-start">
                         <p className="mt-2.5">Long URL:</p>
                         <a
                             target="_blank"
                             href={link}
                             className="text-blue-700 cursor-pointer break-all whitespace-normal overflow-wrap max-w-[500px] border-2 border-gray-300 p-2 bg-gray-100 rounded-lg"
-                            title={link} // Add title to show the full URL on hover
+                            title={link}
                         >
                             {link}
                         </a>
                     </div>
                     <button
-                        className="ml-24 text-white bg-blue-600 font-bold w-44 h-10 hover:bg-blue-800 transition duration-200 rounded mt-6"
+                        className="ml-20 text-white bg-blue-600 font-bold w-44 h-10 hover:bg-blue-800 transition duration-200 rounded mt-6"
                         onClick={handleClick}
                     >
                         Shorten another URL
                     </button>
-                    <p className="mt-8 ml-24 text-xs">
+                    <p className="mt-8 ml-20 text-xs">
                         * Short URLs that do not have at least one click per month are disabled
                     </p>
                 </div>
