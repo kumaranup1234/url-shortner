@@ -92,6 +92,85 @@ async function getAllClicks(req, res) {
     }
 }
 
+// get All clicks for a user in a span of 10 days
+async function getAllUserClicks (req, res) {
+
+    try {
+        const totalClicks = await Click.countDocuments();
+        let maxClick = 0;
+        let maxClicksDate = 0;
+
+        // Get today's date and calculate the date 10 days ago
+        const today = new Date();
+        const tenDaysAgo = new Date(today);
+        tenDaysAgo.setDate(today.getDate() - 9);
+
+        // Aggregate clicks for the past 7 days
+        const clicks = await Click.aggregate([
+            {
+                $match: {
+                    timestamp: { $gte: tenDaysAgo }
+                }
+            },
+            {
+                $project: {
+                    date: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } }
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        // Prepare data for the last 7 days
+        const dateCounts = {};
+        for (let i = 9; i >= 0; i--) {
+            const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+            const dateString = date.toISOString().split('T')[0];
+            dateCounts[dateString] = 0; // Default count is 0
+        }
+
+        // Fill the counts from the aggregation result
+        clicks.forEach(click => {
+            dateCounts[click._id] = click.count;
+        });
+
+        // Create an array of objects with dates and counts for the frontend
+        const clicksByDate = Object.keys(dateCounts).map((date) => {
+            const totalClicks = dateCounts[date];
+            if (totalClicks > maxClick){
+                maxClick = totalClicks;
+                maxClicksDate = date;
+            }
+
+            return{
+                date,
+                count: totalClicks
+            }
+        });
+
+        return res.status(200).json({
+            error: false,
+            totalClicks,
+            maxClick,
+            maxClicksDate,
+            clicksByDate
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
 async function getClicksByDevice(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
@@ -299,7 +378,6 @@ async function getClicksByOs(req, res) {
             message: 'Internal server error',
         });
     }
-
 }
 
 
@@ -310,5 +388,6 @@ module.exports = {
     getClicksByBrowser,
     getClicksByLocation,
     getClicksByReferrer,
-    getClicksByOs
+    getClicksByOs,
+    getAllUserClicks
 }
