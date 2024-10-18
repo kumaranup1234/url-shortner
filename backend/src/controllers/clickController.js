@@ -4,6 +4,7 @@ const { getName } = require('country-list');
 
 async function getAllClicks(req, res) {
     const shortUrlId = req.params.shortUrlId;
+    console.log("getAllClicks")
 
     try {
         // Find the URL document to get the ObjectId
@@ -93,7 +94,8 @@ async function getAllClicks(req, res) {
 }
 
 // get All clicks for a user in a span of 10 days
-async function getAllUserClicks (req, res) {
+async function getUserClicks (req, res) {
+    console.log("getAllUserClicks")
 
     try {
         const totalClicks = await Click.countDocuments();
@@ -389,5 +391,5 @@ module.exports = {
     getClicksByLocation,
     getClicksByReferrer,
     getClicksByOs,
-    getAllUserClicks
+    getUserClicks
 }
