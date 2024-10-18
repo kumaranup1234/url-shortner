@@ -46,6 +46,7 @@ const UserSchema = new mongoose.Schema({
             ref: "Url",
         },
     ],
+    oneLinkPage: { type: mongoose.Schema.Types.ObjectId, ref: 'OneLink', default: null },
 });
 
 UserSchema.pre("save", async function (next) {
