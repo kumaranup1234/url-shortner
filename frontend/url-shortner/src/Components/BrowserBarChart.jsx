@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import {InfinitySpin} from "react-loader-spinner";
 
-const BrowserBarChart = ({ shortUrl }) => {
+const BrowserBarChart = ({ apiUrl }) => {
     const [browserData, setBrowserData] = useState([]);
     const [hoveredBarIndex, setHoveredBarIndex] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const BrowserBarChart = ({ shortUrl }) => {
     // Fetch the data from API
     const getBrowserData = async () => {
         try {
-            const response = await axiosInstance.get(`/api/urls/clicks/browsers/${shortUrl}`);
+            const response = await axiosInstance.get(apiUrl);
             console.log(response.data);
             const browserTypeCounts = response.data.browserTypeCounts;
             // Format the data for the BarChart

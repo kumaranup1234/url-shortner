@@ -5,7 +5,7 @@ import {topLocationState} from "../recoil/atoms.js";
 import {useSetRecoilState} from "recoil";
 import {InfinitySpin} from "react-loader-spinner";
 
-const LocationList = ({ shortUrl }) => {
+const LocationList = ({ apiUrl }) => {
     const [locations, setLocations] = useState([]);
     const [view, setView] = useState("country"); // to toggle between countries and cities
     const setTopLocation = useSetRecoilState(topLocationState);
@@ -16,7 +16,7 @@ const LocationList = ({ shortUrl }) => {
 
     const getLocationData = async () => {
         try {
-            const response = await axiosInstance.get(`/api/urls/clicks/locations/${shortUrl}`);
+            const response = await axiosInstance.get(apiUrl);
             setLocations(response.data.locationCounts);
         } catch (error) {
             console.error("Error fetching location data:", error);

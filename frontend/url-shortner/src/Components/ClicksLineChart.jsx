@@ -25,7 +25,7 @@ const formatXAxis = (tickItem) => {
     return date.toLocaleDateString(undefined, options).replace(/\//g, '/'); // Ensure MM/DD format
 };
 
-const ClicksLineChart = ({ shortUrl }) => {
+const ClicksLineChart = ({ apiUrl }) => {
     const [clickData, setClickData] = useState([]);
     const setTopDate = useSetRecoilState(topDateState);
     const setTotalClicks = useSetRecoilState(totalClicksState);
@@ -33,7 +33,7 @@ const ClicksLineChart = ({ shortUrl }) => {
 
     const getClickData = async () => {
         try {
-            const response = await axiosInstance.get(`/api/urls/clicks/${shortUrl}`);
+            const response = await axiosInstance.get(apiUrl);
             console.log("response of the clicks line chart",response);
             setClickData(response.data.clicksByDate);
             setTopDate({

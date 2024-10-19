@@ -1,5 +1,4 @@
 import {useParams} from "react-router-dom";
-import TopPerformance from "../Cards/TopPerformance.jsx";
 import BrowserBarChart from "../Components/BrowserBarChart.jsx";
 import ClicksLineChart from "../Components/ClicksLineChart.jsx";
 import DevicePieChart from "../Components/DevicePieChart.jsx";
@@ -9,27 +8,26 @@ import TopPerformanceParent from "../Components/TopPerformanceParent.jsx";
 
 const Analytics = () => {
     const { shortenedUrl } = useParams();
-    console.log(shortenedUrl);
 
     return (
         <div className="grid gap-6 p-6">
             {/* Row 1: Browser Bar Chart and Clicks Line Chart */}
             <div className="flex space-x-6">
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <BrowserBarChart shortUrl={shortenedUrl}/>
+                    <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortUrl}`}/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <ClicksLineChart shortUrl={shortenedUrl}/>
+                    <ClicksLineChart apiUrl={`/api/urls/clicks/${shortenedUrl}`}/>
                 </div>
             </div>
 
             {/* Row 2: Device Pie Chart and Referrer Bar Chart */}
             <div className="flex space-x-6">
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <DevicePieChart shortUrl={shortenedUrl}/>
+                    <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortUrl}`}/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <ReferrerBarChart shortUrl={shortenedUrl}/>
+                    <ReferrerBarChart apiUrl={`/api/urls/clicks/referrers/${shortUrl}`}/>
                 </div>
             </div>
 
@@ -39,7 +37,7 @@ const Analytics = () => {
                     <TopPerformanceParent/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <LocationList shortUrl={shortenedUrl}/>
+                    <LocationList apiUrl={`/api/urls/clicks/locations/${shortUrl}`}/>
                 </div>
             </div>
         </div>

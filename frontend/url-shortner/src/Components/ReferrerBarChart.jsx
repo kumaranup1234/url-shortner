@@ -13,7 +13,7 @@ const dummyData = [
     { name: "LinkedIn", value: 8 },
 ];
 
-const ReferrerBarChart = ({ shortUrl }) => {
+const ReferrerBarChart = ({ apiUrl }) => {
     const [referrerData, setReferrerData] = useState([]);
     const [hoveredBarIndex, setHoveredBarIndex] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -21,7 +21,7 @@ const ReferrerBarChart = ({ shortUrl }) => {
     // Fetch the data from API
     const getReferrerData = async () => {
         try {
-            const response = await axiosInstance.get(`/api/urls/clicks/referrers/${shortUrl}`);
+            const response = await axiosInstance.get(apiUrl);
             const referrerCounts = response.data.referrerCounts;
             // Format the data for the BarChart
             const formattedData = Object.keys(referrerCounts).map((referrer) => ({

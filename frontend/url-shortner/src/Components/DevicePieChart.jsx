@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import axiosInstance from "../utils/axiosInstance.js";
 import {InfinitySpin} from "react-loader-spinner";
 
-const DevicePieChart = ({ shortUrl }) => {
+const DevicePieChart = ({ apiUrl }) => {
     const [deviceData, setDeviceData] = useState([]);
     const [totalClicks, setTotalClicks] = useState(0);
     const [activeIndex, setActiveIndex] = useState(null);
@@ -20,7 +20,7 @@ const DevicePieChart = ({ shortUrl }) => {
     // Fetch the data from API
     const getDeviceData = async () => {
         try {
-            const response = await axiosInstance.get(`/api/urls/clicks/devices/${shortUrl}`);
+            const response = await axiosInstance.get(apiUrl);
             const deviceCounts = response.data.deviceTypeCounts;
 
             const formattedData = Object.keys(deviceCounts).map((device) => ({
