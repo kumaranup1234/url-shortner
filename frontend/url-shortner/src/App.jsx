@@ -21,6 +21,7 @@ import TermsOfService from "./Components/TermsOfService.jsx";
 import PrivacyPolicy from "./Components/PrivacyPolicy.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import { inject } from '@vercel/analytics';
+import Dashboard from "./Pages/Dashboard.jsx";
 import protectedRoute from "./Components/ProtectedRoute.jsx";
 import NotFound from "./Pages/NotFound.jsx";
 
@@ -59,6 +60,7 @@ const App = () => {
                 <Route path="/signup" element={<ProtectedRoute element={<SignUp/>} />}/>
                 <Route path="/shortened" element={<Shortened/>}/>
                 <Route path="/links" element={<ProtectedRoute  element={<Links/>} />}/>
+                <Route path="/dashboard" element={<ProtectedRoute  element={<Dashboard/>} />}/>
                 <Route path="/settings" element={<ProtectedRoute element={<Settings/>} />} />
                 <Route path="/reset" element={<ProtectedRoute element={<ForgotPassword />} />} />
                 <Route path="/reset-password/:resetToken" element={<ProtectedRoute element={<ResetPassword />} />} />

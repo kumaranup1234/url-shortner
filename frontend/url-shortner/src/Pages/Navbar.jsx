@@ -40,6 +40,14 @@ const Navbar = () => {
                 {isLoggedIn && (
                     <div className="hidden md:flex space-x-4">
                         <NavLink
+                            to="/dashboard"
+                            className={({ isActive }) =>
+                                isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
+                            }
+                        >
+                            Dashboard
+                        </NavLink>
+                        <NavLink
                             to="/links"
                             className={({ isActive }) =>
                                 isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
