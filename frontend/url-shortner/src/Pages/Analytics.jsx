@@ -14,7 +14,7 @@ const Analytics = () => {
             {/* Row 1: Browser Bar Chart and Clicks Line Chart */}
             <div className="flex space-x-6">
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortUrl}`}/>
+                    <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortenedUrl}`}/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
                     <ClicksLineChart apiUrl={`/api/urls/clicks/${shortenedUrl}`}/>
@@ -24,10 +24,10 @@ const Analytics = () => {
             {/* Row 2: Device Pie Chart and Referrer Bar Chart */}
             <div className="flex space-x-6">
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortUrl}`}/>
+                    <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortenedUrl}`}/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <ReferrerBarChart apiUrl={`/api/urls/clicks/referrers/${shortUrl}`}/>
+                    <ReferrerBarChart apiUrl={`/api/urls/clicks/referrers/${shortenedUrl}`}/>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@ const Analytics = () => {
                     <TopPerformanceParent/>
                 </div>
                 <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <LocationList apiUrl={`/api/urls/clicks/locations/${shortUrl}`}/>
+                    <LocationList apiUrl={`/api/urls/clicks/locations/${shortenedUrl}`}/>
                 </div>
             </div>
         </div>
