@@ -50,7 +50,7 @@ const ClicksLineChart = ({ apiUrl }) => {
 
     useEffect(() => {
         getClickData();
-    }, [shortUrl]);
+    }, []);
 
     // Check if all data points are zero
     const allZeroClicks = clickData.every(item => item.count === 0);

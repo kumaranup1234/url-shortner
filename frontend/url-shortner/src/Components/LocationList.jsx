@@ -29,7 +29,7 @@ const LocationList = ({ apiUrl }) => {
 
     useEffect(() => {
         getLocationData();
-    }, [shortUrl]);
+    }, []);
 
     // Memoize processed data
     const { countries, cities, unknownLocations, maxClicks, topLocation } = useMemo(() => {

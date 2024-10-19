@@ -39,7 +39,7 @@ const BrowserBarChart = ({ apiUrl }) => {
 
     useEffect(() => {
         getBrowserData();
-    }, [shortUrl]);
+    }, []);
 
     // Custom Tooltip Component
     const CustomTooltip = ({ active, payload, label }) => {

@@ -40,7 +40,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
 
     useEffect(() => {
         getReferrerData();
-    }, [shortUrl]);
+    }, []);
 
     // Custom Tooltip Component
     const CustomTooltip = ({ active, payload, label }) => {
