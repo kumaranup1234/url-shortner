@@ -43,11 +43,25 @@ async function handleSignup(req, res) {
             });
         }
 
+        // Generate a new API key
+        const apiKey = UUIDv4();
+
+        // Create a new API key document
+        const newApiKey = new ApiKey({
+            user: userId,
+            key: apiKey,
+            expiresAt: new Date(Date.now() + 360 * 24 * 60 * 60 * 1000), // 360 days from now
+        });
+
+        // Save the new API key document
+        await newApiKey.save();
+
         // Create new user
         const newUser = new User({
             username,
             email,
             password,
+            apiKey: apiKey,
         });
 
         await newUser.save();
