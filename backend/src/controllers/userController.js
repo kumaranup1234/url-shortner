@@ -44,6 +44,8 @@ async function handleSignup(req, res) {
         }
 
 
+        // Generate a new API key
+        const apiKey = UUIDv4();
         // Create new user
         const newUser = new User({
             username,
@@ -53,10 +55,6 @@ async function handleSignup(req, res) {
         });
 
         await newUser.save();
-
-        // Generate a new API key
-        const apiKey = UUIDv4();
-
         // Create a new API key document
         const newApiKey = new ApiKey({
             user: isUser.id,
