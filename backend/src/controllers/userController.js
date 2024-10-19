@@ -48,7 +48,7 @@ async function handleSignup(req, res) {
 
         // Create a new API key document
         const newApiKey = new ApiKey({
-            user: isUser._id,
+            user: isUser.id,
             key: apiKey,
             expiresAt: new Date(Date.now() + 360 * 24 * 60 * 60 * 1000), // 360 days from now
         });

@@ -1,6 +1,7 @@
 const Url = require("../models/Url");
 const Click = require("../models/Click");
 const { getName } = require('country-list');
+const User = require("../models/User");
 
 async function getAllClicks(req, res) {
     const shortUrlId = req.params.shortUrlId;
@@ -95,10 +96,19 @@ async function getAllClicks(req, res) {
 
 // get All clicks for a user in a span of 10 days
 async function getUserClicks (req, res) {
-    console.log("getAllUserClicks")
+    const userId = req.user._id;
 
     try {
-        const totalClicks = await Click.countDocuments();
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            })
+        }
+        const urlArray = user.urls;
+
+        const totalClicks = await Click.countDocuments({ url: { $in: urlArray } });
         let maxClick = 0;
         let maxClicksDate = 0;
 
@@ -111,7 +121,8 @@ async function getUserClicks (req, res) {
         const clicks = await Click.aggregate([
             {
                 $match: {
-                    timestamp: { $gte: tenDaysAgo }
+                    timestamp: { $gte: tenDaysAgo },
+                    url: { $in: urlArray },
                 }
             },
             {
@@ -208,6 +219,51 @@ async function getClicksByDevice(req, res) {
     }
 }
 
+async function getUserDeviceClicks(req, res) {
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                userDeviceTypeCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: { $in: urlArray } });
+
+        // Count the occurrences of each deviceType
+        const userDeviceTypeCounts = clicks.reduce((acc, click) => {
+            const deviceType = click.deviceType || 'Unknown';
+            acc[deviceType] = (acc[deviceType] || 0) + 1;
+            return acc;
+        }, {});
+
+        return res.status(200).json({
+            error: false,
+            userDeviceTypeCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+            details: error.message
+        });
+    }
+}
+
 
 async function getClicksByBrowser(req, res){
     const shortUrlId = req.params.shortUrlId;
@@ -234,8 +290,52 @@ async function getClicksByBrowser(req, res){
             return acc;
         }, {});
 
-        // Log the retrieved clicks to see the actual data
-        // console.log("Retrieved clicks:", browsers);
+        return res.status(200).json({
+            error: false,
+            browserTypeCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+// Get clicks by browser For all urls
+
+
+async function getUserClicksByBrowser(req, res){
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                browserTypeCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: { $in: urlArray }});
+
+
+        // Count the occurrences of each deviceType
+        const browserTypeCounts = clicks.reduce((acc, click) => {
+            const deviceType = click.browser || 'Unknown'; // Default to 'Unknown' if browser is missing
+            acc[deviceType] = (acc[deviceType] || 0) + 1;
+            return acc;
+        }, {});
 
         return res.status(200).json({
             error: false,
@@ -249,6 +349,7 @@ async function getClicksByBrowser(req, res){
         });
     }
 }
+
 
 async function getClicksByLocation(req, res) {
     const shortUrlId = req.params.shortUrlId;
@@ -303,6 +404,69 @@ async function getClicksByLocation(req, res) {
     }
 }
 
+// Get all clicks by location for a user
+
+async function getUserClicksByLocation(req, res) {
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                locationCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: {$in : urlArray }});
+
+        // Aggregate the locations by country and city
+        const locationCounts = clicks.reduce((acc, click) => {
+            const country = getName(click.location?.country) || 'Unknown Country';
+            const city = click.location?.city || 'Unknown City';
+
+            const locationKey = `${country}, ${city}`;
+
+            if (!acc[locationKey]) {
+                acc[locationKey] = 0;
+            }
+
+            acc[locationKey]++;
+            return acc;
+        }, {});
+
+        // Check if any clicks are found
+        if (Object.keys(locationCounts).length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'No clicks found for the given URL',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            locationCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+
+
 
 async function getClicksByReferrer(req, res){
     const shortUrlId = req.params.shortUrlId;
@@ -320,6 +484,52 @@ async function getClicksByReferrer(req, res){
 
         const objectId = urlDoc._id;
         const clicks = await Click.find({ url: objectId });
+
+        // Count the occurrences of each deviceType
+        const referrerCounts = clicks.reduce((acc, click) => {
+            const deviceType = click.referrer || 'Unknown'; // Default to 'Unknown' if browser is missing
+            acc[deviceType] = (acc[deviceType] || 0) + 1;
+            return acc;
+        }, {});
+
+        // console.log("Retrieved clicks:", referrerCounts);
+
+        return res.status(200).json({
+            error: false,
+            referrerCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+// Get all clicks by referrer for a user
+async function getUSerClicksByReferrer(req, res){
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                referrerCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: {$in : urlArray }});
 
         // Count the occurrences of each deviceType
         const referrerCounts = clicks.reduce((acc, click) => {
@@ -382,6 +592,54 @@ async function getClicksByOs(req, res) {
     }
 }
 
+// Get all clicks by os for a user
+
+async function getUserClicksByOs(req, res) {
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                osCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: {$in : urlArray }});
+
+        // Count the occurrences of each deviceType
+        const osCounts = clicks.reduce((acc, click) => {
+            const osType = click.os || 'Unknown'; // Default to 'Unknown' if os is missing
+            acc[osType] = (acc[osType] || 0) + 1;
+            return acc;
+        }, {});
+
+        return res.status(200).json({
+            error: false,
+            osCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+
+
+
 
 
 module.exports = {
@@ -391,5 +649,10 @@ module.exports = {
     getClicksByLocation,
     getClicksByReferrer,
     getClicksByOs,
-    getUserClicks
+    getUserClicks,
+    getUserDeviceClicks,
+    getUserClicksByOs,
+    getUSerClicksByReferrer,
+    getUserClicksByLocation,
+    getUserClicksByBrowser
 }
