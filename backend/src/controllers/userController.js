@@ -43,6 +43,17 @@ async function handleSignup(req, res) {
             });
         }
 
+
+        // Create new user
+        const newUser = new User({
+            username,
+            email,
+            password,
+            apiKey: apiKey,
+        });
+
+        await newUser.save();
+
         // Generate a new API key
         const apiKey = UUIDv4();
 
@@ -55,16 +66,6 @@ async function handleSignup(req, res) {
 
         // Save the new API key document
         await newApiKey.save();
-
-        // Create new user
-        const newUser = new User({
-            username,
-            email,
-            password,
-            apiKey: apiKey,
-        });
-
-        await newUser.save();
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '12h' });
 
         // Set the token as a cookie
