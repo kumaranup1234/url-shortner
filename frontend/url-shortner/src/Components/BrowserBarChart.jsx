@@ -84,6 +84,7 @@ const BrowserBarChart = ({ apiUrl }) => {
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
+                                    tickCount={6}
                                 />
                                 <Tooltip
                                     content={<CustomTooltip/>}

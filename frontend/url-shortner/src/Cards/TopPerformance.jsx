@@ -34,7 +34,6 @@ const TopPerformance = ({ heading, name, clicks, location }) => {
                 </div>}
             </div>
         </>
-
     );
 };
 

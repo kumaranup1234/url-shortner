@@ -86,6 +86,7 @@ const ClicksLineChart = ({ apiUrl }) => {
                             <YAxis
                                 allowDecimals={false}
                                 tickFormatter={(value) => Math.round(value)}
+                                tickCount={6}
                                 minTickGap={5}
                                 axisLine={false} // Hides the Y-axis line
                                 tickLine={false} // Hides the ticks on Y-axis

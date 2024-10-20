@@ -8,7 +8,7 @@ const TopPerformanceParent = () => {
 
 
     return (
-        <div className="flex flex-col space-y-4">
+        <div className="grid space-y-4 h-96">
             <TopPerformance
                 heading="Top Performing Date"
                 name={topDate.date}

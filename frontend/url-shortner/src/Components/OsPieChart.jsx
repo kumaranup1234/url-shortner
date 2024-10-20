@@ -3,41 +3,27 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import axiosInstance from "../utils/axiosInstance.js";
 import {InfinitySpin} from "react-loader-spinner";
 
-const DevicePieChart = ({ apiUrl }) => {
-    const [deviceData, setDeviceData] = useState([]);
+const OsPieChart = ({ apiUrl }) => {
+    const [osData, setOsData] = useState([]);
     const [totalClicks, setTotalClicks] = useState(0);
     const [activeIndex, setActiveIndex] = useState(null);
     const [centerText, setCenterText] = useState('Total: 0');
     const [loading, setLoading] = useState(true);
 
-     // Dummy data for testing
-     const dummyData = [
-         {name: 'Desktop', value: 23},
-         {name: 'Mobile', value: 12},
-         {name: 'Tablet', value: 8},
-     ];
-
     // Fetch the data from API
-    const getDeviceData = async () => {
+    const getOsData = async () => {
         try {
             const response = await axiosInstance.get(apiUrl);
-            console.log("pie chart data",response.data);
-            const deviceCounts = response.data.deviceTypeCounts;
+            const OsCounts = response.data.osCounts;
 
-            const formattedData = Object.keys(deviceCounts).map((device) => ({
+            const formattedData = Object.keys(OsCounts).map((device) => ({
                 name: device,
-                value: deviceCounts[device],
+                value: OsCounts[device],
             }));
-            setDeviceData(formattedData);
-            // For testing
-            //setDeviceData(dummyData);
-
-            const total = Object.values(deviceCounts).reduce((acc, count) => acc + count, 0);
+            setOsData(formattedData);
+            const total = Object.values(OsCounts).reduce((acc, count) => acc + count, 0);
             setTotalClicks(total);
             setCenterText(`Total: ${total}`);
-
-            console.log("Device Data fetched: ", formattedData);
-            console.log("Total Clicks: ", total);
         } catch (error) {
             console.error('Error fetching device data:', error);
         } finally {
@@ -46,7 +32,7 @@ const DevicePieChart = ({ apiUrl }) => {
     };
 
     useEffect(() => {
-        getDeviceData();
+        getOsData();
     }, []);
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -70,8 +56,8 @@ const DevicePieChart = ({ apiUrl }) => {
     };
 
     const onPieEnter = (_, index) => {
-        if (deviceData[index]) {
-            const {name, value} = deviceData[index];
+        if (osData[index]) {
+            const {name, value} = osData[index];
             setActiveIndex(index)
             setCenterText(`${name}: ${value}`);
         }
@@ -94,15 +80,15 @@ const DevicePieChart = ({ apiUrl }) => {
                     />
                     <p>Preparing your graph data...</p>
                 </div>
-                : deviceData.length > 0 ? <div className="bg-gray-200 rounded-lg p-4">
-                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
+                : osData.length > 0 ? <div className="bg-gray-200 rounded-lg p-4">
+                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by OS</h2>
                     <div className="flex items-center space-x-6">
                         {/* Pie Chart */}
                         <div className="relative w-96 flex items-center justify-center">
                             <ResponsiveContainer width="100%" height={345}>
                                 <PieChart>
                                     <Pie
-                                        data={deviceData}
+                                        data={osData}
                                         cx="50%"
                                         cy="50%"
                                         innerRadius={90}
@@ -113,7 +99,7 @@ const DevicePieChart = ({ apiUrl }) => {
                                         onMouseEnter={onPieEnter}
                                         onMouseLeave={onPieLeave}
                                     >
-                                        {deviceData.map((entry, index) => (
+                                        {osData.map((entry, index) => (
                                             <Cell
                                                 key={`cell-${index}`}
                                                 fill={COLORS[index % COLORS.length]}
@@ -133,7 +119,7 @@ const DevicePieChart = ({ apiUrl }) => {
                         {/* List of devices and colors */}
                         <div className="flex flex-col justify-center items-start space-y-2">
                             <ul>
-                                {deviceData.map((entry, index) => (
+                                {osData.map((entry, index) => (
                                     <li key={index} className="flex items-center space-x-2">
                             <span
                                 className="inline-block w-4 h-4 rounded"
@@ -155,4 +141,4 @@ const DevicePieChart = ({ apiUrl }) => {
     );
 };
 
-export default DevicePieChart;
+export default OsPieChart;
