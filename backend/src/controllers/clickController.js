@@ -237,14 +237,14 @@ async function getUserDeviceClicks(req, res) {
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                userDeviceTypeCounts: {}, // No URLs, so return empty result
+                deviceTypeCounts: {}, // No URLs, so return empty result
             });
         }
 
         const clicks = await Click.find({ url: { $in: urlArray } });
 
         // Count the occurrences of each deviceType
-        const userDeviceTypeCounts = clicks.reduce((acc, click) => {
+        const deviceTypeCounts = clicks.reduce((acc, click) => {
             const deviceType = click.deviceType || 'Unknown';
             acc[deviceType] = (acc[deviceType] || 0) + 1;
             return acc;
@@ -252,7 +252,7 @@ async function getUserDeviceClicks(req, res) {
 
         return res.status(200).json({
             error: false,
-            userDeviceTypeCounts
+            deviceTypeCounts
         });
     } catch (error) {
         console.log("Error fetching the clicks:", error);
