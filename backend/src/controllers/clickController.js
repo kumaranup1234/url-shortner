@@ -424,7 +424,7 @@ async function getClicksByCountry (req, res){
 
         // Aggregate the locations by country and city
         const countryCounts = clicks.reduce((acc, click) => {
-            const country = getName(click.location?.country) || 'Unknown Country';
+            const country = click.location?.country || 'Unknown Country';
 
             const locationKey = `${country}`;
 
