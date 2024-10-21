@@ -10,10 +10,11 @@ const {
     getUserClicks,
     getUserDeviceClicks,
     getUserClicksByOs,
-    getUSerClicksByReferrer,
+    getUserClicksByReferrer,
     getUserClicksByLocation,
     getClicksByCountry,
-    getUserClicksByBrowser
+    getUserClicksByBrowser,
+    getUserClicksByCountry
 } = require('../controllers/clickController');
 const { authenticateUser } = require('../middleware/authenticate');
 
@@ -33,10 +34,13 @@ router.get('/clicks/getUserClicksByBrowser', authenticateUser, getUserClicksByBr
 router.get('/clicks/getUserClicksByLocations', authenticateUser, getUserClicksByLocation);
 
 // Get all clicks for a user by browser
-router.get('/clicks/getUserClicksByReferrer', authenticateUser, getUSerClicksByReferrer);
+router.get('/clicks/getUserClicksByReferrer', authenticateUser, getUserClicksByReferrer);
 
 // Get all clicks for a user by Os
 router.get('/clicks/getUserClicksByOs', authenticateUser, getUserClicksByOs);
+
+// Get Clicks by Country for maps for all urls
+router.get('/clicks/country', authenticateUser, getUserClicksByCountry);
 
 // Get All Clicks for a URL for a span of 10 days
 router.get('/clicks/:shortUrlId', authenticateUser, getAllClicks);

@@ -457,6 +457,69 @@ async function getClicksByCountry (req, res){
     }
 }
 
+// Get all users clicks for country for map
+
+async function getUserClicksByCountry (req, res) {
+
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+            });
+        }
+
+        const urlArray = user.urls;
+
+        // Check if user has any URLs
+        if (urlArray.length === 0) {
+            return res.status(200).json({
+                error: false,
+                countryCounts: {}, // No URLs, so return empty result
+            });
+        }
+
+        const clicks = await Click.find({ url: { $in: urlArray }});
+
+        // Aggregate the locations by country
+        const countryCounts = clicks.reduce((acc, click) => {
+            const country = click.location?.country || 'Unknown Country';
+
+            const locationKey = `${country}`;
+
+            if (!acc[locationKey]) {
+                acc[locationKey] = 0;
+            }
+
+            acc[locationKey]++;
+            return acc;
+        }, {});
+
+        // Check if any clicks are found
+        if (Object.keys(countryCounts).length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'No clicks found for the given URL',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            countryCounts
+        });
+
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
 
 // Get all clicks by location for a user
 async function getUserClicksByLocation(req, res) {
@@ -561,7 +624,7 @@ async function getClicksByReferrer(req, res){
 }
 
 // Get all clicks by referrer for a user
-async function getUSerClicksByReferrer(req, res){
+async function getUserClicksByReferrer(req, res){
     const userId = req.user._id;
 
     try {
@@ -705,8 +768,9 @@ module.exports = {
     getUserClicks,
     getUserDeviceClicks,
     getUserClicksByOs,
-    getUSerClicksByReferrer,
+    getUserClicksByReferrer,
     getUserClicksByLocation,
     getUserClicksByBrowser,
-    getClicksByCountry
+    getClicksByCountry,
+    getUserClicksByCountry
 }
