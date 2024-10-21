@@ -12,6 +12,7 @@ const {
     getUserClicksByOs,
     getUSerClicksByReferrer,
     getUserClicksByLocation,
+    getClicksByCountry,
     getUserClicksByBrowser
 } = require('../controllers/clickController');
 const { authenticateUser } = require('../middleware/authenticate');
@@ -48,6 +49,9 @@ router.get('/clicks/browsers/:shortUrlId', authenticateUser, getClicksByBrowser)
 
 // Get Clicks by Location
 router.get('/clicks/locations/:shortUrlId', authenticateUser, getClicksByLocation);
+
+// Get Clicks by Country for maps
+router.get('/clicks/country/:shortUrlId', authenticateUser, getClicksByCountry);
 
 // Get Clicks by Referrer
 router.get('/clicks/referrers/:shortUrlId', authenticateUser, getClicksByReferrer);

@@ -404,8 +404,61 @@ async function getClicksByLocation(req, res) {
     }
 }
 
-// Get all clicks by location for a user
+// Get country clicks for map
+async function getClicksByCountry (req, res){
+    const shortUrlId = req.params.shortUrlId;
 
+    try {
+        // Find the URL document to get the ObjectId
+        const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
+
+        if (!urlDoc) {
+            return res.status(404).json({
+                error: true,
+                message: 'URL not found',
+            });
+        }
+
+        const objectId = urlDoc._id;
+        const clicks = await Click.find({ url: objectId });
+
+        // Aggregate the locations by country and city
+        const countryCounts = clicks.reduce((acc, click) => {
+            const country = getName(click.location?.country) || 'Unknown Country';
+
+            const locationKey = `${country}`;
+
+            if (!acc[locationKey]) {
+                acc[locationKey] = 0;
+            }
+
+            acc[locationKey]++;
+            return acc;
+        }, {});
+
+        // Check if any clicks are found
+        if (Object.keys(locationCounts).length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'No clicks found for the given URL',
+            });
+        }
+
+        return res.status(200).json({
+            error: false,
+            countryCounts
+        });
+    } catch (error) {
+        console.log("Error fetching the clicks:", error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
+        });
+    }
+}
+
+
+// Get all clicks by location for a user
 async function getUserClicksByLocation(req, res) {
     const userId = req.user._id;
 
@@ -654,5 +707,6 @@ module.exports = {
     getUserClicksByOs,
     getUSerClicksByReferrer,
     getUserClicksByLocation,
-    getUserClicksByBrowser
+    getUserClicksByBrowser,
+    getClicksByCountry
 }
