@@ -24,6 +24,7 @@ import { inject } from '@vercel/analytics';
 import Dashboard from "./Pages/Dashboard.jsx";
 import protectedRoute from "./Components/ProtectedRoute.jsx";
 import NotFound from "./Pages/NotFound.jsx";
+import WorldMap from "./Components/WorldMap.jsx";
 
 const App = () => {
     // Set default state to indicate not logged in

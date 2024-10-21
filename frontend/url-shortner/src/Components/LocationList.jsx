@@ -17,6 +17,7 @@ const LocationList = ({ apiUrl }) => {
     const getLocationData = async () => {
         try {
             const response = await axiosInstance.get(apiUrl);
+            console.log(response.data);
             setLocations(response.data.locationCounts);
         } catch (error) {
             console.error("Error fetching location data:", error);
@@ -25,11 +26,6 @@ const LocationList = ({ apiUrl }) => {
         }
     };
 
-    console.log(locations);
-
-    useEffect(() => {
-        getLocationData();
-    }, []);
 
     // Memoize processed data
     const { countries, cities, unknownLocations, maxClicks, topLocation } = useMemo(() => {
@@ -86,10 +82,6 @@ const LocationList = ({ apiUrl }) => {
         };
     }, [locations]); // Dependency on locations
 
-    setTopLocation({
-        name: topLocation,
-        clicks: maxClicks
-    })
 
     // Calculate total pages for countries or cities
     const totalPages = view === 'country' ? Math.ceil(countries.length / itemsPerPage) : Math.ceil(cities.length / itemsPerPage);
@@ -103,6 +95,13 @@ const LocationList = ({ apiUrl }) => {
         setCurrentPage(newPage);
     };
 
+    useEffect(() => {
+        getLocationData();
+        setTopLocation({
+            name: topLocation,
+            clicks: maxClicks
+        })
+    }, [topLocation, maxClicks]);
 
 
     return (

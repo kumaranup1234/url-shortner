@@ -10,6 +10,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import InfoCard from "../Cards/InfoCard.jsx";
+import WorldMap from "../Components/WorldMap.jsx";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
@@ -82,6 +83,9 @@ const Dashboard = () => {
                 <div className="flex space-x-6">
                     <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <OsPieChart apiUrl={`/api/urls/clicks/getUserClicksByOs`}/>
+                    </div>
+                    <div className="w-1/2 bg-white shadow-lg p-4 rounded-lg">
+                        <WorldMap apiUrl={`/api/urls/clicks/country`}/>
                     </div>
                 </div>
             </div>

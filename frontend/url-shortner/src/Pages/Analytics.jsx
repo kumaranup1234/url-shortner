@@ -6,6 +6,7 @@ import ReferrerBarChart from "../Components/ReferrerBarChart.jsx";
 import LocationList from "../Components/LocationList.jsx";
 import TopPerformanceParent from "../Components/TopPerformanceParent.jsx";
 import OsPieChart from "../Components/OsPieChart.jsx";
+import WorldMap from "../Components/WorldMap.jsx";
 
 const Analytics = () => {
     const { shortenedUrl } = useParams();
@@ -49,6 +50,9 @@ const Analytics = () => {
                 <div className="flex space-x-6">
                     <div className="w-1/2 bg-white shadow-lg p-6 rounded-lg">
                         <OsPieChart apiUrl={`/api/urls/clicks/os/${shortenedUrl}`}/>
+                    </div>
+                    <div className="w-1/2 bg-white shadow-lg p-6 rounded-lg">
+                        <WorldMap apiUrl={`/api/urls/clicks/country/${shortenedUrl}`}/>
                     </div>
                 </div>
             </div>
