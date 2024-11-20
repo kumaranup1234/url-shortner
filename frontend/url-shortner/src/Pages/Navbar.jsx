@@ -14,10 +14,11 @@ const Navbar = () => {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    const dropdownRefMobile = useRef(null);
 
     // custom hook for outside click detection
     useOutsideClick(dropdownRef, () => setShowDropdown(false));
-    useOutsideClick(dropdownRef, () => setShowMobileMenu(false));
+    useOutsideClick(dropdownRefMobile, () => setShowMobileMenu(false));
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -41,7 +42,7 @@ const Navbar = () => {
     return (
         <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
             {/* Left: Logo */}
-            <div ref={dropdownRef} className="flex items-center space-x-6 ml-4 md:ml-16">
+            <div className="flex items-center space-x-6 ml-4 md:ml-16">
                 {/* hamburger Icon */}
                 {!showMobileMenu ? <img
                     src={hamburger}
@@ -150,7 +151,7 @@ const Navbar = () => {
             </div>
 
             {showMobileMenu && (
-                <div className="absolute top-16 left-0 w-full h-[calc(100%-4rem)] bg-teal-900 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
+                <div ref={dropdownRefMobile} className="absolute top-16 left-0 w-full h-[calc(100%-4rem)] bg-teal-900 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
                     {isLoggedIn ? (
                         <div className="flex flex-col text-center space-y-4">
                             <NavLink
