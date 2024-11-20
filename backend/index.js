@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = ["http://localhost:5173", "https://trimat.vercel.app"];
+        const allowedOrigins = ["http://localhost:5173", "https://trimat.vercel.app", "http://192.168.207.243:5173/"];
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
