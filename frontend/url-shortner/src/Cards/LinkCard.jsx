@@ -79,7 +79,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
     };
 
     return (
-        <div className="bg-gray-200 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-6 mr-1 relative">
+        <div className="bg-gray-200 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">
@@ -100,7 +100,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
 
                     {/* Original URL */}
                     <a href={originalUrl} target="_blank" rel="noopener noreferrer"
-                       className="text-gray-800 font-semibold mt-3 ml-1">
+                       className="text-gray-800 font-semibold mt-3 ml-1 truncate">
                         {trimmedUrl}
                     </a>
                 </div>
@@ -120,7 +120,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
             </div>
 
             {/* Right Section - Three Dot Menu */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative sm:ml-2" ref={dropdownRef}>
                 <button onClick={toggleDropdown} className="focus:outline-none">
                     <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
                 </button>

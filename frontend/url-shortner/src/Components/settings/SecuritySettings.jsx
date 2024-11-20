@@ -28,15 +28,13 @@ const SecuritySettings = () => {
                 loading: "Resetting password",
                 success: "Password reset successfully.",
                 error: "Password reset failed",
-            })
+            });
 
             // Reset input fields after the promise resolves
             await myPromise;
             setCurrentPassword(""); // Reset to an empty string instead of `null`
             setPassword("");
             setConfirmPassword("");
-
-
         } catch (error) {
             if (error.response && error.response.data.message) {
                 toast.error(error.response.data.message);
@@ -47,15 +45,18 @@ const SecuritySettings = () => {
     };
 
     return (
-        <div className="h-screen">
-            <div className="mt-10 bg-gray-100 mr-24 w-10/12">
-                <div className="flex mb-4 bg-teal-900 text-white p-4">
-                    <p className="text-white text-center">Update password</p>
+        <div className="h-screen flex justify-center items-start py-10 px-4">
+            <div className="bg-gray-100 w-full max-w-4xl rounded-md shadow-lg">
+                {/* Header */}
+                <div className="flex justify-center mb-4 bg-teal-900 text-white p-4 rounded-t-md">
+                    <p className="text-lg font-semibold">Update Password</p>
                 </div>
-                <div className="p-8">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Form */}
+                <div className="p-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Current Password */}
-                        <div className="grid grid-cols-4 gap-4 items-center">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
                             <label htmlFor="currentPassword" className="text-sm font-semibold">
                                 Current Password
                             </label>
@@ -85,7 +86,7 @@ const SecuritySettings = () => {
                         </div>
 
                         {/* New Password */}
-                        <div className="grid grid-cols-4 gap-4 items-center">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
                             <label htmlFor="password" className="text-sm font-semibold">
                                 New Password
                             </label>
@@ -115,7 +116,7 @@ const SecuritySettings = () => {
                         </div>
 
                         {/* Confirm Password */}
-                        <div className="grid grid-cols-4 gap-4 items-center">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
                             <label htmlFor="confirmPassword" className="text-sm font-semibold">
                                 Confirm Password
                             </label>
@@ -144,14 +145,13 @@ const SecuritySettings = () => {
                             </div>
                         </div>
 
-                        {/* Update button */}
-                        <div className="grid grid-cols-4 gap-4 items-center">
-                            <div></div> {/* Empty div for alignment */}
+                        {/* Update Button */}
+                        <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="bg-teal-900 text-white rounded-md p-2 border border-gray-300 w-1/2"
+                                className="bg-teal-900 text-white rounded-md px-5 py-2 border border-gray-300 hover:bg-teal-800 transition-all duration-200"
                             >
-                                Update
+                                Update Password
                             </button>
                         </div>
                     </form>

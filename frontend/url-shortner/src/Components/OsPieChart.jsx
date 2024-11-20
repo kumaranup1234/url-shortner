@@ -9,6 +9,7 @@ const OsPieChart = ({ apiUrl }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [centerText, setCenterText] = useState('Total: 0');
     const [loading, setLoading] = useState(true);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     // Fetch the data from API
     const getOsData = async () => {
@@ -30,6 +31,20 @@ const OsPieChart = ({ apiUrl }) => {
             setLoading(false);
         }
     };
+
+
+    // Update window width on resize
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         getOsData();
@@ -68,6 +83,15 @@ const OsPieChart = ({ apiUrl }) => {
         setCenterText(`Total: ${totalClicks}`);
     };
 
+    const getRadius = () => {
+        if (windowWidth >= 1024) { // For large screens
+            return { innerRadius: 90, outerRadius: 110 };
+        }
+        return { innerRadius: 65, outerRadius: 85 };
+    };
+
+    const { innerRadius, outerRadius } = getRadius();
+
     return (
         <div className="shadow-lg rounded-lg">
             {loading ?
@@ -84,15 +108,15 @@ const OsPieChart = ({ apiUrl }) => {
                     <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by OS</h2>
                     <div className="flex items-center space-x-6">
                         {/* Pie Chart */}
-                        <div className="relative w-96 flex items-center justify-center">
+                        <div className="relative w-full md:w-1/2 flex items-center justify-center">
                             <ResponsiveContainer width="100%" height={345}>
                                 <PieChart>
                                     <Pie
                                         data={osData}
                                         cx="50%"
                                         cy="50%"
-                                        innerRadius={90}
-                                        outerRadius={110}
+                                        innerRadius={innerRadius}
+                                        outerRadius={outerRadius}
                                         activeIndex={activeIndex}
                                         activeShape={renderActiveShape}
                                         dataKey="value"

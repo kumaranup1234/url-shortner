@@ -71,7 +71,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
                     <ResponsiveContainer width="100%" height={340}>
                         <BarChart
                             data={referrerData}
-                            margin={{top: 10, right: 10, left: 10, bottom: 10}}
+                            margin={{top: 10, right: 10, left: -10, bottom: 10}}
                             barGap={5} // Reduce gap between bars
                             barSize={60} // Increase bar width
                         >

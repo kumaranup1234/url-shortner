@@ -9,6 +9,7 @@ const DevicePieChart = ({ apiUrl }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [centerText, setCenterText] = useState('Total: 0');
     const [loading, setLoading] = useState(true);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
      // Dummy data for testing
      const dummyData = [
@@ -44,6 +45,19 @@ const DevicePieChart = ({ apiUrl }) => {
             setLoading(false);
         }
     };
+
+    // Update window width on resize
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         getDeviceData();
@@ -82,6 +96,15 @@ const DevicePieChart = ({ apiUrl }) => {
         setCenterText(`Total: ${totalClicks}`);
     };
 
+    const getRadius = () => {
+        if (windowWidth >= 1024) { // For large screens
+            return { innerRadius: 90, outerRadius: 110 };
+        }
+        return { innerRadius: 70, outerRadius: 90 };
+    };
+
+    const { innerRadius, outerRadius } = getRadius();
+
     return (
         <div className="shadow-lg rounded-lg">
             {loading ?
@@ -98,15 +121,15 @@ const DevicePieChart = ({ apiUrl }) => {
                     <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
                     <div className="flex items-center space-x-6">
                         {/* Pie Chart */}
-                        <div className="relative w-96 flex items-center justify-center">
+                        <div className="relative w-full md:w-1/2 flex items-center justify-center">
                             <ResponsiveContainer width="100%" height={345}>
                                 <PieChart>
                                     <Pie
                                         data={deviceData}
                                         cx="50%"
                                         cy="50%"
-                                        innerRadius={90}
-                                        outerRadius={110}
+                                        innerRadius={innerRadius}
+                                        outerRadius={outerRadius}
                                         activeIndex={activeIndex}
                                         activeShape={renderActiveShape}
                                         dataKey="value"
@@ -126,7 +149,7 @@ const DevicePieChart = ({ apiUrl }) => {
 
                             {/* Centered text */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <p className="text-xl font-bold">{centerText}</p>
+                                <p className="md:text-xl font-bold">{centerText}</p>
                             </div>
                         </div>
 

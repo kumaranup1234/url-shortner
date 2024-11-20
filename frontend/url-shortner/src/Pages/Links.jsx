@@ -37,7 +37,7 @@ const Links = () => {
     };
 
     return (
-        <div className="mx-16 mt-2">
+        <div className="mx-auto sm:px-6 lg:px-8 mt-2 overflow-x-hidden">
             <div className="flex">
                 <div className="grid">
                     <CreateNewLink onSuccess={triggerRefresh} />
@@ -45,7 +45,7 @@ const Links = () => {
                     <div className="flex space-x-10 mt-10">
                         {/* Links section */}
                         <div className="flex-1">
-                            <div className="grid grid-cols-1 gap-6">
+                            <div className="grid grid-cols-1 gap-2 md:gap-6">
                                 { loading ? (
                                     <>
                                         <SkeletonLoader />
@@ -80,7 +80,7 @@ const Links = () => {
                 </div>
 
                 {/* SummaryCard section */}
-                <div className="w-1/3 ml-40 mt-10">
+                <div className="w-1/3 ml-40 mt-10 hidden lg:block">
                     <SummaryCard refresh={refresh}/>
                     <div className="mt-12">
                         <AboutCard/>

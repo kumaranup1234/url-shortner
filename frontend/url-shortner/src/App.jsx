@@ -1,18 +1,19 @@
 import './App.css';
-import Shortened from "./Pages/Shortened.jsx";
-import Login from "./Pages/Login.jsx";
 import { Route, Routes } from "react-router-dom";
-import LandingPage from "./Pages/LandingPage.jsx";
-import Links from "./Pages/Links.jsx";
-import Analytics from "./Pages/Analytics.jsx";
-import Navbar from "./Pages/Navbar.jsx";
-import SignUp from "./Pages/SignUp.jsx";
-import { useEffect, useState } from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import axiosInstance from "./utils/axiosInstance.js";
 import {useRecoilState} from "recoil";
 import {authState} from "./recoil/atoms.js";
 import {Toaster} from "react-hot-toast";
-import Settings from "./Pages/Settings.jsx";
+import { inject } from '@vercel/analytics';
+import Shortened from "./Pages/Shortened.jsx";
+import Login from "./Pages/Login.jsx";
+import LandingPage from "./Pages/LandingPage.jsx";
+import Links from "./Pages/Links.jsx";
+const Analytics = React.lazy(() => import('./Pages/Analytics.jsx'));
+import Navbar from "./Pages/Navbar.jsx";
+import SignUp from "./Pages/SignUp.jsx";
+const Settings = React.lazy(() => import('./Pages/Settings.jsx'));
 import ForgotPassword from "./Pages/ForgotPassword.jsx";
 import ResetPassword from "./Pages/ResetPassword.jsx";
 import ApiDocs from "./Pages/ApiDocs.jsx";
@@ -20,14 +21,12 @@ import MainFooter from "./Components/MainFooter.jsx";
 import TermsOfService from "./Components/TermsOfService.jsx";
 import PrivacyPolicy from "./Components/PrivacyPolicy.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
-import { inject } from '@vercel/analytics';
-import Dashboard from "./Pages/Dashboard.jsx";
-import protectedRoute from "./Components/ProtectedRoute.jsx";
+const Dashboard = React.lazy(() => import('./Pages/Dashboard.jsx'));
 import NotFound from "./Pages/NotFound.jsx";
-import WorldMap from "./Components/WorldMap.jsx";
+import OneLink from "./Pages/OneLink.jsx";
+import LoadingSpinner from "./Components/LoadingSpinner.jsx";
 
 const App = () => {
-    // Set default state to indicate not logged in
     const [auth, setAuth] = useRecoilState(authState);
     const [loading, setLoading] = useState(true);
 
@@ -48,13 +47,14 @@ const App = () => {
 
     inject();
     if (loading) {
-        return <div className="h-screen w-screen"></div>; // Blank full-screen div
+       return <LoadingSpinner />;
     }
 
     return (
         <>
             <div><Toaster/></div>
             <Navbar/>
+            <Suspense fallback={<LoadingSpinner />}>
             <Routes>
                 <Route path="/" element={<ProtectedRoute element={<LandingPage/>} />}/>
                 <Route path="/login" element={<ProtectedRoute element={<Login/>} />}/>
@@ -62,6 +62,7 @@ const App = () => {
                 <Route path="/shortened" element={<Shortened/>}/>
                 <Route path="/links" element={<ProtectedRoute  element={<Links/>} />}/>
                 <Route path="/dashboard" element={<ProtectedRoute  element={<Dashboard/>} />}/>
+                <Route path="/onelinkPages" element={<ProtectedRoute element={<OneLink/>} />}/>
                 <Route path="/settings" element={<ProtectedRoute element={<Settings/>} />} />
                 <Route path="/reset" element={<ProtectedRoute element={<ForgotPassword />} />} />
                 <Route path="/reset-password/:resetToken" element={<ProtectedRoute element={<ResetPassword />} />} />
@@ -71,6 +72,7 @@ const App = () => {
                 <Route path="/analytics/:shortenedUrl" element={<ProtectedRoute element={<Analytics/>} />}/>
                 <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
             <MainFooter />
         </>
     );

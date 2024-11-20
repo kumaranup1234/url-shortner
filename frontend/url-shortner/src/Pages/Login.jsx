@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PasswordInput from "../Components/PasswordInput.jsx";
-import {useSetRecoilState} from "recoil";
-import {validateEmail} from "../utils/helper.js";
+import { useSetRecoilState } from "recoil";
+import { validateEmail } from "../utils/helper.js";
 import axiosInstance from "../utils/axiosInstance.js";
-import {authState} from "../recoil/atoms.js";
+import { authState } from "../recoil/atoms.js";
 import toast from "react-hot-toast";
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
         e.preventDefault();
 
         if (!validateEmail(email)) {
-            toast.error("Please enter a valid email")
+            toast.error("Please enter a valid email");
             return;
         }
         if (!password) {
@@ -30,12 +30,12 @@ const Login = () => {
                 email: email,
                 password: password
             })
-            if (response.data.success){
+            if (response.data.success) {
                 setAuth({ isLoggedIn: true, user: response.data.user });
             }
             toast.dismiss(toastId);
-            navigate("/links")
-        } catch (error){
+            navigate("/links");
+        } catch (error) {
             toast.dismiss(toastId);
             if (error.response && error.response.data && error.response.data.message) {
                 toast.error(error.response.data.message);
@@ -45,11 +45,10 @@ const Login = () => {
         }
     }
 
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <div className="flex items-center justify-center">
-                <div className="w-96 border rounded-lg bg-white px-7 py-10 shadow-lg">
+            <div className="flex items-center justify-center w-full px-4 sm:px-6 md:px-8 lg:px-12">
+                <div className="w-full max-w-md border rounded-lg bg-white px-7 py-10 shadow-lg">
                     <form onSubmit={handleLogin}>
                         <h4 className="text-2xl font-semibold mb-7 text-gray-800 text-center">Login</h4>
                         <input

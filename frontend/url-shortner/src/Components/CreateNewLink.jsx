@@ -28,9 +28,9 @@ const CreateNewLink = ({ onSuccess }) => {
 
 
     return (
-        <div className="ml-6">
+        <div className="ml-1 mr-2 md:ml-6 ">
             <div className="flex justify-center mt-10">
-                <form className="border-2 border-gray-200 flex items-center rounded">
+                <form className="border-2 border-gray-200 flex items-center rounded w-full max-w-3xl">
                     <input
                         type="text"
                         name="url"
@@ -39,7 +39,7 @@ const CreateNewLink = ({ onSuccess }) => {
                         onChange={(e) => {
                             setOriginalUrl(e.target.value)
                         }}
-                        className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
+                        className="border-none focus:ring-2 focus:ring-blue-500 w-full md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
                     />
                     <button
                         onClick={handleSubmit}
