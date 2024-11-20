@@ -17,23 +17,19 @@ app.set('trust proxy', 1)
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors({
-    origin: '*',
-    credentials: true
-}));
 
-//app.use(cors({
- //   origin: (origin, callback) => {
-    //    const allowedOrigins = ["http://localhost:5173", "https://trimat.vercel.app", "http://192.168.207.243:5173/"];
-    //    if (!origin || allowedOrigins.includes(origin)) {
-     //       callback(null, true);
-     //   } else {
-     //       callback(new Error("Not allowed by CORS"));
-      //  }
-  //  },
-   // methods: ["POST", "GET", "PUT", "DELETE"],
-   // credentials: true
-//}));
+app.use(cors({
+ origin: (origin, callback) => {
+        const allowedOrigins = ["http://localhost:5173", "https://trimat.vercel.app",];
+       if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+       } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+   methods: ["POST", "GET", "PUT", "DELETE"],
+   credentials: true
+}));
 
 // Middleware for parsing JSON request bodies
 app.use(express.json());
