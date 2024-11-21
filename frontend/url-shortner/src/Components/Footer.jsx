@@ -3,7 +3,7 @@ import URL from "../assets/icon-url.png"
 import Stats from "../assets/icon-statistics.png"
 const Footer = () => {
     return (
-        <div>
+        <footer>
             <div className="mt-8 ml-20">
                 <p className="text-2xl text-gray-700 font-bold ml-64">Simple and fast URL shortener!</p>
                 <p className="text-left ml-64 mt-2">
@@ -45,7 +45,7 @@ const Footer = () => {
                     </p>
                 </div>
             </div>
-        </div>
+        </footer>
     )
 
 }
