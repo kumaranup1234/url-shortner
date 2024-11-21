@@ -18,6 +18,7 @@ const OneLinkSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+OneLinkSchema.index({ username: 1 });
 
 const OneLink = mongoose.model('OneLink', OneLinkSchema);
 

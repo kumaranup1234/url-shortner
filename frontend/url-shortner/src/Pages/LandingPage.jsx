@@ -72,11 +72,11 @@ const LandingPage = () => {
                                 onChange={(e) => {
                                     setLink(e.target.value)
                                 }}
-                                className="border-none focus:ring-2 focus:ring-blue-500 w-80 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
+                                className="border-none focus:ring-2 focus:ring-blue-500 w-full max-w-[90%] md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
                             />
                             <button
                                 onClick={handleSubmit}
-                                className="w-full text-white bg-blue-600 font-bold md:w-28 h-14 hover:bg-blue-800 transition duration-200">
+                                className="w-[50%] text-white bg-blue-600 font-bold md:w-28 h-14 hover:bg-blue-800 transition duration-200">
                                 Shorten URL
                             </button>
                         </form>
