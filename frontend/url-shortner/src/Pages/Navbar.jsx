@@ -181,15 +181,15 @@ const Navbar = () => {
             </div>
 
             {showMobileMenu && (
-                <div className="absolute top-16 left-0 w-full h-[calc(100%-4rem)] bg-teal-900 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
+                <div className="absolute top-16 mt-2 left-0 w-full h-[calc(100%-4rem)] bg-teal-700 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
                     {isLoggedIn ? (
                         <div className="flex flex-col text-center space-y-4">
                             <NavLink
                                 to="/dashboard"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -199,8 +199,8 @@ const Navbar = () => {
                                 to="/links"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -210,8 +210,8 @@ const Navbar = () => {
                                 to="/onelinkPages"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -221,8 +221,8 @@ const Navbar = () => {
                                 to="/api-docs"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -235,8 +235,8 @@ const Navbar = () => {
                                 to="/login"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -246,8 +246,8 @@ const Navbar = () => {
                                 to="/signup"
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-yellow-300 font-bold text-xl"
-                                        : "text-white hover:text-gray-300 text-xl"
+                                        ? "text-yellow-300 font-bold text-2xl"
+                                        : "text-white text-2xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
