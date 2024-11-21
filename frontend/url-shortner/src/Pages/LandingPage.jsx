@@ -5,6 +5,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import {isAuthenticated} from "../recoil/selectors.js";
 import {useRecoilValue} from "recoil";
 import toast from "react-hot-toast";
+import MainFooter from "../Components/MainFooter.jsx";
 
 const LandingPage = () => {
 
@@ -54,6 +55,7 @@ const LandingPage = () => {
         navigate("/login")
     }
     return (
+        <>
         <div>
             <div className="w-full max-w-lg lg:max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg mt-16">
                 <div className="text-center">
@@ -112,6 +114,8 @@ const LandingPage = () => {
             </div>
             <Footer/>
         </div>
+            <MainFooter />
+        </>
     );
 }
 

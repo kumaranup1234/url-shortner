@@ -23,7 +23,7 @@ const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 grid items-center justify-center z-50">
+        <div className="w-full fixed inset-0 bg-black bg-opacity-50 grid items-center justify-center z-50">
             {/* Modal Box */}
             <div className="bg-white p-6 rounded-lg relative w-96">
                 {/* Navbar Section */}

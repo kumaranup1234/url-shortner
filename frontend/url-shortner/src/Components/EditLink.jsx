@@ -35,7 +35,7 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg relative w-1/2"> {/* Larger modal */}
+            <div className="bg-white p-6 rounded-lg relative w-11/12 md:w-1/2"> {/* Larger modal */}
                 {/* Navbar Section */}
                 <div className="flex justify-between items-center mb-4 bg-teal-900 text-white p-4 -mx-6 -mt-6 rounded-tr-lg rounded-tl-lg">
                     <p className="text-white font-bold">Edit Link</p>

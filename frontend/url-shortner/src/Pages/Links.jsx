@@ -85,7 +85,7 @@ const Links = () => {
                     </div>
                 </div>
             </div>
-            <p className="text-center mb-4 text-bold m-4 p-4">--- You've reached the end of your links ---</p>
+            {allLinks.length > 0 && <p className="text-center text-bold mt-10 md:mt-10 mb-4">--- You've reached the end of your links ---</p>}
         </div>
     );
 };

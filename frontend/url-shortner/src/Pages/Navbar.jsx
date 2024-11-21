@@ -1,22 +1,34 @@
 import { FaUserCircle, FaCog, FaSignOutAlt } from "react-icons/fa";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { authState } from "../recoil/atoms.js";
-import {useRef, useState} from "react";
-import {NavLink, useNavigate} from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../Components/LogoutButton.jsx";
 import useOutsideClick from "../hooks/useOutsideClick.jsx";
-import hamburger from  "../assets/hamburger-menu.svg"
-import close from "../assets/close-button.svg"
+import hamburger from "../assets/hamburger-menu.svg";
+import close from "../assets/close-button.svg";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
-    const {isLoggedIn, user} = useRecoilValue(authState);
+    const { isLoggedIn, user } = useRecoilValue(authState);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
     // custom hook for outside click detection
     useOutsideClick(dropdownRef, () => setShowDropdown(false));
+
+    // Disable scrolling when the mobile menu is open
+    useEffect(() => {
+        if (showMobileMenu) {
+            document.body.style.overflow = "hidden"; // disable scrolling
+        } else {
+            document.body.style.overflow = "auto"; // re-enable scrolling
+        }
+        return () => {
+            document.body.style.overflow = "auto"; // re-enable scrolling on cleanup
+        };
+    }, [showMobileMenu]);
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -35,57 +47,73 @@ const Navbar = () => {
         } else {
             navigate("/");
         }
-    }
+    };
 
     return (
         <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
             {/* Left: Logo */}
             <div className="flex items-center space-x-6 ml-4 md:ml-16">
                 {/* hamburger Icon */}
-                {!showMobileMenu ? <img
-                    src={hamburger}
-                    alt="Hamburger Menu"
-                    className="cursor-pointer md:hidden w-6 h-6"
+                {!showMobileMenu ? (
+                    <img
+                        src={hamburger}
+                        alt="Hamburger Menu"
+                        className="cursor-pointer md:hidden w-6 h-6"
+                        onClick={toggleMobileMenu}
+                    />
+                ) : (
+                    <img
+                        src={close}
+                        alt="Close Menu"
+                        className="cursor-pointer md:hidden h-6 w-6"
+                        onClick={toggleMobileMenu}
+                    />
+                )}
 
-                    onClick={toggleMobileMenu}
-                /> : <img
-                    src={close}
-                    alt="Close Menu"
-                    className="cursor-pointer md:hidden h-6 w-6"
-                    onClick={toggleMobileMenu}
-                />}
-
-                <div onClick={handleLogoClick} className="text-white font-bold text-2xl cursor-pointer">Trim.URL</div>
+                <div
+                    onClick={handleLogoClick}
+                    className="text-white font-bold text-2xl cursor-pointer"
+                >
+                    Trim.URL
+                </div>
                 {isLoggedIn && (
                     <div className="hidden md:flex space-x-4">
                         <NavLink
                             to="/dashboard"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold"
+                                    : "text-white hover:text-gray-300 font-medium"
                             }
                         >
                             Dashboard
                         </NavLink>
                         <NavLink
                             to="/links"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold"
+                                    : "text-white hover:text-gray-300 font-medium"
                             }
                         >
                             Your Links
                         </NavLink>
                         <NavLink
                             to="/onelinkPages"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold"
+                                    : "text-white hover:text-gray-300 font-medium"
                             }
                         >
                             OneLink
                         </NavLink>
                         <NavLink
                             to="/api-docs"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold" : "text-white hover:text-gray-300 font-medium"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold"
+                                    : "text-white hover:text-gray-300 font-medium"
                             }
                         >
                             API Docs
@@ -100,16 +128,20 @@ const Navbar = () => {
                     <div className="space-x-6 hidden md:block ">
                         <NavLink
                             to="/login"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold text-xl"
+                                    : "text-white hover:text-gray-300 text-xl"
                             }
                         >
                             Login
                         </NavLink>
                         <NavLink
                             to="/signup"
-                            className={({isActive}) =>
-                                isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-yellow-300 font-bold text-xl"
+                                    : "text-white hover:text-gray-300 text-xl"
                             }
                         >
                             SignUp
@@ -155,7 +187,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/dashboard"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -164,7 +198,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/links"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -173,7 +209,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/onelinkPages"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -182,7 +220,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/api-docs"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -194,7 +234,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/login"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -203,7 +245,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/signup"
                                 className={({ isActive }) =>
-                                    isActive ? "text-yellow-300 font-bold text-xl" : "text-white hover:text-gray-300 text-xl"
+                                    isActive
+                                        ? "text-yellow-300 font-bold text-xl"
+                                        : "text-white hover:text-gray-300 text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -215,6 +259,6 @@ const Navbar = () => {
             )}
         </nav>
     );
-}
+};
 
 export default Navbar;
