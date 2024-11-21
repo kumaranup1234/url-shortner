@@ -2,8 +2,7 @@ import {Link} from "react-router-dom";
 
 const MainFooter = () => {
     return (
-        <div className="flex flex-col min-h-screen">
-        <footer className="bg-teal-900 text-white py-4">
+        <footer className="bg-teal-900 text-white mt-6 p-4">
             <div className="container mx-auto text-center">
                 <p className="text-sm">
                     Built by Anup Kumar | © {new Date().getFullYear()} URL Shortener
@@ -26,7 +25,6 @@ const MainFooter = () => {
                 </div>
             </div>
         </footer>
-        </div>
     );
 };
 

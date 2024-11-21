@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { BASE_URL } from "../utils/constants.js";
+import MainFooter from "../Components/MainFooter.jsx";
 
 const Shortened = () => {
     const location = useLocation();
@@ -28,6 +29,7 @@ const Shortened = () => {
     };
 
     return (
+        <>
         <div className="px-4 sm:px-8 md:px-16 lg:px-32">
             <div className="text-center p-4 mt-4">
                 <h1 className="text-2xl md:text-3xl text-gray-700 font-bold">Your shortened URL</h1>
@@ -38,7 +40,7 @@ const Shortened = () => {
 
             <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-xl mx-auto mt-6">
                 <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-                    <form className="border-2 flex items-center w-full md:w-auto">
+                    <form className="border-2 flex items-center w-full md:w-full">
                         <input
                             type="text"
                             name="url"
@@ -48,7 +50,7 @@ const Shortened = () => {
                             className="border-none focus:ring-2 focus:ring-blue-500 flex-grow h-12 md:h-14 px-4 text-sm md:text-base outline-none rounded-l-md"
                         />
                         <button
-                            className={`font-bold px-4 py-3 md:px-6 md:py-3 transition duration-200 ${buttonText === "Copied!" ? "bg-green-600 hover:bg-green-800 text-white" : "bg-blue-600 hover:bg-blue-800 text-white"}`}
+                            className={`font-bold px-4 py-3 md:px-6 md:py-4 transition duration-200 ${buttonText === "Copied!" ? "bg-green-600 hover:bg-green-800 text-white" : "bg-blue-600 hover:bg-blue-800 text-white"}`}
                             onClick={handleCopyClick}
                         >
                             {buttonText}
@@ -81,6 +83,8 @@ const Shortened = () => {
                 </div>
             </div>
         </div>
+            <MainFooter />
+        </>
     );
 };
 

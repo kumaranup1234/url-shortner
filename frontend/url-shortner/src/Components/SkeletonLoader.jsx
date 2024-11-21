@@ -1,6 +1,6 @@
 const SkeletonLoader = () => {
     return (
-        <div className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-6 mr-1 relative animate-pulse">
+        <div className="bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative animate-pulse">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">
@@ -33,10 +33,11 @@ const SkeletonLoader = () => {
             </div>
 
             {/* Right Section - Three Dot Menu Placeholder */}
-            <div className="relative">
+            <div className="relative sm:ml-2">
                 <div className="bg-gray-200 h-6 w-6 rounded"></div>
             </div>
         </div>
     );
-}
+};
+
 export default SkeletonLoader;

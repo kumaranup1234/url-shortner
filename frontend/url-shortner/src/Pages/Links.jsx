@@ -52,8 +52,6 @@ const Links = () => {
                                         <SkeletonLoader />
                                         <SkeletonLoader />
                                     </>
-
-
                                 ): allLinks.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center mb-24">
                                         <p className="text-gray-500 text-lg">No Short URLs created yet. Create your first
