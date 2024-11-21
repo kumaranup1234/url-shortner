@@ -7,7 +7,7 @@ import deleteIcon from "../assets/deleteIcon.svg";
 import qrIcon from "../assets/qrIcon.svg";
 import threeDotsIcon from "../assets/threeDotsIcon.svg";
 import { BASE_URL } from "../utils/constants.js";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../Components/QRCodePopup.jsx";
 import toast from "react-hot-toast";
@@ -23,6 +23,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
     const [showDropdown, setShowDropdown] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isShareModalOpen, setShareModalOpen] = useState(false);
+    const [isDropdownUpward, setIsDropdownUpward] = useState(false);
     const dropdownRef = useRef(null);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
@@ -78,6 +79,21 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
         });
     };
 
+    useEffect(() => {
+        if (showDropdown) {
+            const dropdown = dropdownRef.current;
+            const dropdownRect = dropdown.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+
+            // check if dropdown would overflow
+            if (dropdownRect.bottom > viewportHeight) {
+                setIsDropdownUpward(true);
+            } else {
+                setIsDropdownUpward(false);
+            }
+        }
+    }, [showDropdown]);
+
     return (
         <div className="bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative">
             {/* Left Section */}
@@ -127,7 +143,8 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                    <div className="absolute right-0 w-40 bg-white rounded-lg shadow-lg z-10 border-2 border-gray-200">
+                    <div className={`absolute right-0 w-40 bg-white rounded-lg shadow-lg z-10 border-2 border-gray-200 ${
+                    isDropdownUpward ? "bottom-full mb-2" : "top-full mt-2"}`}>
                         <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleCopy}>
                             <img src={copyIcon} className="h-5 w-5 mr-2" alt="Copy Icon"/>
                             <button className="text-sm">Copy</button>

@@ -51,36 +51,36 @@ const Navbar = () => {
 
     return (
         <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
-            {/* Left: Logo */}
             <div className="flex items-center space-x-6 ml-4 md:ml-16">
-                {/* hamburger Icon */}
-                {!showMobileMenu ? (
-                    <img
-                        src={hamburger}
-                        alt="Hamburger Menu"
-                        className="cursor-pointer md:hidden w-6 h-6"
-                        onClick={toggleMobileMenu}
-                    />
-                ) : (
-                    <img
-                        src={close}
-                        alt="Close Menu"
-                        className="cursor-pointer md:hidden h-6 w-6"
-                        onClick={toggleMobileMenu}
-                    />
-                )}
-
+                <div className="flex justify-between items-center space-x-6">
+                    {!showMobileMenu ? (
+                        <img
+                            src={hamburger}
+                            alt="Hamburger Menu"
+                            className="cursor-pointer md:hidden w-6 h-6"
+                            onClick={toggleMobileMenu}
+                        />
+                    ) : (
+                        <img
+                            src={close}
+                            alt="Close Menu"
+                            className="cursor-pointer md:hidden h-6 w-6"
+                            onClick={toggleMobileMenu}
+                        />
+                    )}
                 <div
                     onClick={handleLogoClick}
                     className="text-white font-bold text-2xl cursor-pointer"
                 >
                     Trim.URL
                 </div>
+                </div>
+
                 {isLoggedIn && (
                     <div className="hidden md:flex space-x-4">
                         <NavLink
                             to="/dashboard"
-                            className={({ isActive }) =>
+                            className={({isActive}) =>
                                 isActive
                                     ? "text-yellow-300 font-bold"
                                     : "text-white hover:text-gray-300 font-medium"
@@ -90,7 +90,7 @@ const Navbar = () => {
                         </NavLink>
                         <NavLink
                             to="/links"
-                            className={({ isActive }) =>
+                            className={({isActive}) =>
                                 isActive
                                     ? "text-yellow-300 font-bold"
                                     : "text-white hover:text-gray-300 font-medium"
@@ -100,7 +100,7 @@ const Navbar = () => {
                         </NavLink>
                         <NavLink
                             to="/onelinkPages"
-                            className={({ isActive }) =>
+                            className={({isActive}) =>
                                 isActive
                                     ? "text-yellow-300 font-bold"
                                     : "text-white hover:text-gray-300 font-medium"
@@ -110,7 +110,7 @@ const Navbar = () => {
                         </NavLink>
                         <NavLink
                             to="/api-docs"
-                            className={({ isActive }) =>
+                            className={({isActive}) =>
                                 isActive
                                     ? "text-yellow-300 font-bold"
                                     : "text-white hover:text-gray-300 font-medium"
@@ -126,7 +126,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-6 md:mr-14">
                 {!isLoggedIn ? (
                     <div className="space-x-6 hidden md:block ">
-                        <NavLink
+                    <NavLink
                             to="/login"
                             className={({ isActive }) =>
                                 isActive
@@ -181,7 +181,7 @@ const Navbar = () => {
             </div>
 
             {showMobileMenu && (
-                <div className="absolute top-16 mt-2 left-0 w-full h-[calc(100%-4rem)] bg-teal-700 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
+                <div className="absolute top-16 mt-2 left-0 w-full h-[calc(100%-4rem)] bg-teal-950 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
                     {isLoggedIn ? (
                         <div className="flex flex-col text-center space-y-4">
                             <NavLink

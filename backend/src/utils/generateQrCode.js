@@ -1,5 +1,5 @@
 const QRCode = require('qrcode');
-const baseUrl = "https://url-shortner-yi5l.onrender.com/"
+const baseUrl = "https://trim-at.onrender.com/"
 
 async function generateQRCodeForUrl(shortUrl) {
     const url = baseUrl + shortUrl;
