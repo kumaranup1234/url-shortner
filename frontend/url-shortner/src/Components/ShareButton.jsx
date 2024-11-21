@@ -28,7 +28,7 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
                         </div>
 
 
-                        <div className="flex justify-between mb-6">
+                        <div className="flex justify-between gap-4 mb-6">
                             <a
                                 href={socialMediaLinks.facebook}
                                 target="_blank"
