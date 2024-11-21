@@ -79,7 +79,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
     };
 
     return (
-        <div className="bg-gray-200 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative">
+        <div className="bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">

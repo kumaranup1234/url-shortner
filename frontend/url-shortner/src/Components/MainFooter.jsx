@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 
 const MainFooter = () => {
     return (
+        <div className="flex flex-col min-h-screen">
         <footer className="bg-teal-900 text-white py-4">
             <div className="container mx-auto text-center">
                 <p className="text-sm">
@@ -25,6 +26,7 @@ const MainFooter = () => {
                 </div>
             </div>
         </footer>
+        </div>
     );
 };
 

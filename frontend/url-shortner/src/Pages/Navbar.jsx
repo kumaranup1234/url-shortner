@@ -14,11 +14,9 @@ const Navbar = () => {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
-    const dropdownRefMobile = useRef(null);
 
     // custom hook for outside click detection
     useOutsideClick(dropdownRef, () => setShowDropdown(false));
-    useOutsideClick(dropdownRefMobile, () => setShowMobileMenu(false));
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -151,7 +149,7 @@ const Navbar = () => {
             </div>
 
             {showMobileMenu && (
-                <div ref={dropdownRefMobile} className="absolute top-16 left-0 w-full h-[calc(100%-4rem)] bg-teal-900 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
+                <div className="absolute top-16 left-0 w-full h-[calc(100%-4rem)] bg-teal-900 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
                     {isLoggedIn ? (
                         <div className="flex flex-col text-center space-y-4">
                             <NavLink

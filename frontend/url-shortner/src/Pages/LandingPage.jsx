@@ -55,9 +55,9 @@ const LandingPage = () => {
     }
     return (
         <div>
-            <div className="max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg mt-16">
+            <div className="w-full max-w-lg lg:max-w-3xl mx-auto border-2 p-8 bg-white shadow-lg rounded-lg mt-16">
                 <div className="text-center">
-                    <p className="text-3xl text-gray-700 font-bold">Paste the URL to be shortened</p>
+                    <p className="text-lg md:text-xl lg:text-2xl text-gray-700 font-bold">Paste the URL to be shortened</p>
                 </div>
                 <div>
                     <div className="flex justify-center mt-10">
@@ -74,7 +74,7 @@ const LandingPage = () => {
                             />
                             <button
                                 onClick={handleSubmit}
-                                className="text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
+                                className="w-full text-white bg-blue-600 font-bold md:w-28 h-14 hover:bg-blue-800 transition duration-200">
                                 Shorten URL
                             </button>
                         </form>
@@ -91,7 +91,7 @@ const LandingPage = () => {
             </div>
             <div className="max-w-3xl mx-auto border-2 p-6 bg-white shadow-lg rounded-lg mt-10">
                 <div className="text-center">
-                    <p className="text-3xl text-gray-700 font-bold">Want More? Try Premium Features!</p>
+                    <p className="text-lg md:text-xl lg:text-3xl text-gray-700 font-bold">Want More? Try Premium Features!</p>
                 </div>
                 <div>
                     <div className="text-center mt-4">
