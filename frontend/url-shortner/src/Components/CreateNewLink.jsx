@@ -43,7 +43,7 @@ const CreateNewLink = ({ onSuccess }) => {
                     />
                     <button
                         onClick={handleSubmit}
-                        className="rounded text-white bg-blue-600 font-bold w-28 h-14 hover:bg-blue-800 transition duration-200">
+                        className="rounded text-white bg-blue-600 font-bold p-1 w-36 h-14 hover:bg-blue-800 transition duration-200">
                         Shorten URL
                     </button>
                 </form>

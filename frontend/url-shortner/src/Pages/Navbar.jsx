@@ -189,7 +189,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -200,7 +200,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -211,7 +211,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -222,7 +222,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -236,7 +236,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >
@@ -247,7 +247,7 @@ const Navbar = () => {
                                 className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-2xl"
+                                        : "text-white text-xl"
                                 }
                                 onClick={toggleMobileMenu}
                             >

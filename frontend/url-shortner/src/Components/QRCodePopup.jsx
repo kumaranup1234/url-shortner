@@ -30,7 +30,7 @@ const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
                 <div className="flex justify-between items-center mb-4 bg-teal-900 text-white p-4 rounded-t-lg -mx-6 -mt-6 rounded-tr-lg rounded-tl-lg">
                     {/* Link on the left */}
 
-                    <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 truncate">
+                    <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-yellow-300 truncate">
                         <span className="text-white cursor-default">Short Id: </span>{shortUrl}
                     </a>
                     {/* Close button on the right */}

@@ -18,7 +18,7 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
         <>
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-5/12">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-5/12">
                         {/* Navbar Section */}
                         <div className="flex justify-between items-center mb-4 bg-teal-900 text-white p-4 -mx-6 -mt-6 rounded-tr-lg rounded-tl-lg">
                             <p className="text-white font-bold text-2xl">Share Link</p>
@@ -28,12 +28,12 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
                         </div>
 
 
-                        <div className="flex justify-around mb-6">
+                        <div className="flex space-x-1 justify-around mb-6">
                             <a
                                 href={socialMediaLinks.facebook}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center bg-gray-100 p-4 w-24 h-24 rounded-lg hover:bg-gray-200"
+                                className="flex flex-col items-center justify-center bg-gray-100 p-2 w-24 h-24 rounded-lg hover:bg-gray-200"
                             >
                                 <FaFacebookF className="text-blue-700 text-2xl mb-2" />
                                 <span className="text-sm">Facebook</span>
@@ -42,7 +42,7 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
                                 href={socialMediaLinks.x}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center bg-gray-100 p-4 w-24 h-24 rounded-lg hover:bg-gray-200"
+                                className="flex flex-col items-center justify-center bg-gray-100 p-2 w-24 h-24 rounded-lg hover:bg-gray-200"
                             >
                                 <img src={twitter} className="text-blue-400 text-2xl mb-2 h-8 w-8"  alt="X icon"/>
                                 <span className="text-sm">X</span>
@@ -51,7 +51,7 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
                                 href={socialMediaLinks.instagram}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center bg-gray-100 p-4 w-24 h-24 rounded-lg hover:bg-gray-200"
+                                className="flex flex-col items-center justify-center bg-gray-100 p-2 w-24 h-24 rounded-lg hover:bg-gray-200"
                             >
                                 <FaInstagram className="text-pink-600 text-2xl mb-2" />
                                 <span className="text-sm">Instagram</span>
@@ -60,7 +60,7 @@ const ShareButton = ({ linkToShare, isModalOpen, onClose }) => {
                                 href={socialMediaLinks.whatsapp}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center bg-gray-100 p-4 w-24 h-24 rounded-lg hover:bg-gray-200"
+                                className="flex flex-col items-center justify-center bg-gray-100 p-2 w-24 h-24 rounded-lg hover:bg-gray-200"
                             >
                                 <FaWhatsapp className="text-green-500 text-2xl mb-2" />
                                 <span className="text-sm">WhatsApp</span>
