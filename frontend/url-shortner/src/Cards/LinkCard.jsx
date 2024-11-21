@@ -26,6 +26,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
     const [isDropdownUpward, setIsDropdownUpward] = useState(false);
     const dropdownRef = useRef(null);
     const dropDownDirection = useRef(null);
+    const dropdownDirectionSet = useRef(false);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
 
@@ -86,11 +87,14 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
             const dropdownRect = dropdown.getBoundingClientRect();
             const viewportHeight = window.innerHeight;
 
-            // Check if dropdown will overflow at the bottom
-            if (dropdownRect.bottom > viewportHeight) {
-                setIsDropdownUpward(true); // Position it upwards
-            } else {
-                setIsDropdownUpward(false); // Position it downwards
+            // only set the dropdown direction when it is first opened
+            if (!dropdownDirectionSet.current) {
+                if (dropdownRect.bottom > viewportHeight) {
+                    setIsDropdownUpward(true);
+                } else {
+                    setIsDropdownUpward(false);
+                }
+                dropdownDirectionSet.current = true;
             }
         }
     }, [showDropdown]);
