@@ -37,7 +37,7 @@ const Links = () => {
     };
 
     return (
-        <div className="mx-auto sm:px-6 lg:px-8 mt-2 overflow-x-hidden">
+        <div className="mx-auto sm:px-6 lg:px-8 mt-2">
             <div className="flex">
                 <div className="grid">
                     <CreateNewLink onSuccess={triggerRefresh} />
