@@ -14,7 +14,7 @@ const Analytics = () => {
     return (
         <div className="bg-gray-100">
             <div>
-                <h4 className="p-4 ml-4 text-sm sm:text-base">
+                <h4 className="p-4 ml-[8px] text-sm sm:text-base">
                     * Individual analytics of the short URL. For analytics of overall clicks of all URLs, please visit{" "}
                     <Link to="/dashboard" className="font-bold underline">
                         Dashboard
