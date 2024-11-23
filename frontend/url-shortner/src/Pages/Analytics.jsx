@@ -12,7 +12,7 @@ const Analytics = () => {
     const { shortenedUrl } = useParams();
 
     return (
-        <div className="mb-16">
+        <div className="bg-gray-100">
             <div>
                 <h4 className="p-4 ml-4 text-sm sm:text-base">
                     * Individual analytics of the short URL. For analytics of overall clicks of all URLs, please visit{" "}

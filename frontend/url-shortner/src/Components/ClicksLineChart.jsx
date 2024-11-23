@@ -58,7 +58,7 @@ const ClicksLineChart = ({ apiUrl }) => {
     return (
         <>
             {loading ?
-                <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                <div className="rounded-lg p-4 h-96 flex items-center justify-center">
                     <InfinitySpin
                         visible={true}
                         width="200"
@@ -67,13 +67,13 @@ const ClicksLineChart = ({ apiUrl }) => {
                     />
                     <p>Preparing your graph data...</p>
                 </div>
-                : !allZeroClicks > 0 ? <div className="bg-gray-200 border border-gray-200 rounded p-4 shadow-lg mx-auto"
+                : !allZeroClicks > 0 ? <div className="rounded p-4 mx-auto"
                                           style={{width: '100%', height: '365px', overflow: 'hidden'}}>
                     <h2 className="text-xl font-bold text-center mb-2 ml-10">Clicks & Scans Over Time</h2>
                     <ResponsiveContainer width="99%" height="90%">
                         <LineChart
                             data={clickData}
-                            margin={{top: 10, right: 5, left: -10, bottom: 10}}
+                            margin={{top: 10, right: 5, left: -35, bottom: 10}}
                         >
                             <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                             <XAxis

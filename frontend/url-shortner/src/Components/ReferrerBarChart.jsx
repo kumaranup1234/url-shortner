@@ -57,7 +57,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
 
     return (
         <>
-            {loading ? <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+            {loading ? <div className="rounded-lg p-4 h-96 flex items-center justify-center">
                 <InfinitySpin
                     visible={true}
                     width="200"
@@ -66,12 +66,12 @@ const ReferrerBarChart = ({ apiUrl }) => {
                 />
                 <p>Preparing your graph data...</p>
                 </div>
-                : referrerData.length > 0 ? <div className="bg-gray-200 p-4 border rounded w-full shadow-lg">
+                : referrerData.length > 0 ? <div className="p-4 rounded w-full">
                     <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by referrer</h2>
                     <ResponsiveContainer width="100%" height={340}>
                         <BarChart
                             data={referrerData}
-                            margin={{top: 10, right: 10, left: -10, bottom: 10}}
+                            margin={{top: 10, right: 5, left: -25, bottom: 10}}
                             barGap={5} // Reduce gap between bars
                             barSize={60} // Increase bar width
                         >

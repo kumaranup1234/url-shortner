@@ -57,7 +57,7 @@ const BrowserBarChart = ({ apiUrl }) => {
     return (
         <>
             {loading ?
-                <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                <div className="rounded-lg p-4 h-96 flex items-center justify-center">
                     <InfinitySpin
                         visible={true}
                         width="200"
@@ -66,13 +66,13 @@ const BrowserBarChart = ({ apiUrl }) => {
                     />
                     <p>Preparing your graph data...</p>
                 </div>
-                : browserData.length > 0 ? <div className="bg-gray-200 p-4 border rounded-lg mx-auto w-full shadow-lg">
+                : browserData.length > 0 ? <div className="p-4 rounded-lg mx-auto w-full">
                     <h2 className="text-xl font-bold mb-4 text-center">Clicks + Scans by Browser</h2>
-                    <div className="w-full h-72"> {/* Set height for the chart */}
+                    <div className="w-full h-72">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={browserData}
-                                margin={{top: 10, right: 10, left: -10, bottom: 10}}
+                                margin={{top: 10, right: 5, left: -25, bottom: 5}}
                                 barGap={5} // Reduce gap between bars
                                 barSize={60} // Increase bar width
                                 animationDuration={800}
@@ -80,7 +80,7 @@ const BrowserBarChart = ({ apiUrl }) => {
                                 <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                                 <XAxis
                                     dataKey="name"
-                                    tick={{fontSize: 12}} // Reduce font size of X-axis labels
+                                    tick={{fontSize: 12,}} // Reduce font size of X-axis labels
                                 />
                                 <YAxis
                                     axisLine={false}

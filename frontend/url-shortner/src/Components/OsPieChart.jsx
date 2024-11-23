@@ -93,9 +93,9 @@ const OsPieChart = ({ apiUrl }) => {
     const { innerRadius, outerRadius } = getRadius();
 
     return (
-        <div className="shadow-lg rounded-lg">
+        <div className="rounded-lg">
             {loading ?
-                <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                <div className="rounded-lg p-4 h-96 flex items-center justify-center">
                     <InfinitySpin
                         visible={true}
                         width="200"
@@ -104,12 +104,12 @@ const OsPieChart = ({ apiUrl }) => {
                     />
                     <p>Preparing your graph data...</p>
                 </div>
-                : osData.length > 0 ? <div className="bg-gray-200 rounded-lg p-4">
+                : osData.length > 0 ? <div className="rounded-lg p-4">
                     <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by OS</h2>
-                    <div className="flex items-center space-x-6">
+                    <div className="flex flex-col md:flex-row items-center space-x-6">
                         {/* Pie Chart */}
-                        <div className="relative w-full md:w-1/2 flex items-center justify-center">
-                            <ResponsiveContainer width="100%" height={345}>
+                        <div className="relative w-full md:w-1/2 flex items-center justify-center h-[250px] lg:h-[345px]">
+                            <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
                                         data={osData}
