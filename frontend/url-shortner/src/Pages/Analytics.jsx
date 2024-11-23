@@ -22,7 +22,7 @@ const Analytics = () => {
                 </h4>
             </div>
 
-            <div className="grid gap-6 p-4 sm:p-6">
+            <div className="grid gap-6 p-2 sm:p-6">
                 {/* Row 1: Browser Bar Chart and Clicks Line Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
