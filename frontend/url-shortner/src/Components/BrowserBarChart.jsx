@@ -72,7 +72,7 @@ const BrowserBarChart = ({ apiUrl }) => {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={browserData}
-                                margin={{top: 10, right: 5, left: -25, bottom: 5}}
+                                margin={{top: 10, right: 5, left: -25, bottom: 10}}
                                 barGap={5} // Reduce gap between bars
                                 barSize={60} // Increase bar width
                                 animationDuration={800}
@@ -80,8 +80,15 @@ const BrowserBarChart = ({ apiUrl }) => {
                                 <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                                 <XAxis
                                     dataKey="name"
-                                    tick={{fontSize: 12,}} // Reduce font size of X-axis labels
+                                    tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value}
+                                    tick={{
+                                        fontSize: 12,
+                                        dy: 10,
+                                        textAnchor: 'middle',
+                                    }}
+                                    tickMargin={4}
                                 />
+
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
