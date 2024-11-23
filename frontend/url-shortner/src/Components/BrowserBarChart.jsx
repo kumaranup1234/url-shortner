@@ -83,7 +83,6 @@ const BrowserBarChart = ({ apiUrl }) => {
                                     tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value}
                                     tick={{
                                         fontSize: 10,
-                                        angle: -45,
                                         dy: 8,
                                         textAnchor: 'middle',
                                     }}
