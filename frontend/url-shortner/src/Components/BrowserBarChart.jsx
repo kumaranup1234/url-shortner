@@ -67,12 +67,12 @@ const BrowserBarChart = ({ apiUrl }) => {
                     <p>Preparing your graph data...</p>
                 </div>
                 : browserData.length > 0 ? <div className="p-4 rounded-lg mx-auto w-full">
-                    <h2 className="text-xl font-bold mb-4 text-center">Clicks + Scans by Browser</h2>
-                    <div className="w-full h-72">
+                    <h2 className="text-xl mb-4 font-bold text-center">Clicks + Scans by Browser</h2>
+                    <div className="w-full h-80">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={browserData}
-                                margin={{top: 10, right: 5, left: -25, bottom: 10}}
+                                margin={{top: 10, right: 5, left: -25, bottom: 20}}
                                 barGap={5} // Reduce gap between bars
                                 barSize={60} // Increase bar width
                                 animationDuration={800}
@@ -82,8 +82,9 @@ const BrowserBarChart = ({ apiUrl }) => {
                                     dataKey="name"
                                     tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value}
                                     tick={{
-                                        fontSize: 12,
-                                        dy: 10,
+                                        fontSize: 11,
+                                        angle: -45,
+                                        dy: 8,
                                         textAnchor: 'middle',
                                     }}
                                     tickMargin={4}
