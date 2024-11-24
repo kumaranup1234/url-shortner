@@ -70,10 +70,10 @@ const ClicksLineChart = ({ apiUrl }) => {
                 : !allZeroClicks > 0 ? <div className="rounded p-4 mx-auto"
                                           style={{width: '100%', height: '365px', overflow: 'hidden'}}>
                     <h2 className="text-xl font-bold text-center mb-2 ml-10">Clicks & Scans Over Time</h2>
-                    <ResponsiveContainer width="99%" height="90%">
+                    <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             data={clickData}
-                            margin={{top: 10, right: 5, left: -35, bottom: 10}}
+                            margin={{top: 10, right: 5, left: -35, bottom: 21}}
                         >
                             <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                             <XAxis
@@ -85,6 +85,7 @@ const ClicksLineChart = ({ apiUrl }) => {
                                 padding={{left: 10, right: 10}} // add padding to avoid text overlap
                                 axisLine={false} // hide the axis line
                                 tickLine={false} // hide tick lines
+                                tickMargin={4}
                             />
                             <YAxis
                                 allowDecimals={false}

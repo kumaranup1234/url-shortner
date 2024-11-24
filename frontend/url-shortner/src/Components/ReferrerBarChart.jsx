@@ -78,7 +78,8 @@ const ReferrerBarChart = ({ apiUrl }) => {
                             <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                             <XAxis
                                 dataKey="name"
-                                tick={{fontSize: 12}} // Reduce font size of X-axis labels
+                                tick={{fontSize: 12}}
+                                tickMargin={4}
                             />
                             <YAxis
                                 axisLine={false}
