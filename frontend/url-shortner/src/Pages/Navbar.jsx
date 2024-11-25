@@ -148,7 +148,7 @@ const Navbar = () => {
                         </NavLink>
                     </div>
                 ) : (
-                    <div ref={dropdownRef} className="flex items-center text-white" onClick={toggleDropdown}>
+                    <div ref={dropdownRef} className="flex md:space-x-2 items-center text-white" onClick={toggleDropdown}>
                         {user?.profileImage ? (
                             <img
                                 src={user.profileImage}
