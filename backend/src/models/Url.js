@@ -5,7 +5,7 @@ const UrlSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        match: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, // Ensures valid URL format
+        match: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
     },
     shortUrl: {
         type: String,
@@ -17,8 +17,15 @@ const UrlSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    title: {
+        type: String,
+        required: true,
+    },
+    logo: {
+        type: String,
+    },
     qrCode: {
-        type: String, // Store base64 or URL to the image
+        type: String,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +38,7 @@ const UrlSchema = new mongoose.Schema({
     },
     lastAccessed: {
         type: Date,
-        default: null, // To track the last time the URL was accessed
+        default: null,
     },
 });
 

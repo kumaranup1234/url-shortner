@@ -1,17 +1,13 @@
 import LinkCard from "../Cards/LinkCard.jsx";
 import { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance.js";
-import { useRecoilValue } from "recoil";
-import { authState } from "../recoil/atoms.js";
 import SummaryCard from "../Cards/SummaryCard.jsx";
 import AboutCard from "../Cards/AboutCard.jsx";
 import CreateNewLink from "../Components/CreateNewLink.jsx";
 import SkeletonLoader from "../Components/SkeletonLoader.jsx";
 
 const Links = () => {
-    const { isLoggedIn } = useRecoilValue(authState);
     const [refresh, setRefresh] = useState(false);
-    console.log("is logged in value", isLoggedIn);
     const [allLinks, setAllLinks] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -19,7 +15,6 @@ const Links = () => {
         try {
             const response = await axiosInstance.get("/api/urls/manage/user-urls");
             setAllLinks(response.data.userUrls);
-            console.log(response.data.userUrls);
         } catch (e) {
             console.error(e);
         } finally {
@@ -72,7 +67,6 @@ const Links = () => {
                                     ))
                                 )}
                             </div>
-
                         </div>
                     </div>
                 </div>

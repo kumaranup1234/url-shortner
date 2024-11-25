@@ -12,7 +12,6 @@ const {
 const { authenticateUser } = require('../middleware/authenticate');
 
 // Create Short URL ANon
-
 router.post('/anon/shorten', createShortUrlAnon);
 
 // Create Short URL

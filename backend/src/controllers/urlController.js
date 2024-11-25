@@ -3,6 +3,7 @@ const Url = require("../models/Url");
 const User = require("../models/User");
 const AnonymousUrl = require("../models/AnonymousUrl");
 const { generateQRCodeForUrl } = require("../utils/generateQrCode");
+const { extractData } = require("../utils/extractMetaData");
 
 
 
@@ -53,7 +54,7 @@ async function createShortUrl(req, res) {
     if (!url) {
         return res.status(400).json({ error: true, message: 'URL is required' });
     }
-    const shortId = shortid.generate(); // Generate a short ID
+    const shortId = shortid.generate();
 
     try {
         // Check if the URL already exists for the user
@@ -70,6 +71,7 @@ async function createShortUrl(req, res) {
         }
 
         const qrCode = await generateQRCodeForUrl(shortId);
+        const { title, logo } = await extractData(url);
 
         // Create a new shortened URL entry
         const newUrl = new Url({
@@ -77,6 +79,8 @@ async function createShortUrl(req, res) {
             shortUrl: shortId,
             user: req.user._id,
             qrCode: qrCode,
+            title: title,
+            logo: logo,
         });
 
         // Save the URL to the database
