@@ -39,11 +39,11 @@ const CreateNewLink = ({ onSuccess }) => {
                         onChange={(e) => {
                             setOriginalUrl(e.target.value)
                         }}
-                        className="border-none focus:ring-2 focus:ring-blue-500 md:w-[500px] lg:w-[500px] h-14 px-4 text-lg outline-none"
+                        className="border-none focus:ring-2 focus:ring-blue-500 md:w-[500px] h-14 px-4 text-lg outline-none"
                     />
                     <button
                         onClick={handleSubmit}
-                        className="rounded text-white bg-blue-600 font-bold p-1 w-36 h-14 hover:bg-blue-800 transition duration-200">
+                        className="rounded text-white bg-blue-600 font-bold p-1 w-32 md:w-36 h-14 hover:bg-blue-800 transition duration-200">
                         Shorten URL
                     </button>
                 </form>
