@@ -18,7 +18,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 
 
 const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalClicks, onEditSuccess, onDeleteSuccess }) => {
-    const maxLength = 30;
+    const [maxLength, setMaxLength] = useState(40);
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -29,11 +29,27 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     const dropdownDirectionSet = useRef(false);
     const trimmedUrl = originalUrl.length > maxLength ? `${originalUrl.slice(0, maxLength)}...` : originalUrl;
     const fullUrl = `${BASE_URL}/${shortenedUrl}`;
-    const screen = window.innerWidth;
 
 
     // custom hook for outside click detection
     UseOutsideClick(dropdownRef, () => setShowDropdown(false));
+
+    useEffect(() => {
+        const updateMaxLength = () => {
+            if (window.innerWidth < 430) {
+                setMaxLength(30);
+            } else {
+                setMaxLength(40);
+            }
+        };
+
+        updateMaxLength();  // Call on mount
+        window.addEventListener("resize", updateMaxLength);
+
+        return () => {
+            window.removeEventListener("resize", updateMaxLength);
+        };
+    }, []);
 
     const handleQrIconClick = () => {
         if (qrCode) {
@@ -134,7 +150,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                         <div className='flex flex-col mt-1'>
                         {/* Shortened URL */}
                         <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 mt-1 truncate">
-                            {fullUrl}
+                            {fullUrl.length > maxLength ? `${fullUrl.slice(0, maxLength)}...` : fullUrl}
                         </a>
 
                         {/* Original URL */}

@@ -29,21 +29,21 @@ const CreateNewLink = ({ onSuccess }) => {
 
     return (
         <div className="md:ml-6">
-            <div className="flex justify-center mt-10">
-                <form className="border-2 border-gray-200 flex items-center rounded">
+            <div className="flex justify-center w-full mt-10">
+                <form
+                    className="border-2 border-gray-200 flex items-stretch rounded w-full mx-auto">
                     <input
                         type="text"
                         name="url"
-                        placeholder="Enter the link here"
+                        placeholder="https://example.com/my-long-url"
                         value={originalUrl}
-                        onChange={(e) => {
-                            setOriginalUrl(e.target.value)
-                        }}
-                        className="border-none focus:ring-2 focus:ring-blue-500 md:w-[500px] h-14 px-4 text-lg outline-none"
+                        onChange={(e) => setOriginalUrl(e.target.value)}
+                        className="border-none focus:ring-2 focus:ring-blue-500 flex-grow h-14 pl-4 text-lg outline-none rounded-l"
                     />
                     <button
                         onClick={handleSubmit}
-                        className="rounded text-white bg-blue-600 font-bold p-1 w-32 md:w-36 h-14 hover:bg-blue-800 transition duration-200">
+                        className="text-white bg-blue-600 font-bold w-auto h-14 px-4 rounded-r hover:bg-blue-800 transition duration-200"
+                    >
                         Shorten URL
                     </button>
                 </form>

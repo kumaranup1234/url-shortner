@@ -32,8 +32,8 @@ const Links = () => {
     };
 
     return (
-        <div className="mx-auto px-1 lg:px-8 mt-2">
-            <div className="flex lg:justify-center">
+        <div className="lg:px-8 mt-2">
+            <div className="flex lg:justify-center max-w-full px-4 overflow-hidden ">
                 <div>
                     <div>
                         <CreateNewLink onSuccess={triggerRefresh} />
