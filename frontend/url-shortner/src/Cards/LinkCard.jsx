@@ -101,7 +101,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     }, [showDropdown]);
 
     return (
-        <div className="bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-2 md:ml-6 mr-3 relative">
+        <div className="w-full md:w-[calc(100%-12px)] lg:w-[calc(100%-30px)] bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 ml-3 md:ml-6 mr-3 relative">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">

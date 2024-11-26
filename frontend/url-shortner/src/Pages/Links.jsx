@@ -32,14 +32,16 @@ const Links = () => {
     };
 
     return (
-        <div className="mx-auto sm:px-6 lg:px-8 mt-2">
-            <div className="flex">
-                <div className="grid">
+        <div className="mx-auto px-2 lg:px-8 mt-2">
+            <div className="flex flex-col md:flex-row">
+                <div className="ml-3">
                     <CreateNewLink onSuccess={triggerRefresh} />
-                    {/* <div className="border mt-6 w-8/12 ml-6"></div> */}
-                    <div className="flex space-x-10 mt-10">
+                </div>
+
+                <div className="grid">
+                    <div className="flex mt-10">
                         {/* Links section */}
-                        <div className="flex-1">
+                        <div className="flex">
                             <div className="grid grid-cols-1 gap-2 md:gap-6">
                                 { loading ? (
                                     <>
