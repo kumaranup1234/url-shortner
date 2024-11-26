@@ -162,7 +162,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
             </div>
 
             {/* Right Section - Three Dot Menu */}
-            <div ref={dropdownRef} className="relative sm:ml-2" >
+            <div ref={dropdownRef} className="flex-shrink-0 relative sm:ml-2" >
                 <button onClick={toggleDropdown} className="focus:outline-none">
                     <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
                 </button>
