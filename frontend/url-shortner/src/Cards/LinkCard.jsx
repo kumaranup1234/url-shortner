@@ -115,13 +115,19 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                             <img src={copyIcon} alt="Copy" className="h-4 w-4"/>
                             <span>Copy</span>
                         </button>
+                        {qrCode && (
+                            <div className="md:hidden cursor-pointer items-center" onClick={handleQrIconClick}>
+                                <img src={qrIcon} alt="QR Icon" className="h-12 w-12 object-contain"/>
+                            </div>
+                        )}
+
                     </div>
 
-                    <div className="flex space-x-3">
+                    <div className="flex md:space-x-3">
                         {/* QR Code Icon */}
                         {qrCode && (
                             <div className="cursor-pointer" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-12 w-12 object-contain"/>
+                                <img src={qrIcon} alt="QR Icon" className="hidden md:block mt-2 h-12 w-12 object-contain"/>
                             </div>
                         )}
 
