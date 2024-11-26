@@ -17,7 +17,7 @@ import UseOutsideClick from "../hooks/useOutsideClick.jsx";
 import axiosInstance from "../utils/axiosInstance.js";
 
 
-const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, toalClicks, onEditSuccess, onDeleteSuccess }) => {
+const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalClicks, onEditSuccess, onDeleteSuccess }) => {
     const maxLength = 30;
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -107,7 +107,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, toalCl
                 <div className="grid">
                     <div className="flex items-center space-x-4">
                         <img src={logo} alt={logo}
-                             className="md:block h-6 w-6 md:h-12 md:w-12 object-contain rounded-full bg-gray-200"/>
+                             className="md:block h-12 w-12 object-contain rounded-full bg-gray-200"/>
 
                         <button
                             onClick={handleCopy}
@@ -121,7 +121,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, toalCl
                         {/* QR Code Icon */}
                         {qrCode && (
                             <div className="cursor-pointer" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-10 w-8 md:h-12 md:w-10"/>
+                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-12 w-12"/>
                             </div>
                         )}
 
@@ -134,7 +134,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, toalCl
                         {/* Original URL */}
                         <a href={originalUrl} target="_blank" rel="noopener noreferrer"
                            className="text-gray-800 font-semibold truncate">
-                            {screen > 640 ? `${trimmedUrl.splice(0,20)}...` : trimmedUrl.splice(0,20)}
+                            {trimmedUrl}
                         </a>
                         </div>
                     </div>
