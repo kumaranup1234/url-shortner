@@ -7,7 +7,7 @@ import deleteIcon from "../assets/deleteIcon.svg";
 import qrIcon from "../assets/qrIcon.svg";
 import threeDotsIcon from "../assets/threeDotsIcon.svg";
 import { BASE_URL } from "../utils/constants.js";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Link } from "react-router-dom";
 import QRCodePopup from "../Components/QRCodePopup.jsx";
 import toast from "react-hot-toast";
@@ -17,8 +17,8 @@ import UseOutsideClick from "../hooks/useOutsideClick.jsx";
 import axiosInstance from "../utils/axiosInstance.js";
 
 
-const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEditSuccess, onDeleteSuccess }) => {
-    const maxLength = 50;
+const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalClicks, onEditSuccess, onDeleteSuccess }) => {
+    const maxLength = 30;
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -104,26 +104,40 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, totalClicks, onEdit
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">
-                    <div className="flex">
-                        {/* QR Code Icon */}
-                        {qrCode && (
-                            <div className="absolute top-4 left-4 cursor-pointer" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="h-9 w-9"/>
-                            </div>
-                        )}
-                        {/* Shortened URL */}
-                        <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 mt-1 ml-12">
-                            {shortenedUrl}
-                        </a>
+                    <div className="flex items-center space-x-4">
+                        <img src={logo} alt={logo}
+                             className="md:block h-12 w-12 object-contain rounded-full bg-gray-200"/>
 
-                            <img src={copyIcon} className="h-5 w-5 cursor-pointer mt-1.5 ml-6" alt="Copy Icon" onClick={handleCopy}/>
+                        <button
+                            onClick={handleCopy}
+                            className="flex items-center space-x-2 p-2 h-10 w-20 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
+                            <img src={copyIcon} alt="Copy" className="h-4 w-4"/>
+                            <span>Copy</span>
+                        </button>
                     </div>
 
-                    {/* Original URL */}
-                    <a href={originalUrl} target="_blank" rel="noopener noreferrer"
-                       className="text-gray-800 font-semibold mt-3 ml-1 truncate">
-                        {trimmedUrl}
-                    </a>
+                    <div className="flex space-x-3">
+                        {/* QR Code Icon */}
+                        {qrCode && (
+                            <div className="cursor-pointer" onClick={handleQrIconClick}>
+                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-12 w-10"/>
+                            </div>
+                        )}
+
+                        <div className='flex flex-col'>
+                        {/* Shortened URL */}
+                        <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 mt-1 truncate">
+                            {fullUrl}
+                        </a>
+
+                        {/* Original URL */}
+                        <a href={originalUrl} target="_blank" rel="noopener noreferrer"
+                           className="text-gray-800 font-semibold truncate">
+                            {trimmedUrl}
+                        </a>
+                        </div>
+                    </div>
+
                 </div>
                 <div className="flex space-x-4">
                     <div className="flex items-center">

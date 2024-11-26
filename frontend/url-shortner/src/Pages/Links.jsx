@@ -61,6 +61,8 @@ const Links = () => {
                                             qrCode={link?.qrCode}
                                             totalClicks={link.totalClicks}
                                             date={new Date(link.createdAt).toLocaleDateString()}
+                                            title={link.title}
+                                            logo={link.logo}
                                             onEditSuccess={getAllLinks}
                                             onDeleteSuccess={triggerRefresh}
                                         />
