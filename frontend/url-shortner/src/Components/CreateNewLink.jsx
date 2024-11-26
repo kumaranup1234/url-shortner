@@ -29,7 +29,7 @@ const CreateNewLink = ({ onSuccess }) => {
 
     return (
         <div className="md:ml-6">
-            <div className="flex mt-10">
+            <div className="flex justify-center mt-10">
                 <form className="border-2 border-gray-200 flex items-center rounded">
                     <input
                         type="text"

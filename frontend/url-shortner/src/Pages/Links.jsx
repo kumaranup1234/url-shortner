@@ -32,10 +32,12 @@ const Links = () => {
     };
 
     return (
-        <div className="mx-auto px-2 lg:px-8 mt-2">
-            <div className="flex">
-                <div className="grid">
-                    <CreateNewLink onSuccess={triggerRefresh} />
+        <div className="mx-auto px-1 lg:px-8 mt-2">
+            <div className="flex lg:justify-center">
+                <div>
+                    <div>
+                        <CreateNewLink onSuccess={triggerRefresh} />
+                    </div>
                     <div className="flex mt-10">
                         {/* Links section */}
                         <div className="flex-1">
@@ -73,7 +75,7 @@ const Links = () => {
                 </div>
 
                 {/* SummaryCard section */}
-                <div className="w-1/3 ml-40 mt-10 hidden lg:block">
+                <div className="w-1/3 ml-40 mt-10 hidden xl:block">
                     <SummaryCard refresh={refresh}/>
                     <div className="mt-12">
                         <AboutCard/>
