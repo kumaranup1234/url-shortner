@@ -121,11 +121,11 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                         {/* QR Code Icon */}
                         {qrCode && (
                             <div className="cursor-pointer" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-12 w-12"/>
+                                <img src={qrIcon} alt="QR Icon" className="mt-2 h-12 w-12 object-contain"/>
                             </div>
                         )}
 
-                        <div className='flex flex-col'>
+                        <div className='flex flex-col mt-1'>
                         {/* Shortened URL */}
                         <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 mt-1 truncate">
                             {fullUrl}
