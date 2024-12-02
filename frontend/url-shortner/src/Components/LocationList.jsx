@@ -133,8 +133,7 @@ const LocationList = ({ apiUrl }) => {
                     </div>
                 </div>
 
-                {/* Conditional rendering based on selected view */}
-                {loading ? <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                {loading ? <div className="rounded-lg p-4 h-96 flex items-center justify-center">
                         <InfinitySpin
                             visible={true}
                             width="200"

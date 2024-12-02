@@ -26,4 +26,6 @@ async function extractData(url) {
     }
 }
 
-module.exports = extractData;
+module.exports = {
+    extractData
+};

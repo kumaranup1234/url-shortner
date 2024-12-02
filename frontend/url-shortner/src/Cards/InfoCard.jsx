@@ -3,7 +3,7 @@ import orb from "../assets/orbIcon.svg";
 
 const InfoCard = ({ heading, info }) => {
     return (
-        <div className="bg-gray-200 p-6 rounded-lg border shadow-lg">
+        <div className="p-6 rounded-lg border-2">
 
             <div className="flex items-center mb-4">
                 <img src={dots} alt="dotsIcon" className="w-5 h-5 mr-2" />

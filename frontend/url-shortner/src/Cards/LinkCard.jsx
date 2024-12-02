@@ -117,11 +117,11 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     }, [showDropdown]);
 
     return (
-        <div className="w-full md:w-auto bg-gray-100 rounded-lg shadow-md p-4 flex justify-between items-center mb-4 md:ml-6 relative">
+        <div className="w-full md:w-auto bg-gray-100 rounded-lg shadow-md p-6 flex justify-between items-center mb-4 md:ml-6 relative">
             {/* Left Section */}
             <div className="grid space-y-2">
                 <div className="grid">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-grow items-center space-x-4">
                         <img src={logo} alt={logo}
                              className="md:block h-12 w-12 object-contain rounded-full bg-gray-200"/>
 
@@ -178,7 +178,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
             </div>
 
             {/* Right Section - Three Dot Menu */}
-            <div ref={dropdownRef} className="flex-shrink-0 relative sm:ml-2" >
+            <div ref={dropdownRef} className="relative sm:ml-2" >
                 <button onClick={toggleDropdown} className="focus:outline-none">
                     <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
                 </button>
