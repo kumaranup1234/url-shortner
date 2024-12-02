@@ -9,6 +9,10 @@ const cloudinary = require('../config/cloudinaryConfig');
 const upload = require('../utils/multerConfig');
 const {sendEmail} = require("../utils/sendEmail");
 
+// Do I need a new array? → Likely map or filter.
+// Do I need just one element? → Likely find.
+// Do I need one value (sum, max, etc.)? → Likely reduce.
+
 // Signup Handler
 async function handleSignup(req, res) {
     const { username, email, password } = req.body;
@@ -521,14 +525,20 @@ async function getAllCount(req, res) {
         const totalUrls = user.urls.length;
 
         const totalClicks = await Url.find({ user: userId }).select('totalClicks');
+        const urls = await Url.find({user : userId});
+        const topUrl = urls.reduce((maxDoc, currentDoc) => {
+            return currentDoc.totalClicks > (maxDoc?.totalClicks || 0) ? currentDoc : maxDoc;
+        }, null);
+
 
         const totalClicksArray = totalClicks.map((doc) => doc.totalClicks);
         const totalClicksSum = totalClicksArray.reduce((acc, clicks) => acc + clicks, 0);
 
         return res.status(200).json({
             error: false,
-                totalUrls,
-                totalClicksSum,
+            totalUrls,
+            totalClicksSum,
+            topUrl
         });
     } catch (error) {
         console.log('Error getting data', error);
