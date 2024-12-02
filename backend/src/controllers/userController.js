@@ -529,7 +529,6 @@ async function getAllCount(req, res) {
         const topUrl = urls.reduce((maxDoc, currentDoc) => {
             return currentDoc.totalClicks > (maxDoc?.totalClicks || 0) ? currentDoc : maxDoc;
         }, null);
-        console.log("top url", topUrl)
 
 
         const totalClicksArray = totalClicks.map((doc) => doc.totalClicks);

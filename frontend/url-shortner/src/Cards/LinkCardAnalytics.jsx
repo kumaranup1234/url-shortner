@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance.js";
 import copyIcon from "../assets/copyIcon.svg";
-import {Link, redirect} from "react-router-dom";
 import qrCode from '../assets/qrcode.svg'
 import calendarIcon from "../assets/calendarIcon.svg";
 import shareIcon from "../assets/shareIcon.svg";
@@ -40,7 +39,6 @@ const LinkCardAnalytics = ({ shortUrlId}) => {
     const handleModalClose = () => setEditModalOpen(false);
     const handleQrCodePopup = () => {
         setQrCodeOpen(!qrCodeOpen);
-
     }
     const handleCopy = () => {
         navigator.clipboard.writeText(fullUrl);
@@ -57,12 +55,12 @@ const LinkCardAnalytics = ({ shortUrlId}) => {
 
     useEffect(() => {
         getLinksData();
-    }, [refresh, topUrl]);
+    }, [refresh]);
 
     return (
         <>
             {loading ? (
-                <div className="rounded-lg p-4 h-96 flex md:flex-col items-center justify-center bg-white">
+                <div className="rounded-lg p-4 h-auto flex md:flex-col items-center justify-center bg-white">
                     <InfinitySpin
                         visible={true}
                         width="100"
@@ -84,6 +82,24 @@ const LinkCardAnalytics = ({ shortUrlId}) => {
                                 className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
                                 <img src={copyIcon} alt="Copy" className="h-5 w-5"/>
                                 <span>Copy</span>
+                            </button>
+                            <button
+                                onClick={handleShareModalClick}
+                                className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
+                                <img src={shareIcon} alt="Share" className="h-5 w-5"/>
+                                <span>Share</span>
+                            </button>
+                            <button
+                                onClick={handleEditClick}
+                                className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
+                                <img src={editIcon} alt="Edit" className="h-5 w-5"/>
+                                <span>Edit</span>
+                            </button>
+                            <button
+                                onClick={handleQrCodePopup}
+                                className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
+                                <img src={qrCode} alt="Edit" className="h-5 w-5"/>
+                                <span>QrCode</span>
                             </button>
                         </div>
                     </div>

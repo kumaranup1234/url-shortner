@@ -7,14 +7,16 @@ import LocationList from "../Components/LocationList.jsx";
 import {Link} from "react-router-dom";
 import OsPieChart from "../Components/OsPieChart.jsx";
 import axiosInstance from "../utils/axiosInstance.js";
-import {Suspense, useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import InfoCard from "../Cards/InfoCard.jsx";
 import WorldMap from "../Components/WorldMap.jsx";
 import TopPerformingLink from "../Cards/TopPerformingLink.jsx";
+import {InfinitySpin} from "react-loader-spinner";
 
 const Dashboard = () => {
     const [data, setData] = useState({});
+    const [topUrlData, setTopUrlData] = useState();
 
     const getData = async () => {
         try {
@@ -23,8 +25,10 @@ const Dashboard = () => {
             setData({
                 totalUrls : response.data.totalUrls,
                 totalClicksSum: response.data.totalClicksSum,
-                topUrl: response.data.topUrl
             })
+            setTopUrlData(response.data.topUrl)
+            console.log("top url data", topUrlData);
+            console.log("data", data);
         } catch (error) {
             toast.error(error.message);
         }
@@ -35,7 +39,7 @@ const Dashboard = () => {
 
 
     return (
-        <div className="bg-gray-100 mb-16">
+        <div className="bg-gray-100">
             <div>
                 <h4 className="p-4 ml-4 text-sm sm:text-base">* Overall analytics of the short url. For analytics of
                     individual clicks of a url, please visit <Link to="/links"
@@ -54,8 +58,29 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6 p-2 ml-4 mr-4">
-                <div className="w-full md:w-1/2 lg:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                    <TopPerformingLink topUrl={data.topUrl}/>
+                <div className="w-full bg-white shadow-lg p-4 rounded-lg">
+                    {topUrlData ? (
+                        <TopPerformingLink
+                            createdAt={topUrlData.createdAt}
+                            originalUrl={topUrlData.originalUrl}
+                            logo={topUrlData.logo}
+                            title={topUrlData.title}
+                            shortUrl={topUrlData.shortUrl}
+                            totalClicks={topUrlData.totalClicks}
+                        />
+                    ) : (
+                        <div className="rounded-lg p-4 h-auto flex md:flex-col items-center justify-center bg-white">
+                            <div>
+                                <InfinitySpin
+                                    visible={true}
+                                    width="100"
+                                    color="#4fa94d"
+                                    ariaLabel="infinity-spin-loading"
+                                />
+                                <p className="mt-4 text-gray-600">Preparing your data...</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
