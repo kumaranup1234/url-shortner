@@ -73,7 +73,7 @@ const ClicksLineChart = ({ apiUrl }) => {
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             data={clickData}
-                            margin={{top: 10, right: 5, left: -35, bottom: 25}}
+                            margin={{top: 10, right: 5, left: -35, bottom: 26}}
                         >
                             <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                             <XAxis

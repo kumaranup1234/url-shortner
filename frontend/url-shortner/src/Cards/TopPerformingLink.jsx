@@ -86,6 +86,11 @@ const TopPerformingLink = ({ shortUrl, logo, title, totalClicks, originalUrl, cr
                 </div>
 
                 <div className="md:hidden flex space-x-4">
+                    <div
+                        className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
+                        <img src={stats} alt="Copy" className="h-5 w-5"/>
+                        <span>Total Clicks: {totalClicks}</span>
+                    </div>
                     <button
                         onClick={handleCopy}
                         className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
