@@ -1,69 +1,72 @@
-import { useState } from 'react';
+import { useState } from "react";
 import copyIcon from "../assets/copyIcon.svg";
 import downloadIcon from "../assets/downloadIcon.svg";
-import {BASE_URL} from "../utils/constants.js";
+import { BASE_URL } from "../utils/constants.js";
 
 const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
     const [copied, setCopied] = useState(false);
-    const fullUrl=`${BASE_URL}/${shortUrl}`
-
-
+    const fullUrl = `${BASE_URL}/${shortUrl}`;
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(qrCode);
+        navigator.clipboard.writeText(fullUrl);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
     const handleDownload = () => {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = qrCode;
-        link.download = 'QRCode.png';
+        link.download = "QRCode.png";
         link.click();
     };
 
     return (
-        <div className="w-full fixed inset-0 bg-black bg-opacity-50 grid items-center justify-center z-50">
-            {/* Modal Box */}
-            <div className="bg-white p-6 rounded-lg relative w-96">
-                {/* Navbar Section */}
-                <div className="flex justify-between items-center mb-4 bg-teal-900 text-white p-4 rounded-t-lg -mx-6 -mt-6 rounded-tr-lg rounded-tl-lg">
-                    {/* Link on the left */}
-
-                    <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-yellow-300 truncate">
-                        <span className="text-white cursor-default">Short Id: </span>{shortUrl}
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
+                <div className="flex justify-between items-center bg-teal-700 text-white p-4 rounded-t-lg">
+                    <a
+                        href={fullUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-yellow-300 truncate w-3/4 hover:underline"
+                    >
+                        <span className="text-white">Short URL: </span>
+                        {shortUrl}
                     </a>
-                    {/* Close button on the right */}
-                    <button className="text-white text-2xl font-bold" onClick={onClose}>
+                    <button
+                        className="text-xl font-bold focus:outline-none hover:text-red-500"
+                        onClick={onClose}
+                    >
                         &times;
                     </button>
                 </div>
 
-                {/* QR Code Section */}
-                <div className="flex flex-col items-center mb-4">
-                    <img src={qrCode} alt="QR Code" className="w-40 h-40 mb-4" />
-                </div>
+                <div className="flex flex-col items-center p-6">
+                    <img
+                        src={qrCode}
+                        alt="QR Code"
+                        className="w-40 h-40 mb-4 border border-gray-300 rounded-lg"
+                    />
 
-                {/* Buttons Section */}
-                <div className="flex space-x-4 justify-center">
-                    <div className="bg-blue-500 flex items-center justify-start px-4 py-2 hover:bg-green-700 cursor-pointer rounded" onClick={handleDownload}>
-                        <img src={downloadIcon} className="h-5 w-5" alt="Download Icon"/>
-                        <button
-                            className="text-white px-4 py-2"
-                        >
-                            Download
-                        </button>
+                    <div className="text-gray-700 text-center mb-4">
+                        <p className="text-sm">Scan the QR code or copy/download the link below:</p>
+                        <p className="text-sm font-medium text-gray-800 break-words mt-2">{fullUrl}</p>
                     </div>
 
-
-                    <div
-                        className="bg-green-500 flex items-center justify-start px-4 py-2 hover:bg-green-800 cursor-pointer rounded"
-                        onClick={handleCopy}>
-                        <img src={copyIcon} className="h-5 w-4" alt="Copy Icon"/>
+                    <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 w-full">
                         <button
-                            className="text-white px-4 py-2 rounded"
+                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg w-full"
+                            onClick={handleDownload}
                         >
-                            {copied ? "Copied" : "Copy"}
+                            <img src={downloadIcon} alt="Download Icon" className="h-5 w-5 mr-2" />
+                            Download QR Code
+                        </button>
+                        <button
+                            className={`flex items-center justify-center ${copied ? "bg-green-700" : "bg-green-600 hover:bg-green-700"} text-white px-4 py-2 rounded-lg w-full`}
+                            onClick={handleCopy}
+                        >
+                            <img src={copyIcon} alt="Copy Icon" className="h-5 w-5 mr-2" />
+                            {copied ? "Copied!" : "Copy Link"}
                         </button>
                     </div>
                 </div>
