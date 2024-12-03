@@ -35,44 +35,53 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg relative w-11/12 md:w-1/2"> {/* Larger modal */}
-                {/* Navbar Section */}
-                <div className="flex justify-between items-center mb-4 bg-teal-900 text-white p-4 -mx-6 -mt-6 rounded-tr-lg rounded-tl-lg">
-                    <p className="text-white font-bold">Edit Link</p>
-                    {/* Close Button */}
-                    <button className="text-white text-2xl font-bold" onClick={onClose}>
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-lg mx-4 sm:mx-auto">
+                <div className="flex justify-between items-center bg-teal-700 text-white p-4 rounded-t-lg">
+                    <h2 className="text-lg font-bold">Edit Link</h2>
+                    <button
+                        className="text-2xl font-bold hover:text-red-500 focus:outline-none"
+                        onClick={onClose}
+                    >
                         &times;
                     </button>
                 </div>
 
                 <div className="p-6">
-                    <form onSubmit={handleEditSubmit}>
-                        {/* Original URL Section */}
-                        <label className="block text-sm font-medium text-gray-700">Original URL</label>
-                        <input
-                            type="text"
-                            value={originalUrl}
-                            onChange={(e) => setOriginalUrl(e.target.value)}
-                            className="border rounded w-full p-2 mt-1 mb-4"
-                            placeholder="Enter the updated link"
-                            required
-                        />
+                    <form onSubmit={handleEditSubmit} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Original URL</label>
+                            <input
+                                type="text"
+                                value={originalUrl}
+                                onChange={(e) => setOriginalUrl(e.target.value)}
+                                className="border border-gray-300 rounded-lg w-full p-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                                placeholder="Enter the updated link"
+                                required
+                            />
+                        </div>
 
-                        {/* Shortened URL Section */}
-                        <label className="block text-sm font-medium text-gray-700">Shortened URL</label>
-                        <input
-                            type="text"
-                            value={fullUrl}
-                            className="border rounded w-full p-2 mt-1 mb-4"
-                            readOnly
-                            required
-                        />
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Shortened URL</label>
+                            <input
+                                type="text"
+                                value={fullUrl}
+                                className="border border-gray-300 rounded-lg w-full p-2 bg-gray-100 text-gray-600 focus:outline-none"
+                                readOnly
+                            />
+                        </div>
 
-                        <div className="flex justify-between mt-6">
-                            <button type="button" onClick={onClose} className="bg-red-600 text-white rounded px-4 py-2">
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
+                            >
                                 Cancel
                             </button>
-                            <button type="submit" className="bg-blue-600 text-white rounded px-4 py-2">
+                            <button
+                                type="submit"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            >
                                 Update
                             </button>
                         </div>
