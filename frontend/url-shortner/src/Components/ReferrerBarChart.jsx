@@ -66,12 +66,12 @@ const ReferrerBarChart = ({ apiUrl }) => {
                 />
                 <p>Preparing your graph data...</p>
                 </div>
-                : referrerData.length > 0 ? <div className="p-4 rounded w-full">
+                : referrerData.length > 0 ? <div className="p-2 rounded w-full">
                     <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by referrer</h2>
-                    <ResponsiveContainer width="100%" height={340}>
+                    <ResponsiveContainer width="100%" height={360}>
                         <BarChart
                             data={referrerData}
-                            margin={{top: 10, right: 5, left: -25, bottom: 15}}
+                            margin={{top: 10, right: 5, left: -20, bottom: 10}}
                             barGap={5} // Reduce gap between bars
                             barSize={60} // Increase bar width
                         >
