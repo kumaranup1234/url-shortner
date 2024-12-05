@@ -122,7 +122,7 @@ const Navbar = () => {
                 )}
             </div>
 
-            {/* Right: Buttons/Profile */}
+            {/* Right: Profile */}
             <div className="flex items-center space-x-6 md:mr-14">
                 {!isLoggedIn ? (
                     <div className="space-x-6 hidden md:block ">
@@ -181,7 +181,7 @@ const Navbar = () => {
             </div>
 
             {showMobileMenu && (
-                <div className="absolute top-16 mt-2 left-0 w-full h-[calc(100%-4rem)] bg-teal-950 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
+                <div className="absolute top-[4.2rem] mt-2 left-0 w-full h-[calc(100vh-4rem)] bg-teal-950 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
                     {isLoggedIn ? (
                         <div className="flex flex-col text-center space-y-4">
                             <NavLink
