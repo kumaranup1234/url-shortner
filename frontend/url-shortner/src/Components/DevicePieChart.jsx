@@ -22,7 +22,6 @@ const DevicePieChart = ({ apiUrl }) => {
     const getDeviceData = async () => {
         try {
             const response = await axiosInstance.get(apiUrl);
-            console.log("pie chart data",response.data);
             const deviceCounts = response.data.deviceTypeCounts;
 
             const formattedData = Object.keys(deviceCounts).map((device) => ({
@@ -36,9 +35,6 @@ const DevicePieChart = ({ apiUrl }) => {
             const total = Object.values(deviceCounts).reduce((acc, count) => acc + count, 0);
             setTotalClicks(total);
             setCenterText(`Total: ${total}`);
-
-            console.log("Device Data fetched: ", formattedData);
-            console.log("Total Clicks: ", total);
         } catch (error) {
             console.error('Error fetching device data:', error);
         } finally {
@@ -118,7 +114,7 @@ const DevicePieChart = ({ apiUrl }) => {
                     <p>Preparing your graph data...</p>
                 </div>
                 : deviceData.length > 0 ? <div className="rounded-lg p-4">
-                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
+                    <h2 className="md:text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
                     <div className="flex flex-col md:flex-row items-center space-x-6">
                         {/* Pie Chart */}
                         <div className="relative w-full md:w-1/2 flex items-center justify-center h-[250px] lg:h-[345px]">

@@ -67,7 +67,7 @@ const BrowserBarChart = ({ apiUrl }) => {
                     <p>Preparing your graph data...</p>
                 </div>
                 : browserData.length > 0 ? <div className="p-4 rounded-lg mx-auto w-full">
-                    <h2 className="text-xl mb-4 font-bold text-center">Clicks + Scans by Browser</h2>
+                    <h2 className="md:text-xl mb-4 font-bold text-center">Clicks + Scans by Browser</h2>
                     <div className="w-full h-80">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart

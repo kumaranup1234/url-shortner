@@ -105,7 +105,7 @@ const OsPieChart = ({ apiUrl }) => {
                     <p>Preparing your graph data...</p>
                 </div>
                 : osData.length > 0 ? <div className="rounded-lg p-4">
-                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by OS</h2>
+                    <h2 className="md:text-xl text-center font-bold mb-4">Clicks + scans by OS</h2>
                     <div className="flex flex-col md:flex-row items-center space-x-6">
                         {/* Pie Chart */}
                         <div className="relative w-full md:w-1/2 flex items-center justify-center h-[250px] lg:h-[345px]">
@@ -134,7 +134,6 @@ const OsPieChart = ({ apiUrl }) => {
                                 </PieChart>
                             </ResponsiveContainer>
 
-                            {/* Centered text */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <p className="text-xl font-bold">{centerText}</p>
                             </div>

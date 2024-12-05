@@ -67,7 +67,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
                 <p>Preparing your graph data...</p>
                 </div>
                 : referrerData.length > 0 ? <div className="p-2 rounded w-full">
-                    <h2 className="text-xl text-center font-bold mb-4">Clicks + scans by referrer</h2>
+                    <h2 className="md:text-xl text-center font-bold mb-4">Clicks + scans by referrer</h2>
                     <ResponsiveContainer width="100%" height={360}>
                         <BarChart
                             data={referrerData}
