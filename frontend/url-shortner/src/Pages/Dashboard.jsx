@@ -39,15 +39,17 @@ const Dashboard = () => {
 
 
     return (
-        <div className="bg-gray-100">
-            <div>
-                <h4 className="p-4 ml-4 text-sm sm:text-base">* Overall analytics of the short url. For analytics of
-                    individual clicks of a url, please visit <Link to="/links"
-                                                                   className="font-bold underline">Links</Link> and
-                    clicks the stats button.</h4>
+        <div className="bg-gray-100 pt-2">
+            <div className="bg-blue-100 border border-blue-400 text-blue-800 rounded-lg p-4 mb-4 mx-6">
+                <p className="text-sm sm:text-base">
+                    <strong>Note:</strong> Overall analytics of the short URL. For analytics of individual clicks of a
+                    URL, please visit
+                    <Link to="/links"
+                          className="font-bold underline text-blue-700 hover:text-blue-800"> Links</Link> and click the
+                    stats button.
+                </p>
             </div>
 
-            {/* InfoCards Section */}
             <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6 p-2 ml-4 mr-4">
                 <div className="w-full md:w-1/2 lg:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                     <InfoCard heading={"Total short urls created"} info={data.totalUrls}/>
@@ -84,9 +86,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Charts Section */}
             <div className="grid gap-6 p-4 sm:p-6">
-                {/* Row 1: Browser Bar Chart and Clicks Line Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <BrowserBarChart apiUrl={`/api/urls/clicks/getUserClicksByBrowser`}/>
@@ -96,7 +96,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Row 2: Device Pie Chart and Referrer Bar Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <DevicePieChart apiUrl={`/api/urls/clicks/getUserDeviceClicks`}/>
@@ -106,7 +105,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Row 3: Location List */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <TopPerformanceParent/>
@@ -116,7 +114,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Row 4: OS Pie Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <OsPieChart apiUrl={`/api/urls/clicks/getUserClicksByOs`}/>
