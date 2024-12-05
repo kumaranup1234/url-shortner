@@ -79,9 +79,9 @@ const BrowserBarChart = ({ apiUrl }) => {
                                 <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
                                 <XAxis
                                     dataKey="name"
-                                    tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}..` : value}
+                                    tickFormatter={(value) => value.length > 8 && window.innerWidth < 768 ? `${value.substring(0, 6)}..` : value}
                                     tick={{
-                                        fontSize: 11,
+                                        fontSize: window.innerWidth < 768 ? 8 : 12,
                                         dy: 6,
                                         textAnchor: 'middle',
                                     }}
