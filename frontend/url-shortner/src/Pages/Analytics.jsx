@@ -8,25 +8,27 @@ import TopPerformanceParent from "../Components/TopPerformanceParent.jsx";
 import OsPieChart from "../Components/OsPieChart.jsx";
 import WorldMap from "../Components/WorldMap.jsx";
 import LinkCardAnalytics from "../Cards/LinkCardAnalytics.jsx";
+import React from "react";
 
 
 const Analytics = () => {
     const { shortenedUrl } = useParams();
 
     return (
-        <div className="bg-gray-100">
-            <div>
-                <h4 className="p-4 ml-[8px] text-sm sm:text-base">
-                    * Individual analytics of the short URL. For analytics of overall clicks of all URLs, please visit{" "}
-                    <Link to="/dashboard" className="font-bold underline">
-                        Dashboard
-                    </Link>
-                </h4>
+        <div className="bg-gray-100 pt-2">
+            <div className="bg-blue-100 border border-blue-400 text-blue-800 rounded-lg p-4 mb-2 mx-6">
+                <p className="text-sm sm:text-base">
+                    <strong>Note:</strong> Individual analytics of the short URL. For analytics of overall clicks of all URLs, please
+                    visit
+                    <Link to="/dashboard"
+                          className="font-bold underline text-blue-700 hover:text-blue-800"> Dashboard</Link> and click the
+                    stats button.
+                </p>
             </div>
 
             <div className="grid gap-6 p-2 sm:p-6">
                 <div className="w-full bg-white shadow-lg p-4 rounded-lg">
-                    <LinkCardAnalytics shortUrlId={shortenedUrl} />
+                    <LinkCardAnalytics shortUrlId={shortenedUrl}/>
                 </div>
 
 
