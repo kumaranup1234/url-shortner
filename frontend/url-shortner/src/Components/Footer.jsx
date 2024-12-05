@@ -4,7 +4,7 @@ import Stats from "../assets/icon-statistics.png";
 
 const Footer = () => {
     return (
-        <div className="py-8 lg:max-w-4xl lg:ml-64">
+        <div className="py-8 w-full max-w-4xl px-4 mx-auto">
             <div className="p-4 md:px-20">
                 <p className="text-lg md:text-2xl text-gray-700 font-bold text-center md:text-left">
                     Simple and fast URL shortener!
