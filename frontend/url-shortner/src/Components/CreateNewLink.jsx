@@ -38,7 +38,7 @@ const CreateNewLink = ({ onSuccess }) => {
                         placeholder="https://example.com/my-long-url"
                         value={originalUrl}
                         onChange={(e) => setOriginalUrl(e.target.value)}
-                        className="border-none focus:ring-2 focus:ring-blue-500 flex-grow h-14 pl-4 text-lg outline-none rounded-l"
+                        className="px-4 border-none focus:ring-2 focus:ring-blue-500 flex-grow h-14 pl-4 text-lg outline-none rounded-l"
                     />
                     <button
                         onClick={handleSubmit}
