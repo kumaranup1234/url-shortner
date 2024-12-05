@@ -400,10 +400,10 @@ async function updateUserProfile(req, res){
     }
 }
 
-async function generateApiKey(req, res) {
+async function getApiKey(req, res) {
     const userId = req.user._id;
 
-    // Check if the user exists
+    // check if the user exists
     const isUser = await User.findById(userId);
     if (!isUser) {
         return res.status(404).json({
@@ -413,39 +413,10 @@ async function generateApiKey(req, res) {
     }
 
     try {
-        // Generate a new API key
-        const apiKey = UUIDv4();
-
-        // Create a new API key document
-        const newApiKey = new ApiKey({
-            user: userId,
-            key: apiKey,
-            expiresAt: new Date(Date.now() + 360 * 24 * 60 * 60 * 1000), // 360 days from now
-        });
-
-        // Save the new API key document
-        await newApiKey.save();
-
-        // Update the user's API key field
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { $set: { apiKey: apiKey } },
-            { new: true } // Return the updated user document
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({
-                error: true,
-                message: 'Error occurred during API key generation',
-            });
-        }
-
+        const apiKey = isUser.apiKey;
         return res.status(200).json({
             error: false,
-            data: {
-                apiKey: updatedUser.apiKey,
-                expiresAt: newApiKey.expiresAt,
-            },
+            apiKey: apiKey,
         });
     } catch (error) {
         console.log('Error generating API key', error);
@@ -638,7 +609,7 @@ module.exports = {
     handleLogout,
     getUserProfile,
     updateUserProfile,
-    generateApiKey,
+    getApiKey,
     regenerateApiKey,
     getAllCount,
     handleStatus,

@@ -6,7 +6,7 @@ const {
     handleLogout,
     getUserProfile,
     updateUserProfile,
-    generateApiKey,
+    getApiKey,
     regenerateApiKey,
     getAllCount,
     handleStatus,
@@ -50,8 +50,8 @@ router.post("/reset/:resetToken", forgotPasswordReset)
 // Update User Image
 router.post('/profile-image', authenticateUser, updateProfileImage)
 
-// Generate New API Key
-router.post('/generate-api-key', authenticateUser, generateApiKey);
+// get APi key
+router.get('/get-api-key', authenticateUser, getApiKey);
 
 // Regenerate API Key
 router.post('/regenerate-api-key', authenticateUser, regenerateApiKey);
