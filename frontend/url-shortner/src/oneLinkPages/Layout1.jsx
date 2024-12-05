@@ -4,16 +4,15 @@ const Layout1 = () => {
             <div className="flex h-screen justify-center items-center">
                 <div className="relative bg-gradient-to-br from-green-300 to-yellow-100 p-6 rounded-lg shadow-2xl shadow-green-900 w-96">
 
-                    {/* Profile Picture */}
                     <div className="flex justify-center">
                         <img
                             src="https://clipartcraft.com/images/assassins-creed-logo-gold.png"
                             alt="Profile Picture"
                             className="rounded-full w-28 h-28"
+                            loading="lazy"
                         />
                     </div>
 
-                    {/* Profile Name and Description */}
                     <div className="text-center mt-4">
                         <h1 className="text-lg font-bold font-serif">Anurag Anand</h1>
                         <p className="text-gray-600">
@@ -21,7 +20,6 @@ const Layout1 = () => {
                         </p>
                     </div>
 
-                    {/* Options List */}
                     <div className="mt-8 space-y-6">
                         <a
                             href="#"

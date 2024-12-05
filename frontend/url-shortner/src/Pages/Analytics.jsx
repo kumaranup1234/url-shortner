@@ -32,7 +32,6 @@ const Analytics = () => {
                 </div>
 
 
-                {/* Row 1: Browser Bar Chart and Clicks Line Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortenedUrl}`}/>
@@ -42,7 +41,6 @@ const Analytics = () => {
                     </div>
                 </div>
 
-                {/* Row 2: Device Pie Chart and Referrer Bar Chart */}
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
                         <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortenedUrl}`}/>
@@ -52,7 +50,7 @@ const Analytics = () => {
                     </div>
                 </div>
 
-                {/* Row 3: Top Performance and Location List */}
+
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
                         <TopPerformanceParent/>
@@ -62,7 +60,7 @@ const Analytics = () => {
                     </div>
                 </div>
 
-                {/* Row 4: OS Pie Chart and World Map */}
+
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
                         <OsPieChart apiUrl={`/api/urls/clicks/os/${shortenedUrl}`}/>

@@ -161,12 +161,6 @@ const LinkCardAnalytics = ({ shortUrlId}) => {
                             <img src={editIcon} alt="Edit" className="h-5 w-5"/>
                             <span>Edit</span>
                         </button>
-                        <button
-                            onClick={handleQrCodePopup}
-                            className="flex items-center space-x-2 p-2 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
-                            <img src={qrCode} alt="Edit" className="h-5 w-5"/>
-                            <span>QrCode</span>
-                        </button>
                     </div>
 
 
