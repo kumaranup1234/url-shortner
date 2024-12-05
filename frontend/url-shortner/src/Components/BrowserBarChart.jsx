@@ -66,13 +66,12 @@ const BrowserBarChart = ({ apiUrl }) => {
                     />
                     <p>Preparing your graph data...</p>
                 </div>
-                : browserData.length > 0 ? <div className="p-4 rounded-lg mx-auto w-full">
+                : browserData.length > 0 ? <div className="p-2 rounded-lg mx-auto w-full" style={{width: '100%', height: '345px'}}>
                     <h2 className="md:text-xl mb-4 font-bold text-center">Clicks + Scans by Browser</h2>
-                    <div className="w-full h-80">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={browserData}
-                                margin={{top: 10, right: 5, left: -20, bottom: 15}}
+                                margin={{top: 10, right: 5, left: -18, bottom: 15}}
                                 barGap={5} // Reduce gap between bars
                                 barSize={60} // Increase bar width
                                 animationDuration={800}
@@ -112,7 +111,6 @@ const BrowserBarChart = ({ apiUrl }) => {
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
-                    </div>
                 </div> : <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
                     <p className="text-lg font-semibold">
                         No data available.

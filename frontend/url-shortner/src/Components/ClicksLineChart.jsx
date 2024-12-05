@@ -68,7 +68,7 @@ const ClicksLineChart = ({ apiUrl }) => {
                     <p>Preparing your graph data...</p>
                 </div>
                 : !allZeroClicks > 0 ? <div className="rounded p-2 mx-auto"
-                                          style={{width: '100%', height: '370px', overflow: 'hidden'}}>
+                                          style={{width: '100%', height: '365px', overflow: 'hidden'}}>
                     <h2 className="md:text-xl font-bold text-center mb-2">Clicks & Scans Over Time</h2>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
