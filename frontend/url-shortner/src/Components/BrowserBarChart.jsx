@@ -71,7 +71,7 @@ const BrowserBarChart = ({ apiUrl }) => {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={browserData}
-                                margin={{top: 10, right: 5, left: -18, bottom: 15}}
+                                margin={{top: 10, right: 5, left: -18, bottom: 20}}
                                 barGap={5} // Reduce gap between bars
                                 barSize={60} // Increase bar width
                                 animationDuration={800}
