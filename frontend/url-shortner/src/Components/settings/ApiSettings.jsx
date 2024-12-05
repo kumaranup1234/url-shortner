@@ -39,7 +39,14 @@ const ApiSettings = () => {
 
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-between p-4 bg-teal-900 text-white w-full max-w-lg rounded-t-lg">
+            <div
+                className="w-full max-w-lg bg-yellow-100 text-yellow-800 border border-yellow-400 rounded-lg p-4 mb-4 flex items-center">
+                <span className="text-lg font-medium mr-2">⚠️</span>
+                <p className="text-sm">Note: The API key is being generated, but the API is not active currently. It
+                    will be live soon.</p>
+            </div>
+            <div
+                className="flex flex-col md:flex-row items-center md:justify-between p-4 bg-teal-900 text-white w-full max-w-lg rounded-t-lg">
                 <p className="text-lg font-medium">API Key Settings</p>
             </div>
 
@@ -61,7 +68,7 @@ const ApiSettings = () => {
                             onClick={copyToClipboard}
                             className="text-gray-600 hover:text-blue-600 ml-3"
                         >
-                            <FaCopy size={18} />
+                            <FaCopy size={18}/>
                         </button>
                     </div>
 
@@ -70,7 +77,7 @@ const ApiSettings = () => {
                         onClick={regenerateApiKey}
                         className="w-full bg-teal-900 text-white text-sm font-medium py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-200 flex items-center justify-center"
                     >
-                        <FaSyncAlt className="mr-2" />
+                        <FaSyncAlt className="mr-2"/>
                         Regenerate API Key
                     </button>
                 </div>
