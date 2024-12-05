@@ -81,7 +81,7 @@ const ClicksLineChart = ({ apiUrl }) => {
                                 angle={-45}
                                 textAnchor="end"
                                 tickFormatter={formatXAxis}
-                                style={{fontSize: '10px'}}
+                                style={{fontSize: window.innerWidth < 768 ? '8px' : '10px'}}
                                 padding={{left: 10, right: 10}} // add padding to avoid text overlap
                                 axisLine={false} // hide the axis line
                                 tickLine={false} // hide tick lines
