@@ -7,12 +7,9 @@ const OneLinkSchema = new mongoose.Schema({
     theme: { type: String, default: 'default-theme' },
     links: [
         {
-            title: { type: String, required: true },
-            shortUrl: { type: String, required: true },
-            destinationUrl: { type: String, required: true },
-            icon: { type: String },
-            order: { type: Number }
-        }
+            urlId: { type: mongoose.Schema.Types.ObjectId, ref: 'Url' },
+            order: { type: Number, required: true },
+        },
     ],
     pageViews: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now }
@@ -22,4 +19,4 @@ OneLinkSchema.index({ username: 1 });
 
 const OneLink = mongoose.model('OneLink', OneLinkSchema);
 
-module.exports = OneLink;
+export default OneLink;

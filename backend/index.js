@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./src/routes/userRoutes');
 const urlRoutes = require('./src/routes/urlRoutes');
+const oneLinkRoutes = require('./src/routes/oneLinkRoutes');
 const apiRoutes = require('./src/routes/apiRoutes'); // For public API
 const clickRoutes = require('./src/routes/clickRoutes'); // For click analytics
 const redirectRoutes = require('./src/routes/redirectRoutes'); // For URL redirection
@@ -50,6 +51,9 @@ app.use('/api/urls/manage', urlRoutes);
 
 // Click analytics routes (for internal use, nested under URL management routes)
 app.use('/api/urls', authenticateUser, clickRoutes);
+
+// oneLink routes
+app.use('/api/onelink', oneLinkRoutes);
 
 // URL redirection route (publicly accessible)
 app.use('/', redirectRoutes);
