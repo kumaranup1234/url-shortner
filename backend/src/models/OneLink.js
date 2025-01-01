@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {mod} = require("qrcode/lib/core/polynomial");
 
 const OneLinkSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
@@ -19,4 +20,4 @@ OneLinkSchema.index({ username: 1 });
 
 const OneLink = mongoose.model('OneLink', OneLinkSchema);
 
-export default OneLink;
+module.exports = OneLink;
