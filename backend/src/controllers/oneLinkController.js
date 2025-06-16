@@ -4,11 +4,13 @@ const OneLink = require("../models/OneLink");
 const {generate} = require("shortid");
 const {generateQRCodeForUrl} = require("../utils/generateQrCode");
 const {extractData} = require("../utils/extractMetaData");
+const {uploadToCloudinary} = require("../utils/cloudinaryUploader");
 
 
 const createOneLink = async (req, res) => {
+
     const userId = req.user._id;
-    const { username, profilePhoto, bio, theme, links } = req.body;
+    const { username, name, bio, templateId, links} = req.body;
 
     try {
         const user = await User.findById(userId);
@@ -16,53 +18,100 @@ const createOneLink = async (req, res) => {
             return res.status(400).json({ error: true, message: 'User already has a OneLink page.' });
         }
 
-        // username check
         const existingOneLink = await OneLink.findOne({ username });
         if (existingOneLink) {
             return res.status(400).json({ error: true, message: 'Username is already taken.' });
         }
 
-        const orderedLinks = [];
-        if (links && Array.isArray(links)) {
-            for (const { url, order } of links) {
-                // validate
-                if (!url || !/^https?:\/\/.+$/.test(url)) {
-                    return res.status(400).json({ error: true, message: `Invalid URL provided: ${url}` });
+        if (!username || !name || !bio || !templateId) {
+            return res.status(400).json({
+                error: true,
+                message: 'Username, name, bio, and templateId are required.'
+            });
+        }
+
+        let profilePhotoUrl = '';
+        if (req.files && req.files.profilePhoto && req.files.profilePhoto[0]) {
+            const file = req.files.profilePhoto[0];
+            profilePhotoUrl = await uploadToCloudinary(file.buffer, 'one-link/profile-photo', file.originalname);
+        }
+
+        const processedLinks = [];
+        const newLinks = JSON.parse(links);
+        if (newLinks && Array.isArray(newLinks)) {
+            for(let i = 0; i < newLinks.length; i++) {
+                const link = newLinks[i];
+
+                if (!link.url || !link.label){
+                    continue;
                 }
-                    // Create a new shortened URL
-                    const shortId = generate();
-                    const qrCode = await generateQRCodeForUrl(shortId);
-                    const { title, logo } = await extractData(url);
 
-                    const newUrl = new Url({
-                        originalUrl: url,
-                        shortUrl: shortId,
-                        user: userId,
-                        qrCode: qrCode,
-                        title: title,
-                        logo: logo,
-                        isOneLink: true,
+                // Validate URL format
+                if (!/^https?:\/\/.+$/.test(link.url)) {
+                    return res.status(400).json({
+                        error: true,
+                        message: `Invalid URL provided for link ${i + 1}: ${link.url}`
                     });
+                }
 
-                    await newUrl.save();
-                    orderedLinks.push({ url: newUrl._id, order: order || 0 });
+                const shortId = generate();
+                const qrCode = await generateQRCodeForUrl(link.url, shortId);
+                const { title, logo} = await extractData(link.url);
+                console.log(title, logo);
+
+                const urlData = {
+                    originalUrl: link.url,
+                    shortUrl: shortId,
+                    user: userId,
+                    qrCode: qrCode,
+                    isOneLink: true,
+                };
+
+                if (title && title !== 'No title found') {
+                    urlData.title = title;
+                }
+
+                if (logo && logo !== 'No logo found') {
+                    urlData.logo = logo;
+                }
+
+                const newUrl = new Url(urlData);
+                await newUrl.save();
+
+                processedLinks.push({
+                    label: link.label,
+                    url: link.url,
+                    shortUrl: shortId,
+                    urlId: newUrl._id,
+                    order: i
+                });
             }
         }
 
-        // sort links by order before saving
-        orderedLinks.sort((a, b) => a.order - b.order);
+
+        let processedImages = [];
+        if (req.files && req.files.images) {
+            for (const image of req.files.images) {
+                const url = await uploadToCloudinary(image.buffer, 'one-link/images', image.originalname);
+                processedImages.push(url);
+            }
+        }
 
         const oneLink = new OneLink({
             username,
-            profilePhoto,
+            name,
+            profilePhotoUrl,
             bio,
-            theme,
-            links: orderedLinks,
+            templateId: parseInt(templateId),
+            user: userId,
+            links: processedLinks,
+            images: processedImages,
         });
+
 
         await oneLink.save();
 
-        // update the user OneLink page reference
+        // Update user document
         user.oneLinkPage = oneLink._id;
         await user.save();
 
@@ -76,6 +125,7 @@ const createOneLink = async (req, res) => {
         return res.status(500).json({ error: true, message: 'Internal server error.' });
     }
 };
+
 
 const deleteOneLink = async (req, res) => {
     const userId = req.user._id;
@@ -105,71 +155,101 @@ const deleteOneLink = async (req, res) => {
 
 const updateOneLink = async (req, res) => {
     const userId = req.user._id;
-    const { username, bio, theme, profilePhoto, links } = req.body;
+    const { name, bio, links } = req.body;
 
     try {
-
-        const user = await User.findById(userId).populate('oneLinkPage');
-        if (!user || !user.oneLinkPage) {
-            return res.status(400).json({ error: true, message: 'No OneLink page found to update.' });
+        const user = await User.findById(userId);
+        if (!user.oneLinkPage) {
+            return res.status(404).json({ error: true, message: 'OneLink page not found.' });
         }
+
         const oneLink = await OneLink.findById(user.oneLinkPage);
-
-        if (username) {
-            const existingUsername = await OneLink.findOne({ username });
-            if (existingUsername && existingUsername._id.toString() !== oneLink._id.toString()) {
-                return res.status(400).json({ error: true, message: 'Username is already taken.' });
-            }
-            oneLink.username = username;
+        if (!oneLink) {
+            return res.status(404).json({ error: true, message: 'OneLink page not found.' });
         }
 
-        if (bio) oneLink.bio = bio;
-        if (theme) oneLink.theme = theme;
-        if (profilePhoto) oneLink.profilePhoto = profilePhoto;
+        // Update profile photo if new one is uploaded
+        if (req.files && req.files.profilePhoto && req.files.profilePhoto[0]) {
+            const file = req.files.profilePhoto[0];
+            const profilePhotoUrl = await uploadToCloudinary(file.buffer, 'one-link/profile-photo', file.originalname);
+            oneLink.profilePhotoUrl = profilePhotoUrl;
+        }
 
-        if (links)
-            for (const link of links) {
-                if (link.action === 'add'){
-                    const { url, order } = link;
-                    if (!url || !/^https?:\/\/.+$/.test(url)) {
-                        return res.status(400).json({ error: true, message: `Invalid URL provided: ${url}` });
+        // Process updated links
+        if (links) {
+            // Delete old URL documents for links that are being removed
+            const oldUrlIds = oneLink.links.map(link => link.urlId).filter(id => id);
+            await Url.deleteMany({ _id: { $in: oldUrlIds }, isOneLink: true });
+
+            // Process new links
+            const processedLinks = [];
+            const newLinks = JSON.parse(links);
+            if (newLinks && Array.isArray(newLinks)) {
+                for (let i = 0; i < newLinks.length; i++) {
+                    const link = newLinks[i];
+
+                    if (!link.url || !link.label) {
+                        continue;
                     }
 
-                    if (order < 0 || order > oneLink.links.length) {
-                        return res.status(400).json({ error: true, message: `Invalid order: ${order}` });
+                    // Validate URL format
+                    if (!/^https?:\/\/.+$/.test(link.url)) {
+                        return res.status(400).json({
+                            error: true,
+                            message: `Invalid URL provided for link ${i + 1}: ${link.url}`
+                        });
                     }
 
                     const shortId = generate();
-                    const qrCode = await generateQRCodeForUrl(shortId);
-                    const { title, logo } = await extractData(url);
+                    const qrCode = await generateQRCodeForUrl(link.url, shortId);
+                    const { title, logo } = await extractData(link.url);
+                    console.log(title, logo);
 
-                    const newUrl = new Url({
-                        originalUrl: url,
+                    const urlData = {
+                        originalUrl: link.url,
                         shortUrl: shortId,
                         user: userId,
                         qrCode: qrCode,
-                        title: title,
-                        logo: logo,
                         isOneLink: true,
-                    });
+                    };
 
-                    await newUrl.save();
-                    oneLink.links.splice(order, 0, newUrl.id);
-                }else if (link.action === 'update') {
-                    // Update an existing link
-                    const { id, url } = link;
-                    const existingLink = await Url.findById(id);
-                    if (existingLink) {
-                        existingLink.originalUrl = url;
-                        await existingLink.save();
+                    if (title && title !== 'No title found') {
+                        urlData.title = title;
                     }
-                } else if (link.action === 'delete') {
-                    // Remove a link
-                    const { id } = link;
-                    oneLink.links = oneLink.links.filter(linkId => linkId.toString() !== id);
+
+                    if (logo && logo !== 'No logo found') {
+                        urlData.logo = logo;
+                    }
+
+                    const newUrl = new Url(urlData);
+                    await newUrl.save();
+
+                    processedLinks.push({
+                        label: link.label,
+                        url: link.url,
+                        shortUrl: shortId,
+                        urlId: newUrl._id,
+                        order: i
+                    });
                 }
             }
 
+            oneLink.links = processedLinks;
+        }
+
+        // Update images if new ones are uploaded
+        if (req.files && req.files.images && req.files.images.length > 0) {
+            let processedImages = [];
+            for (const image of req.files.images) {
+                const url = await uploadToCloudinary(image.buffer, 'one-link/images', image.originalname);
+                processedImages.push(url);
+            }
+            oneLink.images = processedImages;
+        }
+
+        // Update basic fields
+        if (name) oneLink.name = name;
+        if (bio) oneLink.bio = bio;
 
         await oneLink.save();
 
@@ -178,21 +258,25 @@ const updateOneLink = async (req, res) => {
             message: 'OneLink page updated successfully.',
             data: oneLink,
         });
-
     } catch (error) {
         console.error('Error updating OneLink page:', error);
         return res.status(500).json({ error: true, message: 'Internal server error.' });
     }
-}
+};
 
 const getOneLink = async (req, res) => {
     const { username } = req.params;
-
     try {
-        const oneLink = await OneLink.findOne({ username }).populate('links');
+        const oneLink = await OneLink.findOneAndUpdate(
+            { username },
+            { $inc: { pageViews: 1 } },
+            { new: true }
+        ).populate('links');
+
         if (!oneLink) {
             return res.status(404).json({ error: true, message: 'OneLink page not found.' });
         }
+        oneLink.pageView = oneLink.pageView++;
 
         return res.status(200).json({ success: true, data: oneLink });
     } catch (error) {
@@ -240,13 +324,27 @@ const checkUserName = async (req, res) => {
     }
 }
 
+const getMyPage = async (req, res) => {
+    try {
+        const oneLink = await OneLink.findOne({ user: req.user._id }).populate('links.urlId');
+        if (!oneLink) {
+            return res.status(404).json({ error: true, message: 'No OneLink page found.' });
+        }
+        res.status(200).json({ success: true, data: oneLink });
+    } catch (error) {
+        console.error('Error fetching OneLink:', error);
+        res.status(500).json({ error: true, message: 'Server error' });
+    }
+}
+
 module.exports = {
     getOneLink,
     trackPageView,
     updateOneLink,
     createOneLink,
     deleteOneLink,
-    checkUserName
+    checkUserName,
+    getMyPage
 }
 
 

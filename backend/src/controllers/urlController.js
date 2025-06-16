@@ -194,7 +194,7 @@ async function getUserUrls(req, res){
 
     try {
         // Fetch all URLs associated with the user
-        const userUrls = await Url.find({ user: userId });
+        const userUrls = await Url.find({ user: userId, isOneLink: false });
 
         // If no URLs found
         if (!userUrls || userUrls.length === 0) {

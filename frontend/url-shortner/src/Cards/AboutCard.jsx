@@ -1,4 +1,3 @@
-
 const AboutCard = () =>  {
     return (
         <div className="w-full bg-gray-100">

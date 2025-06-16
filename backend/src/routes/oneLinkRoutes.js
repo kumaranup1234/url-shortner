@@ -6,19 +6,35 @@ const {
     updateOneLink,
     getOneLink,
     trackPageView,
-    checkUserName
+    checkUserName,
+    getMyPage
 } = require('../controllers/oneLinkController');
 
 const { authenticateUser } = require('../middleware/authenticate');
+const upload = require("../utils/multerConfig");
+
 
 // create a new OneLink page
-router.post('/create', authenticateUser, createOneLink);
-
+router.post(
+    '/create',
+    authenticateUser,
+    upload.fields([
+        { name: 'profilePhoto', maxCount: 1 },
+        { name: 'images', maxCount: 10 }
+    ]),
+    createOneLink
+);
 // delete an existing OneLink page
 router.delete('/delete', authenticateUser, deleteOneLink);
 
+// get onelink
+router.get('/my-page', authenticateUser, getMyPage);
+
 // update the user OneLink page
-router.put('/update', authenticateUser, updateOneLink);
+router.post('/update', authenticateUser, upload.fields([
+    { name: 'profilePhoto', maxCount: 1 },
+    { name: 'images', maxCount: 10 }
+]),updateOneLink);
 
 // fetch a OneLink page by username
 router.get('/:username', getOneLink);

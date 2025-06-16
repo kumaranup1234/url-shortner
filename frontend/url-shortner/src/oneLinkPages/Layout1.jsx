@@ -1,64 +1,74 @@
-const Layout1 = () => {
+import React from "react";
+
+const LayoutMain1 = ({
+                           username,
+                           name,
+                           bio,
+                           profilePhoto,
+                           links = [],
+                       }) => {
+    const getBioSpacing = (bioText) => {
+        if (!bioText || bioText.length < 50) return "mb-4";
+        if (bioText.length < 100) return "mb-3";
+        return "mb-2";
+    };
+
     return (
-        <>
-            <div className="flex h-screen justify-center items-center">
-                <div className="relative bg-gradient-to-br from-green-300 to-yellow-100 p-6 rounded-lg shadow-2xl shadow-green-900 w-96">
+        <div className="h-screen bg-gray-50 flex items-center justify-center">
+            <div className="relative bg-gradient-to-br from-green-300 via-green-200 to-yellow-100
+        px-6 py-6 sm:px-8 md:px-10 rounded-2xl shadow-2xl
+        w-[90%] sm:w-[80%] md:w-[60%] lg:w-[45%] xl:w-[40%]
+        flex flex-col items-center justify-start
+        transition-all duration-300 hover:scale-[1.02] shadow-gray-300">
 
-                    <div className="flex justify-center">
-                        <img
-                            src="https://clipartcraft.com/images/assassins-creed-logo-gold.png"
-                            alt="Profile Picture"
-                            className="rounded-full w-28 h-28"
-                            loading="lazy"
-                        />
-                    </div>
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl pointer-events-none"></div>
 
-                    <div className="text-center mt-4">
-                        <h1 className="text-lg font-bold font-serif">Anurag Anand</h1>
-                        <p className="text-gray-600">
-                            Discover my work and see where you can find me &#128128;
-                        </p>
-                    </div>
+                {/* Profile Photo */}
+                <div className="relative z-10 mb-5">
+                    <img
+                        src={profilePhoto}
+                        alt="Profile"
+                        className="rounded-full w-20 h-20 sm:w-24 sm:h-24 object-cover shadow-lg border-4 border-white"
+                        loading="lazy"
+                    />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent to-black/10"></div>
+                </div>
 
-                    <div className="mt-8 space-y-6">
+                {/* Profile Info */}
+                <div className={`relative z-10 text-center ${getBioSpacing(bio)}`}>
+                    <h1 className="text-xl sm:text-2xl font-bold font-serif mb-2 text-gray-800 drop-shadow-sm">
+                        {name}
+                    </h1>
+                    <p className="text-sm sm:text-base text-gray-700 px-2 font-medium">
+                        {bio}
+                    </p>
+                    {username && (
+                        <p className="text-xs sm:text-sm text-gray-600 mt-1 font-mono">@{username}</p>
+                    )}
+                </div>
+
+                {/* Links */}
+                <div className="relative z-10 mt-4 w-full flex flex-col space-y-3 items-stretch">
+                    {links?.slice(0, 5).map((link, index) => (
                         <a
-                            href="#"
-                            className="block bg-white rounded-full text-center p-3 shadow-md shadow-black hover:bg-gray-100"
+                            key={index}
+                            href={link.url || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-white/90 backdrop-blur-sm rounded-full text-center
+                px-4 py-3 text-sm sm:text-base font-semibold
+                shadow-lg hover:shadow-xl hover:bg-white
+                transition-all duration-300 transform hover:scale-105 hover:-translate-y-1
+                border border-white/50"
                         >
-                            <span className="font-semibold font-sans">Website</span>
+                            <span className="text-gray-800">{link.label || `Link ${index + 1}`}</span>
                         </a>
-
-                        <a
-                            href="#"
-                            className="block bg-white rounded-full text-center p-3 shadow-md shadow-black hover:bg-gray-100"
-                        >
-                            <span className="font-semibold font-sans">Twitter</span>
-                        </a>
-
-                        <a
-                            href="#"
-                            className="block bg-white rounded-full text-center p-3 shadow-md shadow-black hover:bg-gray-100"
-                        >
-                            <span className="font-semibold font-sans">Portfolio</span>
-                        </a>
-
-                        <a
-                            href="#"
-                            className="block bg-white rounded-full text-center p-3 shadow-md shadow-black hover:bg-gray-100"
-                        >
-                            <span className="font-semibold font-sans">Pinterest</span>
-                        </a>
-
-                        <a
-                            href="#"
-                            className="block bg-white rounded-full text-center p-3 shadow-md shadow-black hover:bg-gray-100"
-                        >
-                            <span className="font-semibold font-sans">Instagram</span>
-                        </a>
-                    </div>
+                    ))}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
-export default Layout1;
+
+export default LayoutMain1;

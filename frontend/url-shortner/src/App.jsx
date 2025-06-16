@@ -17,7 +17,6 @@ const Settings = React.lazy(() => import('./Pages/Settings.jsx'));
 import ForgotPassword from "./Pages/ForgotPassword.jsx";
 import ResetPassword from "./Pages/ResetPassword.jsx";
 import ApiDocs from "./Pages/ApiDocs.jsx";
-import MainFooter from "./Components/MainFooter.jsx";
 import TermsOfService from "./Components/TermsOfService.jsx";
 import PrivacyPolicy from "./Components/PrivacyPolicy.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
@@ -25,6 +24,11 @@ const Dashboard = React.lazy(() => import('./Pages/Dashboard.jsx'));
 import NotFound from "./Pages/NotFound.jsx";
 import OneLink from "./Pages/OneLink.jsx";
 import LoadingSpinner from "./Components/LoadingSpinner.jsx";
+import CreatePage from "./Components/oneLink/CreatePage.jsx";
+import TemplateSelection from "./Components/oneLink/TemplateSelection.jsx";
+import TemplateEditor from "./Pages/TemplateEditor.jsx";
+import PublicProfilePage from "./Pages/PublicProfilePage.jsx";
+
 
 const App = () => {
     const [auth, setAuth] = useRecoilState(authState);
@@ -49,11 +53,12 @@ const App = () => {
     if (loading) {
        return <LoadingSpinner />;
     }
+    const isPublicProfilePage = location.pathname.startsWith("/onelink/");
 
     return (
         <>
-            <div><Toaster/></div>
-            <Navbar/>
+        {!isPublicProfilePage &&<div><Toaster/></div>}
+        {!isPublicProfilePage &&<Navbar/>}
             <Suspense fallback={<LoadingSpinner />}>
             <Routes>
                 <Route path="/" element={<ProtectedRoute element={<LandingPage/>} />}/>
@@ -61,8 +66,11 @@ const App = () => {
                 <Route path="/signup" element={<ProtectedRoute element={<SignUp/>} />}/>
                 <Route path="/shortened" element={<Shortened/>}/>
                 <Route path="/links" element={<ProtectedRoute  element={<Links/>} />}/>
+                <Route path="/createOneLink" element={<ProtectedRoute  element={<CreatePage/>} />}/>
+                <Route path="/templates" element={<ProtectedRoute element={<TemplateSelection />} />} />
                 <Route path="/dashboard" element={<ProtectedRoute  element={<Dashboard/>} />}/>
                 <Route path="/onelinkPages" element={<ProtectedRoute element={<OneLink/>} />}/>
+                <Route path="/customize-template" element={<ProtectedRoute  element={<TemplateEditor />} />} />
                 <Route path="/settings" element={<ProtectedRoute element={<Settings/>} />} />
                 <Route path="/reset" element={<ProtectedRoute element={<ForgotPassword />} />} />
                 <Route path="/reset-password/:resetToken" element={<ProtectedRoute element={<ResetPassword />} />} />
@@ -71,6 +79,7 @@ const App = () => {
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/analytics/:shortenedUrl" element={<ProtectedRoute element={<Analytics/>} />}/>
                 <Route path="*" element={<NotFound />} />
+                <Route path="/onelink/:username" element={<PublicProfilePage />} />
             </Routes>
             </Suspense>
         </>

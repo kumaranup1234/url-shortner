@@ -5,6 +5,8 @@ import SummaryCard from "../Cards/SummaryCard.jsx";
 import AboutCard from "../Cards/AboutCard.jsx";
 import CreateNewLink from "../Components/CreateNewLink.jsx";
 import SkeletonLoader from "../Components/SkeletonLoader.jsx";
+import noImage from "../assets/no-image2.svg"
+import {formatDate} from "../utils/formatDate.js";
 
 const Links = () => {
     const [refresh, setRefresh] = useState(false);
@@ -15,6 +17,7 @@ const Links = () => {
         try {
             const response = await axiosInstance.get("/api/urls/manage/user-urls");
             setAllLinks(response.data.userUrls);
+            console.log(response.data.userUrls);
         } catch (e) {
             console.error(e);
         } finally {
@@ -61,9 +64,9 @@ const Links = () => {
                                             shortenedUrl={link.shortUrl}
                                             qrCode={link?.qrCode}
                                             totalClicks={link.totalClicks}
-                                            date={new Date(link.createdAt).toLocaleDateString()}
+                                            date={formatDate(link.createdAt)}
                                             title={link.title}
-                                            logo={link.logo}
+                                            logo={link.logo ? link.logo : noImage}
                                             onEditSuccess={getAllLinks}
                                             onDeleteSuccess={triggerRefresh}
                                         />

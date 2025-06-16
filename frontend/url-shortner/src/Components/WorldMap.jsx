@@ -11,6 +11,8 @@ HC_map(Highcharts);
 
 const WorldMap = ({ apiUrl }) => {
     const [mapOptions, setMapOptions] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [hasData, setHasData] = useState(false);
 
 
     const getMapData = async () => {
@@ -23,6 +25,12 @@ const WorldMap = ({ apiUrl }) => {
             //   { code: 'us', value: 18 },
             //   { code: 'fr', value: 19 }
             // ]
+            if (Object.keys(countryCounts).length === 0) {
+                setHasData(false); // No data available
+                setLoading(false);
+                return;
+            }
+            setHasData(true);
             const formattedData = Object.entries(countryCounts).map(([code, value]) => ({
                 code: code.toLowerCase(),
                 value: value
@@ -75,7 +83,9 @@ const WorldMap = ({ apiUrl }) => {
                     pointFormat: '{point.properties.name}: <b>{point.value}</b> clicks',
                 }
             });
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             toast.error("Error fetching location data");
         }
     }
@@ -84,24 +94,38 @@ const WorldMap = ({ apiUrl }) => {
         getMapData();
     }, []);
 
+    if (loading) {
+        return (
+            <div className="rounded-lg p-4 h-96 flex items-center justify-center">
+                <InfinitySpin
+                    visible={true}
+                    width="200"
+                    color="#4fa94d"
+                    ariaLabel="infinity-spin-loading"
+                />
+                <p>Preparing your graph data...</p>
+            </div>
+        );
+    }
+
+    if (!hasData) {
+        return (
+            <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
+                <p className="text-lg font-semibold">
+                    No data available.
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div>
-            {mapOptions ? (
+            {mapOptions && (
                 <HighchartsReact
                     highcharts={Highcharts}
                     constructorType={'mapChart'}
                     options={mapOptions}
                 />
-            ) : (
-               <div className="rounded-lg p-4 h-96 flex items-center justify-center">
-                    <InfinitySpin
-                        visible={true}
-                        width="200"
-                        color="#4fa94d"
-                        ariaLabel="infinity-spin-loading"
-                    />
-                    <p>Preparing your graph data...</p>
-               </div>
             )}
         </div>
     );
