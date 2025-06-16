@@ -74,7 +74,7 @@ const OneLink = () => {
                     <div>
                         {oneLinkData && (
                             <OneLinkCard
-                                oneLinkUrl={`${FRONTEND_BASE_URL}/${oneLinkData.username}`}
+                                oneLinkUrl={`${FRONTEND_BASE_URL}/onelink/${oneLinkData.username}`}
                                 createdAt={formatDate(oneLinkData.createdAt)}
                                 clicks="24"
                                 views={oneLinkData.pageViews}
