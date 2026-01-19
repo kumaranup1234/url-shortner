@@ -1,6 +1,5 @@
-import { FaUserCircle, FaCog, FaSignOutAlt } from "react-icons/fa";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { authState } from "../recoil/atoms.js";
+import { FaUserCircle, FaCog } from "react-icons/fa";
+import { useSelector } from 'react-redux';
 import { useRef, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../Components/LogoutButton.jsx";
@@ -10,251 +9,170 @@ import close from "../assets/close-button.svg";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
-    const { isLoggedIn, user } = useRecoilValue(authState);
+    const { isLoggedIn, user } = useSelector(state => state.auth);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
-    // custom hook for outside click detection
     useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
-    // Disable scrolling when the mobile menu is open
     useEffect(() => {
-        if (showMobileMenu) {
-            document.body.style.overflow = "hidden"; // disable scrolling
-        } else {
-            document.body.style.overflow = "auto"; // re-enable scrolling
-        }
+        document.body.style.overflow = showMobileMenu ? "hidden" : "auto";
         return () => {
-            document.body.style.overflow = "auto"; // re-enable scrolling on cleanup
+            document.body.style.overflow = "auto";
         };
     }, [showMobileMenu]);
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-    };
+    const toggleDropdown = () => setShowDropdown(!showDropdown);
     const handleDropdownLinkClick = (path) => {
         setShowDropdown(false);
         navigate(path);
     };
-    const toggleMobileMenu = () => {
-        setShowMobileMenu(!showMobileMenu);
-    };
+    const toggleMobileMenu = () => setShowMobileMenu(!showMobileMenu);
 
     const handleLogoClick = () => {
-        if (isLoggedIn) {
-            navigate("/links");
-        } else {
-            navigate("/");
-        }
+        navigate(isLoggedIn ? "/links" : "/");
     };
 
+    const navLinks = [
+        { to: "/dashboard", label: "Dashboard" },
+        { to: "/links", label: "Your Links" },
+        { to: "/onelinkPages", label: "OneLink" },
+        { to: "/api-docs", label: "API Docs" }
+    ];
+
+    const authLinks = [
+        { to: "/login", label: "Login" },
+        { to: "/signup", label: "Sign Up" }
+    ];
+
+    const NavLinkComponent = ({ to, label, onClick, mobile = false }) => (
+        <NavLink
+            to={to}
+            onClick={onClick}
+            className={({ isActive }) =>
+                `transition-colors duration-200 ${
+                    isActive
+                        ? "text-yellow-300 font-bold"
+                        : "text-white hover:text-yellow-200"
+                } ${mobile ? "text-xl py-2" : "font-medium"}`
+            }
+        >
+            {label}
+        </NavLink>
+    );
+
     return (
-        <nav className="bg-teal-900 p-5 flex items-center justify-between shadow-md">
-            <div className="flex items-center space-x-6 ml-4 md:ml-16">
-                <div className="flex justify-between items-center space-x-6">
-                    {!showMobileMenu ? (
-                        <img
-                            src={hamburger}
-                            alt="Hamburger Menu"
-                            className="cursor-pointer md:hidden w-6 h-6"
-                            onClick={toggleMobileMenu}
-                        />
-                    ) : (
-                        <img
-                            src={close}
-                            alt="Close Menu"
-                            className="cursor-pointer md:hidden h-6 w-6"
-                            onClick={toggleMobileMenu}
-                        />
-                    )}
-                <div
-                    onClick={handleLogoClick}
-                    className="text-white font-bold text-2xl cursor-pointer"
-                >
-                    Trim.URL
-                </div>
-                </div>
+        <nav className="bg-gradient-to-r from-teal-800 to-teal-900 shadow-lg relative z-40">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Left: Logo and Navigation */}
+                    <div className="flex items-center space-x-8">
+                        <div className="flex items-center space-x-4">
+                            <button
+                                onClick={toggleMobileMenu}
+                                className="md:hidden p-2 rounded-md text-white hover:bg-teal-700 transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                <img
+                                    src={showMobileMenu ? close : hamburger}
+                                    alt={showMobileMenu ? "Close menu" : "Open menu"}
+                                    className="w-5 h-5"
+                                />
+                            </button>
+                            
+                            <button
+                                onClick={handleLogoClick}
+                                className="text-white font-bold text-2xl hover:text-yellow-200 transition-colors"
+                            >
+                                Trim.URL
+                            </button>
+                        </div>
 
-                {isLoggedIn && (
-                    <div className="hidden md:flex space-x-4">
-                        <NavLink
-                            to="/dashboard"
-                            className={({isActive}) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold"
-                                    : "text-white hover:text-gray-300 font-medium"
-                            }
-                        >
-                            Dashboard
-                        </NavLink>
-                        <NavLink
-                            to="/links"
-                            className={({isActive}) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold"
-                                    : "text-white hover:text-gray-300 font-medium"
-                            }
-                        >
-                            Your Links
-                        </NavLink>
-                        <NavLink
-                            to="/onelinkPages"
-                            className={({isActive}) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold"
-                                    : "text-white hover:text-gray-300 font-medium"
-                            }
-                        >
-                            OneLink
-                        </NavLink>
-                        <NavLink
-                            to="/api-docs"
-                            className={({isActive}) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold"
-                                    : "text-white hover:text-gray-300 font-medium"
-                            }
-                        >
-                            API Docs
-                        </NavLink>
-                    </div>
-                )}
-            </div>
-
-            {/* Right: Profile */}
-            <div className="flex items-center space-x-6 md:mr-14">
-                {!isLoggedIn ? (
-                    <div className="space-x-6 hidden md:block ">
-                    <NavLink
-                            to="/login"
-                            className={({ isActive }) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold text-xl"
-                                    : "text-white hover:text-gray-300 text-xl"
-                            }
-                        >
-                            Login
-                        </NavLink>
-                        <NavLink
-                            to="/signup"
-                            className={({ isActive }) =>
-                                isActive
-                                    ? "text-yellow-300 font-bold text-xl"
-                                    : "text-white hover:text-gray-300 text-xl"
-                            }
-                        >
-                            SignUp
-                        </NavLink>
-                    </div>
-                ) : (
-                    <div ref={dropdownRef} className="flex md:space-x-2 items-center text-white" onClick={toggleDropdown}>
-                        {user?.profileImage ? (
-                            <img
-                                src={user.profileImage}
-                                alt="User Profile"
-                                className="w-10 h-9 rounded-full lg:mr-2 cursor-pointer"
-                            />
-                        ) : (
-                            <FaUserCircle
-                                className="w-10 h-9 lg:mr-2 cursor-pointer"
-                            />
-                        )}
-                        <h1 className="cursor-pointer hidden sm:block">{user.username}</h1>
-                        {showDropdown && (
-                            <div className="absolute right-8 md:right-28 mt-36 w-40 bg-white shadow-lg rounded py-2">
-                                {/* Dropdown Menu */}
-                                <NavLink
-                                    to="/settings"
-                                    className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    onClick={() => handleDropdownLinkClick("/settings")}
-                                >
-                                    <FaCog className="mr-2"/> Settings
-                                </NavLink>
-                                <hr className="border-t border-gray-200"/>
-                                {/* Horizontal Line */}
-                                <LogoutButton setShowDropdown={setShowDropdown}/>
+                        {isLoggedIn && (
+                            <div className="hidden md:flex space-x-6">
+                                {navLinks.map(link => (
+                                    <NavLinkComponent key={link.to} {...link} />
+                                ))}
                             </div>
                         )}
                     </div>
-                )}
+
+                    {/* Right: Profile/Auth */}
+                    <div className="flex items-center">
+                        {!isLoggedIn ? (
+                            <div className="hidden md:flex space-x-6">
+                                {authLinks.map(link => (
+                                    <NavLinkComponent key={link.to} {...link} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div ref={dropdownRef} className="relative">
+                                <button
+                                    onClick={toggleDropdown}
+                                    className="flex items-center space-x-2 text-white hover:text-yellow-200 transition-colors p-2 rounded-md hover:bg-teal-700"
+                                    aria-label="User menu"
+                                >
+                                    {user?.profileImage ? (
+                                        <img
+                                            src={user.profileImage}
+                                            alt="Profile"
+                                            className="w-8 h-8 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <FaUserCircle className="w-8 h-8" />
+                                    )}
+                                    <span className="hidden sm:block font-medium">
+                                        {user?.username}
+                                    </span>
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                                
+                                {showDropdown && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
+                                        <button
+                                            onClick={() => handleDropdownLinkClick("/settings")}
+                                            className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                        >
+                                            <FaCog className="mr-3 text-gray-400" />
+                                            Settings
+                                        </button>
+                                        <hr className="my-1 border-gray-200" />
+                                        <LogoutButton setShowDropdown={setShowDropdown} />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
+            {/* Mobile Menu */}
             {showMobileMenu && (
-                <div className="absolute top-[4.2rem] mt-2 left-0 w-full h-[calc(100vh-4rem)] bg-teal-950 bg-opacity-50 z-50 flex flex-col justify-center items-center md:hidden">
-                    {isLoggedIn ? (
-                        <div className="flex flex-col text-center space-y-4">
-                            <NavLink
-                                to="/dashboard"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                Dashboard
-                            </NavLink>
-                            <NavLink
-                                to="/links"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                Your Links
-                            </NavLink>
-                            <NavLink
-                                to="/onelinkPages"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                OneLink
-                            </NavLink>
-                            <NavLink
-                                to="/api-docs"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                API Docs
-                            </NavLink>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col text-center space-y-4">
-                            <NavLink
-                                to="/login"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                Login
-                            </NavLink>
-                            <NavLink
-                                to="/signup"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "text-yellow-300 font-bold text-2xl"
-                                        : "text-white text-xl"
-                                }
-                                onClick={toggleMobileMenu}
-                            >
-                                SignUp
-                            </NavLink>
-                        </div>
-                    )}
+                <div className="md:hidden absolute top-16 left-0 right-0 bg-teal-900 shadow-xl z-50">
+                    <div className="px-4 py-6 space-y-4">
+                        {isLoggedIn ? (
+                            navLinks.map(link => (
+                                <NavLinkComponent
+                                    key={link.to}
+                                    {...link}
+                                    onClick={toggleMobileMenu}
+                                    mobile
+                                />
+                            ))
+                        ) : (
+                            authLinks.map(link => (
+                                <NavLinkComponent
+                                    key={link.to}
+                                    {...link}
+                                    onClick={toggleMobileMenu}
+                                    mobile
+                                />
+                            ))
+                        )}
+                    </div>
                 </div>
             )}
         </nav>
