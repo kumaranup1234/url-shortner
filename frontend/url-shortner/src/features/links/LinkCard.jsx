@@ -1,20 +1,20 @@
-import graphIcon from "../assets/graphIcon.svg";
-import calendarIcon from "../assets/calendarIcon.svg";
-import editIcon from "../assets/editIcon.svg";
-import copyIcon from "../assets/copyIcon.svg";
-import shareIcon from "../assets/shareIcon.svg";
-import deleteIcon from "../assets/deleteIcon.svg";
-import qrIcon from "../assets/qrIcon.svg";
-import threeDotsIcon from "../assets/threeDotsIcon.svg";
-import { BASE_URL } from "../utils/constants.js";
-import React, {useEffect, useRef, useState} from "react";
+import graphIcon from "../../assets/graphIcon.svg";
+import calendarIcon from "../../assets/calendarIcon.svg";
+import editIcon from "../../assets/editIcon.svg";
+import copyIcon from "../../assets/copyIcon.svg";
+import shareIcon from "../../assets/shareIcon.svg";
+import deleteIcon from "../../assets/deleteIcon.svg";
+import qrIcon from "../../assets/qrIcon.svg";
+import threeDotsIcon from "../../assets/threeDotsIcon.svg";
+import { BASE_URL } from "../../shared/utils/constants.js";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import QRCodePopup from "../Components/QRCodePopup.jsx";
-import toast from "react-hot-toast";
-import EditLink from "../Components/EditLink.jsx";
-import ShareButton from "../Components/ShareButton.jsx";
-import UseOutsideClick from "../hooks/useOutsideClick.jsx";
-import axiosInstance from "../utils/axiosInstance.js";
+import QRCodePopup from "../../shared/components/QRCodePopup.jsx";
+import { toast } from 'sonner';
+import EditLink from "./EditLink.jsx";
+import ShareButton from "../../shared/components/ShareButton.jsx";
+import useOutsideClick from "../../shared/hooks/useOutsideClick.js";
+import axiosInstance from "../../shared/utils/axiosInstance.js";
 
 
 const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalClicks, onEditSuccess, onDeleteSuccess }) => {
@@ -32,7 +32,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
 
 
     // custom hook for outside click detection
-    UseOutsideClick(dropdownRef, () => setShowDropdown(false));
+    useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
     useEffect(() => {
         const updateMaxLength = () => {
@@ -83,6 +83,24 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     };
 
     const handleDeleteClick = () => {
+        toast("Delete this link?", {
+            description: "This action cannot be undone.",
+            action: {
+                label: "Delete",
+                onClick: () => executeDelete(),
+            },
+            cancel: {
+                label: "Cancel",
+            },
+            className: "bg-red-50 border-red-200",
+            actionButtonStyle: {
+                backgroundColor: "#ef4444",
+                color: "white",
+            }
+        });
+    };
+
+    const executeDelete = () => {
         const myPromise = axiosInstance.delete(`/api/urls/manage/delete/${shortenedUrl}`);
 
         toast.promise(myPromise, {
@@ -117,100 +135,129 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     }, [showDropdown]);
 
     return (
-        <div className="w-full md:w-auto bg-gray-100 rounded-lg shadow-md p-6 flex justify-between items-center mb-4 md:ml-6 relative">
-            {/* Left Section */}
-            <div className="grid space-y-2">
-                <div className="grid">
-                    <div className="flex flex-grow items-center space-x-4">
-                        <img src={logo} alt={logo}
-                             className="md:block h-12 w-12 object-contain rounded-full bg-gray-200"/>
+        <div className="w-full bg-white border border-gray-100 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 mb-4 relative group">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
 
-                        <button
-                            onClick={handleCopy}
-                            className="flex items-center space-x-2 p-2 h-10 w-20 rounded bg-gray-200 text-gray-600 hover:text-gray-800 transition">
-                            <img src={copyIcon} alt="Copy" className="h-4 w-4"/>
-                            <span>Copy</span>
-                        </button>
-                        {qrCode && (
-                            <div className="md:hidden cursor-pointer items-center" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="h-12 w-12 object-contain"/>
-                            </div>
-                        )}
-
+                {/* Left Section: Icon & Info */}
+                <div className="flex items-start gap-4 flex-1">
+                    {/* Logo/Icon */}
+                    <div className="flex-shrink-0">
+                        <img
+                            src={logo}
+                            alt="Link Logo"
+                            className="h-12 w-12 object-contain rounded-full bg-gray-50 border border-gray-100 p-1"
+                        />
                     </div>
 
-                    <div className="flex md:space-x-3">
-                        {/* QR Code Icon */}
-                        {qrCode && (
-                            <div className="cursor-pointer" onClick={handleQrIconClick}>
-                                <img src={qrIcon} alt="QR Icon" className="hidden md:block mt-2 h-12 w-12 object-contain"/>
+                    {/* Content */}
+                    <div className="flex flex-col flex-1 min-w-0 w-0">
+                        {/* Title & Short URL line */}
+                        <div className="flex flex-wrap items-baseline gap-2 mb-1 min-w-0">
+                            <h3 className="text-lg font-semibold text-gray-900 truncate max-w-full" title={title || "Untitled Link"}>
+                                {title || "Untitled Link"}
+                            </h3>
+                        </div>
+
+                        {/* Short URL (Blue) */}
+                        <a
+                            href={fullUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 font-medium hover:text-blue-700 hover:underline truncate text-base mb-1 block max-w-full"
+                            title={fullUrl}
+                        >
+                            {fullUrl}
+                        </a>
+
+                        {/* Original URL (Subtle) */}
+                        <a
+                            href={originalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 text-sm hover:text-gray-600 truncate mb-3 block max-w-full"
+                            title={originalUrl}
+                        >
+                            {originalUrl}
+                        </a>
+
+                        {/* Metrics & Actions Row */}
+                        <div className="flex flex-wrap items-center gap-4 mt-auto">
+                            {/* Clicks */}
+                            <Link to={`/analytics/${shortenedUrl}`} className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors bg-gray-50 px-2 py-1 rounded-md">
+                                <img src={graphIcon} alt="Clicks" className="w-4 h-4 mr-1.5 opacity-70" />
+                                <span className="font-medium">{totalClicks}</span>
+                                <span className="ml-1 text-gray-400 font-normal">clicks</span>
+                            </Link>
+
+                            {/* Date */}
+                            <div className="flex items-center text-sm text-gray-400 px-2 py-1">
+                                <img src={calendarIcon} alt="Date" className="w-4 h-4 mr-1.5 opacity-70" />
+                                <span>{date}</span>
                             </div>
-                        )}
 
-                        <div className='flex flex-col mt-1'>
-                        {/* Shortened URL */}
-                        <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 mt-1 truncate">
-                            {fullUrl.length > maxLength ? `${fullUrl.slice(0, maxLength)}...` : fullUrl}
-                        </a>
+                            {/* Divider for desktop */}
+                            <div className="hidden md:block h-4 w-px bg-gray-200"></div>
 
-                        {/* Original URL */}
-                        <a href={originalUrl} target="_blank" rel="noopener noreferrer"
-                           className="text-gray-800 font-semibold truncate">
-                            {trimmedUrl}
-                        </a>
+                            {/* Action Buttons (Visible on desktop, condensed on mobile) */}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={handleCopy}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors border border-gray-100"
+                                >
+                                    <img src={copyIcon} alt="" className="w-4 h-4 opacity-70" />
+                                    Copy
+                                </button>
+
+                                {qrCode && (
+                                    <button
+                                        onClick={handleQrIconClick}
+                                        className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                                        title="Show QR Code"
+                                    >
+                                        <img src={qrIcon} alt="QR" className="w-5 h-5 opacity-70" />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
-
                 </div>
-                <div className="flex space-x-4">
-                    <div className="flex items-center">
-                        <img src={graphIcon} alt="Graph Icon" className="mr-1"/>
-                        <Link to={`/analytics/${shortenedUrl}`} className="text-sm text-gray-700">
-                            {totalClicks}
-                        </Link>
-                    </div>
 
-                    <div className="flex items-center">
-                        <img src={calendarIcon} alt="Calendar Icon" className="mr-1"/>
-                        <p className="text-sm text-gray-700">{date}</p>
-                    </div>
+                {/* Right Section: Menu */}
+                <div ref={dropdownRef} className="absolute top-4 right-4 md:relative md:top-auto md:right-auto self-start">
+                    <button
+                        onClick={toggleDropdown}
+                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors focus:outline-none"
+                    >
+                        <img src={threeDotsIcon} alt="More" className="h-5 w-5" />
+                    </button>
+
+                    {showDropdown && (
+                        <div ref={dropDownDirection} className={`absolute right-0 w-48 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-20 ${isDropdownUpward ? "bottom-full mb-2" : "top-full mt-2"}`}>
+                            <div className="py-1">
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleCopy}>
+                                    <img src={copyIcon} className="h-4 w-4 opacity-70" />
+                                    Copy Link
+                                </button>
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleShareModalClick}>
+                                    <img src={shareIcon} className="h-4 w-4 opacity-70" />
+                                    Share Link
+                                </button>
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleEditClick}>
+                                    <img src={editIcon} className="h-4 w-4 opacity-70" />
+                                    Edit Details
+                                </button>
+                                <div className="h-px bg-gray-100 my-1"></div>
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2" onClick={handleDeleteClick}>
+                                    <img src={deleteIcon} className="h-4 w-4 opacity-70" />
+                                    Delete Link
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Right Section - Three Dot Menu */}
-            <div ref={dropdownRef} className="relative sm:ml-2" >
-                <button onClick={toggleDropdown} className="focus:outline-none">
-                    <img src={threeDotsIcon} alt="More Options" className="h-6 w-6" />
-                </button>
-
-                {/* Dropdown Menu */}
-                {showDropdown && (
-                    <div ref={dropDownDirection} className={`absolute right-0 w-40 bg-white rounded-lg shadow-lg z-10 border-2 border-gray-200 ${
-                        isDropdownUpward ? "bottom-full" : "top-full"
-                    }`}>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleCopy}>
-                            <img src={copyIcon} className="h-5 w-5 mr-2" alt="Copy Icon"/>
-                            <button className="text-sm">Copy</button>
-                        </div>
-                        <hr className="border-t border-gray-200"/>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleShareModalClick}>
-                            <img src={shareIcon} className="h-5 w-5 mr-2" alt="Share Icon"/>
-                            <button className="text-sm">Share</button>
-                        </div>
-                        <hr className="border-t border-gray-200"/>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleEditClick}>
-                            <img src={editIcon} className="h-5 w-5 mr-2" alt="Edit Icon"/>
-                            <button className="text-sm">Edit</button>
-                        </div>
-                        <hr className="border-t border-gray-200"/>
-                        <div className="flex items-center justify-start px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleDeleteClick}>
-                            <img src={deleteIcon} className="h-5 w-5 mr-2" alt="Delete Icon"/>
-                            <button className="text-sm">Delete</button>
-                        </div>
-                    </div>
-                )}
-            </div>
-
+            {/* Modals */}
             <EditLink
                 isOpen={isEditModalOpen}
                 onClose={handleModalClose}
@@ -219,7 +266,6 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
             />
 
             {isShareModalOpen && <ShareButton linkToShare={fullUrl} isModalOpen={isShareModalOpen} onClose={handleShareModalClose} />}
-            {/* QR Code Popup */}
             {showPopup && <QRCodePopup qrCode={qrCode} onClose={() => setShowPopup(false)} shortUrl={shortenedUrl} />}
         </div>
     );

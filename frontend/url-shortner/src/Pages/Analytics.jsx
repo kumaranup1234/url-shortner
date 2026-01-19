@@ -1,14 +1,16 @@
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import BrowserBarChart from "../Components/BrowserBarChart.jsx";
-import ClicksLineChart from "../Components/ClicksLineChart.jsx";
-import DevicePieChart from "../Components/DevicePieChart.jsx";
-import ReferrerBarChart from "../Components/ReferrerBarChart.jsx";
-import LocationList from "../Components/LocationList.jsx";
-import TopPerformanceParent from "../Components/TopPerformanceParent.jsx";
-import OsPieChart from "../Components/OsPieChart.jsx";
-import WorldMap from "../Components/WorldMap.jsx";
 import LinkCardAnalytics from "../Cards/LinkCardAnalytics.jsx";
-import React from "react";
+import ClicksLineChart from "../features/analytics/ClicksLineChart.jsx";
+import DevicePieChart from "../features/analytics/DevicePieChart.jsx";
+import OsPieChart from "../features/analytics/OsPieChart.jsx";
+import ReferrerBarChart from "../features/analytics/ReferrerBarChart.jsx";
+import BrowserBarChart from "../features/analytics/BrowserBarChart.jsx";
+import WorldMap from "../features/analytics/WorldMap.jsx";
+import LocationList from "../features/analytics/LocationList.jsx";
+import LoadingSpinner from "../shared/components/ui/LoadingSpinner.jsx";
+import Footer from "../shared/components/Footer.jsx";
+import TopPerformanceParent from "../features/analytics/TopPerformanceParent.jsx";
 
 
 const Analytics = () => {
@@ -21,52 +23,52 @@ const Analytics = () => {
                     <strong>Note:</strong> Individual analytics of the short URL. For analytics of overall clicks of all URLs, please
                     visit
                     <Link to="/dashboard"
-                          className="font-bold underline text-blue-700 hover:text-blue-800"> Dashboard</Link> and click the
+                        className="font-bold underline text-blue-700 hover:text-blue-800"> Dashboard</Link> and click the
                     stats button.
                 </p>
             </div>
 
             <div className="grid gap-6 p-2 sm:p-6">
                 <div className="w-full bg-white shadow-lg p-4 rounded-lg">
-                    <LinkCardAnalytics shortUrlId={shortenedUrl}/>
+                    <LinkCardAnalytics shortUrlId={shortenedUrl} />
                 </div>
 
 
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                        <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortenedUrl}`}/>
+                        <BrowserBarChart apiUrl={`/api/urls/clicks/browsers/${shortenedUrl}`} />
                     </div>
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                        <ClicksLineChart apiUrl={`/api/urls/clicks/${shortenedUrl}`}/>
+                        <ClicksLineChart apiUrl={`/api/urls/clicks/${shortenedUrl}`} />
                     </div>
                 </div>
 
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                        <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortenedUrl}`}/>
+                        <DevicePieChart apiUrl={`/api/urls/clicks/devices/${shortenedUrl}`} />
                     </div>
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                        <ReferrerBarChart apiUrl={`/api/urls/clicks/referrers/${shortenedUrl}`}/>
-                    </div>
-                </div>
-
-
-                <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
-                    <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
-                        <TopPerformanceParent/>
-                    </div>
-                    <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
-                        <LocationList apiUrl={`/api/urls/clicks/locations/${shortenedUrl}`}/>
+                        <ReferrerBarChart apiUrl={`/api/urls/clicks/referrers/${shortenedUrl}`} />
                     </div>
                 </div>
 
 
                 <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
-                        <OsPieChart apiUrl={`/api/urls/clicks/os/${shortenedUrl}`}/>
+                        <TopPerformanceParent />
+                    </div>
+                    <div className="w-full md:w-1/2 bg-white shadow-lg p-4 rounded-lg">
+                        <LocationList apiUrl={`/api/urls/clicks/locations/${shortenedUrl}`} />
+                    </div>
+                </div>
+
+
+                <div className="flex flex-wrap md:flex-nowrap space-y-6 md:space-y-0 md:space-x-6">
+                    <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
+                        <OsPieChart apiUrl={`/api/urls/clicks/os/${shortenedUrl}`} />
                     </div>
                     <div className="w-full md:w-1/2 bg-white shadow-lg p-6 rounded-lg">
-                        <WorldMap apiUrl={`/api/urls/clicks/country/${shortenedUrl}`}/>
+                        <WorldMap apiUrl={`/api/urls/clicks/country/${shortenedUrl}`} />
                     </div>
                 </div>
             </div>

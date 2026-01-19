@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotification } from '../../store/slices/uiSlice';
-import { validateEmail } from "../../utils/helper.js";
-import axiosInstance from "../../utils/axiosInstance.js";
-import Button from '../ui/Button';
-import Input from '../ui/Input';
+import { validateEmail } from "../../shared/utils/helper.js";
+import axiosInstance from "../../shared/utils/axiosInstance.js";
+import Button from '../../shared/components/ui/Button';
+import Input from '../../shared/components/ui/Input';
 import userIcon from "../../assets/icons8-user.svg";
 
 const ProfileSettings = () => {
@@ -84,7 +84,7 @@ const ProfileSettings = () => {
             }));
             return;
         }
-        
+
         if (!validateEmail(email)) {
             dispatch(addNotification({
                 type: 'error',
@@ -126,11 +126,11 @@ const ProfileSettings = () => {
         <div className="max-w-2xl mx-auto space-y-8">
             {/* Profile Photo Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="bg-gradient-to-r from-teal-600 to-teal-700 text-white p-6 rounded-t-xl">
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-t-xl">
                     <h2 className="text-xl font-semibold">Profile Photo</h2>
-                    <p className="text-teal-100 text-sm mt-1">Update your profile picture</p>
+                    <p className="text-gray-400 text-sm mt-1">Update your profile picture</p>
                 </div>
-                
+
                 <div className="p-6">
                     <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
                         <div className="relative">
@@ -147,7 +147,7 @@ const ProfileSettings = () => {
                                 </div>
                             )}
                         </div>
-                        
+
                         <div className="flex-1 space-y-4">
                             <input
                                 type="file"
@@ -157,7 +157,7 @@ const ProfileSettings = () => {
                             />
                             <p className="text-xs text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
                         </div>
-                        
+
                         <Button
                             onClick={handleImageUpload}
                             loading={imageLoading}
@@ -171,11 +171,11 @@ const ProfileSettings = () => {
 
             {/* Contact Information Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="bg-gradient-to-r from-teal-600 to-teal-700 text-white p-6 rounded-t-xl">
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-t-xl">
                     <h2 className="text-xl font-semibold">Contact Information</h2>
-                    <p className="text-teal-100 text-sm mt-1">Update your personal details</p>
+                    <p className="text-gray-400 text-sm mt-1">Update your personal details</p>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     <Input
                         label="Full Name"

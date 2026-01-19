@@ -8,7 +8,7 @@ const { extractData } = require("../utils/extractMetaData");
 async function createShortUrlAnon(req, res, next) {
     try {
         const { originalUrl } = req.body;
-        
+
         if (!originalUrl) {
             return res.status(400).json({ error: 'URL is required' });
         }
@@ -32,10 +32,11 @@ async function createShortUrlAnon(req, res, next) {
         });
 
         await newUrl.save();
-        
+
         res.status(201).json({
             success: true,
             message: 'URL shortened successfully',
+            _id: newUrl._id,
             originalUrl: newUrl.originalUrl,
             shortUrl: newUrl.shortUrl,
         });
@@ -48,7 +49,7 @@ async function createShortUrl(req, res, next) {
     try {
         const { originalUrl } = req.body;
         const userId = req.user._id;
-        
+
         if (!originalUrl) {
             return res.status(400).json({ error: 'URL is required' });
         }
@@ -65,7 +66,7 @@ async function createShortUrl(req, res, next) {
         }
 
         const shortId = shortid.generate();
-        
+
         // Generate QR code and extract metadata in parallel
         const [qrCode, { title, logo }] = await Promise.all([
             generateQRCodeForUrl(shortId),
@@ -93,6 +94,7 @@ async function createShortUrl(req, res, next) {
         res.status(201).json({
             success: true,
             message: 'URL shortened successfully',
+            _id: newUrl._id,
             originalUrl: newUrl.originalUrl,
             shortUrl: newUrl.shortUrl,
             qrCode: newUrl.qrCode,
@@ -107,11 +109,11 @@ async function createShortUrl(req, res, next) {
 async function getUrlDetails(req, res, next) {
     try {
         const { shortUrlId } = req.params;
-        
-        const urlDetails = await Url.findOne({ 
-            shortUrl: shortUrlId, 
+
+        const urlDetails = await Url.findOne({
+            shortUrl: shortUrlId,
             user: req.user._id,
-            isActive: true 
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
         }).select('-__v');
 
         if (!urlDetails) {
@@ -191,12 +193,12 @@ async function getUserUrls(req, res, next) {
 
         // Use the optimized static method
         const userUrls = await Url.getUserUrls(userId, page, limit);
-        
+
         // Get total count for pagination
-        const totalUrls = await Url.countDocuments({ 
-            user: userId, 
-            isOneLink: false, 
-            isActive: true 
+        const totalUrls = await Url.countDocuments({
+            user: userId,
+            isOneLink: { $ne: true },
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
         });
 
         if (!userUrls || userUrls.length === 0) {
@@ -235,7 +237,7 @@ async function getClicksAnalytics(req, res, next) {
         const urlData = await Url.findOne({
             shortUrl: shortUrlId,
             user: userId,
-            isActive: true
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
         }).select('totalClicks lastAccessed createdAt');
 
         if (!urlData) {

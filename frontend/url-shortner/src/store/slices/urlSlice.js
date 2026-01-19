@@ -5,7 +5,7 @@ export const fetchUrls = createAsyncThunk(
   'urls/fetchUrls',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/api/urls/manage');
+      const response = await axiosInstance.get('/api/urls/manage/user-urls');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch URLs');
@@ -29,10 +29,22 @@ export const deleteUrl = createAsyncThunk(
   'urls/deleteUrl',
   async (urlId, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`/api/urls/manage/${urlId}`);
+      await axiosInstance.delete(`/api/urls/manage/delete/${urlId}`);
       return urlId;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Failed to delete URL');
+    }
+  }
+);
+
+export const shortenPublicUrl = createAsyncThunk(
+  'urls/shortenPublicUrl',
+  async ({ url, route }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(route, { originalUrl: url });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || error.response?.data?.message || 'Failed to shorten URL');
     }
   }
 );
@@ -44,8 +56,12 @@ const urlSlice = createSlice({
     loading: false,
     error: null,
     totalClicks: 0,
+    shortenedUrl: null, // to store the result for public shortening
   },
   reducers: {
+    clearShortenedUrl: (state) => {
+      state.shortenedUrl = null;
+    },
     clearUrlError: (state) => {
       state.error = null;
     },
@@ -65,8 +81,8 @@ const urlSlice = createSlice({
       })
       .addCase(fetchUrls.fulfilled, (state, action) => {
         state.loading = false;
-        state.urls = action.payload.urls || [];
-        state.totalClicks = action.payload.totalClicks || 0;
+        state.urls = action.payload.userUrls || [];
+        state.totalClicks = 0; // getUserUrls usage does not return totalClicks
       })
       .addCase(fetchUrls.rejected, (state, action) => {
         state.loading = false;
@@ -83,9 +99,22 @@ const urlSlice = createSlice({
       })
       .addCase(deleteUrl.rejected, (state, action) => {
         state.error = action.payload;
+      })
+      .addCase(shortenPublicUrl.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.shortenedUrl = null;
+      })
+      .addCase(shortenPublicUrl.fulfilled, (state, action) => {
+        state.loading = false;
+        state.shortenedUrl = action.payload;
+      })
+      .addCase(shortenPublicUrl.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearUrlError, updateUrlClicks } = urlSlice.actions;
+export const { clearUrlError, updateUrlClicks, clearShortenedUrl } = urlSlice.actions;
 export default urlSlice.reducer;

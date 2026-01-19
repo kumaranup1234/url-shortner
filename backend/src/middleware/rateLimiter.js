@@ -2,7 +2,7 @@ const rateLimit = require('express-rate-limit');
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // Increased limit for better UX
   message: {
     error: 'Too many requests from this IP, please try again later.'
   },
@@ -12,7 +12,7 @@ const globalLimiter = rateLimit({
 
 const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5, // stricter limit for sensitive operations
+  max: 50, // Increased limit for better UX
   message: {
     error: 'Too many attempts, please try again later.'
   }

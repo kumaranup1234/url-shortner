@@ -1,6 +1,6 @@
-import Like from "../assets/icon-like.png";
-import URL from "../assets/icon-url.png";
-import Stats from "../assets/icon-statistics.png";
+import Like from "../../assets/icon-like.png";
+import URL from "../../assets/icon-url.png";
+import Stats from "../../assets/icon-statistics.png";
 
 const Footer = () => {
     return (

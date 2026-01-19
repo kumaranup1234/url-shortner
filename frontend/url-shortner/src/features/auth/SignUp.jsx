@@ -4,7 +4,7 @@ import { signupUser } from '../../store/slices/authSlice';
 import { addNotification } from '../../store/slices/uiSlice';
 import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../shared/utils/helper.js";
-import PasswordInput from "../../Components/PasswordInput.jsx";
+import PasswordInput from "../../shared/components/ui/PasswordInput.jsx";
 import Button from "../../shared/components/ui/Button.jsx";
 import Input from "../../shared/components/ui/Input.jsx";
 import tickIcon from "../../assets/icons8-checkmark.svg";
@@ -35,7 +35,7 @@ const SignUp = () => {
             }));
             return;
         }
-        
+
         if (!password || password.length < 6) {
             dispatch(addNotification({
                 type: 'error',
@@ -52,7 +52,7 @@ const SignUp = () => {
                     type: 'success',
                     message: 'Account created successfully!'
                 }));
-                navigate("/links");
+                navigate("/dashboard");
             } else {
                 dispatch(addNotification({
                     type: 'error',
@@ -71,7 +71,7 @@ const SignUp = () => {
 
     const features = [
         "Track your Short Links with Detailed Analytics",
-        "Customizable and Trackable QR Codes", 
+        "Customizable and Trackable QR Codes",
         "Update URLs whenever you need to change their Destination",
         "Manage with ease",
         "API Access"
@@ -84,7 +84,7 @@ const SignUp = () => {
                     <h4 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Join Trim.URL
                     </h4>
-                    
+
                     <Input
                         type="text"
                         placeholder="Choose a username"
@@ -98,7 +98,7 @@ const SignUp = () => {
                             </svg>
                         }
                     />
-                    
+
                     <Input
                         type="email"
                         placeholder="Enter your email"
@@ -113,14 +113,14 @@ const SignUp = () => {
                             </svg>
                         }
                     />
-                    
+
                     <PasswordInput
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="mb-6"
                         placeholder="Create a password (min 6 chars)"
                     />
-                    
+
                     <Button
                         type="submit"
                         loading={loading}
@@ -139,7 +139,7 @@ const SignUp = () => {
                     </p>
                 </form>
             </div>
-            
+
             <div className="w-full max-w-md lg:ml-12 mt-8 lg:mt-0">
                 <div className="text-center lg:text-left mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -151,7 +151,7 @@ const SignUp = () => {
                         The best link management service to track, brand, and share short URLs
                     </p>
                 </div>
-                
+
                 <div className="space-y-4">
                     {features.map((feature, index) => (
                         <div key={index} className="flex items-start space-x-3">

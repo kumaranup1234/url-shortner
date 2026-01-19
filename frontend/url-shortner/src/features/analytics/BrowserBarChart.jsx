@@ -17,9 +17,11 @@ const BrowserBarChart = ({ apiUrl }) => {
     const dispatch = useDispatch();
     const { data, loading } = useSelector(state => state.analytics);
     const [hoveredBarIndex, setHoveredBarIndex] = useState(null);
-    
-    const chartData = data[apiUrl];
+
+    // Normalize data structure handling
+    const rawData = data[apiUrl];
     const isLoading = loading[apiUrl];
+    const chartData = rawData;
 
     useEffect(() => {
         if (apiUrl) {
@@ -27,7 +29,7 @@ const BrowserBarChart = ({ apiUrl }) => {
         }
     }, [dispatch, apiUrl]);
 
-    const browserData = chartData?.browserTypeCounts ? 
+    const browserData = chartData?.browserTypeCounts ?
         Object.keys(chartData.browserTypeCounts).map((browser) => ({
             name: browser,
             value: chartData.browserTypeCounts[browser],
@@ -36,86 +38,97 @@ const BrowserBarChart = ({ apiUrl }) => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white border border-gray-300 p-3 rounded-lg shadow-lg">
-                    <p className="font-semibold text-gray-800">{label}</p>
-                    <p className="text-blue-600">{`Clicks: ${payload[0].value}`}</p>
+                <div className="bg-white/90 backdrop-blur-md border border-gray-100 p-3 rounded-xl shadow-xl">
+                    <p className="font-semibold text-gray-700 mb-1">{label}</p>
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-teal-500"></div>
+                        <p className="text-gray-900 font-bold">
+                            {payload[0].value} <span className="text-xs font-normal text-gray-500">clicks</span>
+                        </p>
+                    </div>
                 </div>
             );
         }
         return null;
     };
 
-    if (isLoading) {
-        return (
-            <div className="rounded-lg p-4 h-96 flex flex-col items-center justify-center">
-                <InfinitySpin
-                    visible={true}
-                    width="80"
-                    color="#0d9488"
-                    ariaLabel="Loading browser analytics"
-                />
-                <p className="mt-4 text-gray-600">Loading browser data...</p>
-            </div>
-        );
-    }
-
-    if (!browserData.length) {
-        return (
-            <div className="bg-gray-50 rounded-lg p-8 h-96 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                </div>
-                <p className="text-lg font-medium text-gray-600">No browser data available</p>
-                <p className="text-sm text-gray-500 mt-1">Data will appear here once you have clicks</p>
-            </div>
-        );
-    }
-
     return (
-        <div className="w-full h-96">
-            <h2 className="text-xl font-bold text-center mb-6 text-gray-800">
-                Clicks by Browser
+        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col">
+            <h2 className="text-lg font-bold text-gray-800 mb-6 text-center lg:text-left">
+                Browser Usage
             </h2>
-            <ResponsiveContainer width="100%" height="85%">
-                <BarChart
-                    data={browserData}
-                    margin={{ top: 10, right: 5, left: -18, bottom: 25 }}
-                    barGap={5}
-                    barSize={60}
-                >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                    <XAxis
-                        dataKey="name"
-                        tickFormatter={(value) => 
-                            value.length > 8 && window.innerWidth < 768 
-                                ? `${value.substring(0, 6)}..` 
-                                : value
-                        }
-                        tick={{
-                            fontSize: window.innerWidth < 768 ? 10 : 12,
-                            dy: 6,
-                        }}
-                        interval={0}
+
+            {isLoading ? (
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px]">
+                    <InfinitySpin
+                        visible={true}
+                        width="100"
+                        color="#0d9488"
+                        ariaLabel="Loading browser analytics"
                     />
-                    <YAxis axisLine={false} tickLine={false} tickCount={6} />
-                    <Tooltip content={<CustomTooltip />} cursor={false} />
-                    <Bar
-                        dataKey="value"
-                        onMouseEnter={(data, index) => setHoveredBarIndex(index)}
-                        onMouseLeave={() => setHoveredBarIndex(null)}
-                        radius={[4, 4, 0, 0]}
-                    >
-                        {browserData.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={index === hoveredBarIndex ? "#0d9488" : "#3b82f6"}
+                </div>
+            ) : browserData.length > 0 ? (
+                <div className="flex-1 w-full h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={browserData}
+                            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                            barSize={50}
+                        >
+                            <defs>
+                                <linearGradient id="colorBrowser" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#0d9488" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#0d9488" stopOpacity={0.4} />
+                                </linearGradient>
+                                <linearGradient id="colorBrowserHover" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#14b8a6" stopOpacity={1} />
+                                    <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.6} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                            <XAxis
+                                dataKey="name"
+                                tickFormatter={(value) =>
+                                    value.length > 8 && window.innerWidth < 768
+                                        ? `${value.substring(0, 6)}..`
+                                        : value
+                                }
+                                tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
+                                axisLine={false}
+                                tickLine={false}
+                                dy={10}
                             />
-                        ))}
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
+                            <YAxis
+                                axisLine={false}
+                                tickLine={false}
+                                tickCount={5}
+                                tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
+                                allowDecimals={false}
+                            />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8fafc' }} />
+                            <Bar
+                                dataKey="value"
+                                radius={[8, 8, 0, 0]}
+                                onMouseEnter={(data, index) => setHoveredBarIndex(index)}
+                                onMouseLeave={() => setHoveredBarIndex(null)}
+                            >
+                                {browserData.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={index === hoveredBarIndex ? "url(#colorBrowserHover)" : "url(#colorBrowser)"}
+                                    />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px] bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <div className="text-4xl mb-2">🌍</div>
+                    <p className="text-gray-900 font-semibold text-sm">No Browser Data</p>
+                    <p className="text-gray-500 text-xs text-center mt-1">Visit links to generate data</p>
+                </div>
+            )}
         </div>
     );
 };

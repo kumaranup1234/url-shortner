@@ -4,6 +4,7 @@ import urlSlice from './slices/urlSlice';
 import uiSlice from './slices/uiSlice';
 import dashboardSlice from './slices/dashboardSlice';
 import analyticsSlice from './slices/analyticsSlice';
+import onelinkSlice from './slices/onelinkSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     ui: uiSlice,
     dashboard: dashboardSlice,
     analytics: analyticsSlice,
+    onelink: onelinkSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

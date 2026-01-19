@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
-import axiosInstance from "../utils/axiosInstance.js";
-import {InfinitySpin} from "react-loader-spinner";
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector, Tooltip } from 'recharts';
+import axiosInstance from "../../shared/utils/axiosInstance.js";
+import { InfinitySpin } from "react-loader-spinner";
+
+const COLORS = ['#4f46e5', '#0ea5e9', '#f59e0b', '#ec4899', '#8b5cf6'];
 
 const DevicePieChart = ({ apiUrl }) => {
     const [deviceData, setDeviceData] = useState([]);
     const [totalClicks, setTotalClicks] = useState(0);
     const [activeIndex, setActiveIndex] = useState(null);
-    const [centerText, setCenterText] = useState('Total: 0');
     const [loading, setLoading] = useState(true);
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-     // Dummy data for testing
-     const dummyData = [
-         {name: 'Desktop', value: 23},
-         {name: 'Mobile', value: 12},
-         {name: 'Tablet', value: 8},
-     ];
 
     // Fetch the data from API
     const getDeviceData = async () => {
@@ -28,13 +21,10 @@ const DevicePieChart = ({ apiUrl }) => {
                 name: device,
                 value: deviceCounts[device],
             }));
-            setDeviceData(formattedData);
-            // For testing
-            //setDeviceData(dummyData);
+            setDeviceData(formattedData.filter(item => item.value > 0)); // Only show items with values
 
             const total = Object.values(deviceCounts).reduce((acc, count) => acc + count, 0);
             setTotalClicks(total);
-            setCenterText(`Total: ${total}`);
         } catch (error) {
             console.error('Error fetching device data:', error);
         } finally {
@@ -42,134 +32,128 @@ const DevicePieChart = ({ apiUrl }) => {
         }
     };
 
-    // Update window width on resize
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
     useEffect(() => {
         getDeviceData();
     }, []);
 
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const onPieEnter = (_, index) => {
+        setActiveIndex(index);
+    };
 
-    // Custom function to "lift" the hovered pie slice
     const renderActiveShape = (props) => {
-        const {cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill} = props;
+        const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
         return (
             <g>
+                <text x={cx} y={cy} dy={-5} textAnchor="middle" fill="#1f2937" className="text-xl font-bold">
+                    {payload.value}
+                </text>
+                <text x={cx} y={cy} dy={15} textAnchor="middle" fill="#9ca3af" className="text-xs font-medium uppercase tracking-wide">
+                    Avg
+                </text>
                 <Sector
                     cx={cx}
                     cy={cy}
                     innerRadius={innerRadius}
-                    outerRadius={outerRadius + 10} // Lift the hovered segment
+                    outerRadius={outerRadius + 6}
                     startAngle={startAngle}
                     endAngle={endAngle}
+                    fill={fill}
+                />
+                <Sector
+                    cx={cx}
+                    cy={cy}
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    innerRadius={outerRadius + 8}
+                    outerRadius={outerRadius + 10}
                     fill={fill}
                 />
             </g>
         );
     };
 
-    const onPieEnter = (_, index) => {
-        if (deviceData[index]) {
-            const {name, value} = deviceData[index];
-            setActiveIndex(index)
-            setCenterText(`${name}: ${value}`);
-        }
-    };
-
-    const onPieLeave = () => {
-        setActiveIndex(null);
-        setCenterText(`Total: ${totalClicks}`);
-    };
-
-    const getRadius = () => {
-        if (windowWidth >= 1024) { // For large screens
-            return { innerRadius: 90, outerRadius: 110 };
-        }
-        return { innerRadius: 70, outerRadius: 90 };
-    };
-
-    const { innerRadius, outerRadius } = getRadius();
-
     return (
-        <div className="rounded-lg">
-            {loading ?
-                <div className="rounded-lg p-4 h-96 flex items-center justify-center">
+        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col">
+            <h2 className="text-lg font-bold text-gray-800 mb-6 text-center lg:text-left">Device Distribution</h2>
+
+            {loading ? (
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px]">
                     <InfinitySpin
                         visible={true}
-                        width="200"
-                        color="#4fa94d"
+                        width="120"
+                        color="#4f46e5"
                         ariaLabel="infinity-spin-loading"
                     />
-                    <p>Preparing your graph data...</p>
                 </div>
-                : deviceData.length > 0 ? <div className="rounded-lg p-4">
-                    <h2 className="md:text-xl text-center font-bold mb-4">Clicks + scans by devices</h2>
-                    <div className="flex flex-col md:flex-row items-center space-x-6">
-                        {/* Pie Chart */}
-                        <div className="relative w-full md:w-1/2 flex items-center justify-center h-[250px] lg:h-[345px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={deviceData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={innerRadius}
-                                        outerRadius={outerRadius}
-                                        activeIndex={activeIndex}
-                                        activeShape={renderActiveShape}
-                                        dataKey="value"
-                                        onMouseEnter={onPieEnter}
-                                        onMouseLeave={onPieLeave}
-                                    >
-                                        {deviceData.map((entry, index) => (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={COLORS[index % COLORS.length]}
-                                                stroke="none"
-                                            />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
+            ) : deviceData.length > 0 ? (
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8 flex-1">
+                    {/* Chart */}
+                    <div className="w-full md:w-1/2 h-[250px] relative">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    activeIndex={activeIndex}
+                                    activeShape={renderActiveShape}
+                                    data={deviceData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                    onMouseEnter={onPieEnter}
+                                    onMouseLeave={() => setActiveIndex(null)}
+                                    animationDuration={1000}
+                                >
+                                    {deviceData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                                    ))}
+                                </Pie>
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                                    formatter={(value, name) => [`${value} Clicks`, name]}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
 
-                            {/* Centered text */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <p className="md:text-xl font-bold">{centerText}</p>
+                        {/* Center Text (Absolute) - only visible when not hovering if desired, or always */}
+                        {activeIndex === null && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span className="text-3xl font-bold text-gray-800">{totalClicks}</span>
+                                <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold mt-1">Total</span>
                             </div>
-                        </div>
-
-                        {/* List of devices and colors */}
-                        <div className="flex flex-col justify-center items-start space-y-2">
-                            <ul>
-                                {deviceData.map((entry, index) => (
-                                    <li key={index} className="flex items-center space-x-2">
-                            <span
-                                className="inline-block w-4 h-4 rounded"
-                                style={{backgroundColor: COLORS[index % COLORS.length]}}
-                            ></span>
-                                        <span className="font-semibold">{entry.name}</span>
-                                        <span>{entry.value}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        )}
                     </div>
-                </div> : <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
-                    <p className="text-lg font-semibold">
-                        No data available.
-                    </p>
-                </div>}
+
+                    {/* Legend */}
+                    <div className="w-full md:w-1/2 flex flex-col gap-3">
+                        {deviceData.map((entry, index) => {
+                            const percentage = ((entry.value / totalClicks) * 100).toFixed(1);
+                            return (
+                                <div key={index} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors group cursor-default">
+                                    <div className="flex items-center gap-3">
+                                        <div
+                                            className="w-3 h-3 rounded-full ring-2 ring-white shadow-sm"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-sm font-bold text-gray-900">{entry.value}</div>
+                                        <div className="text-xs text-gray-400 font-medium">{percentage}%</div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-[300px] bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <div className="text-4xl mb-2">📱</div>
+                    <p className="text-gray-900 font-semibold">No Device Data</p>
+                    <p className="text-gray-500 text-sm">Waiting for clicks...</p>
+                </div>
+            )}
         </div>
     );
 };

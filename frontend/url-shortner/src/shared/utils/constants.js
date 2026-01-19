@@ -1,1 +1,33 @@
-export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';\n\nexport const API_ENDPOINTS = {\n  AUTH: {\n    LOGIN: '/api/users/login',\n    SIGNUP: '/api/users/signup',\n    LOGOUT: '/api/users/logout',\n    STATUS: '/api/users/status',\n  },\n  URLS: {\n    CREATE: '/api/urls/manage/shorten',\n    LIST: '/api/urls/manage/user-urls',\n    DELETE: '/api/urls/manage/delete',\n    UPDATE: '/api/urls/manage/update',\n  },\n  ANALYTICS: {\n    DASHBOARD: '/api/users/getAll',\n    BROWSER: '/api/urls/clicks/getUserClicksByBrowser',\n    LOCATION: '/api/urls/clicks/getUserClicksByLocations',\n  }\n};\n\nexport const STORAGE_KEYS = {\n  AUTH_TOKEN: 'auth_token',\n  USER_PREFERENCES: 'user_preferences',\n};\n\nexport const NOTIFICATION_TYPES = {\n  SUCCESS: 'success',\n  ERROR: 'error',\n  WARNING: 'warning',\n  INFO: 'info',\n};
+export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+
+export const API_ENDPOINTS = {
+    AUTH: {
+        LOGIN: '/api/users/login',
+        SIGNUP: '/api/users/signup',
+        LOGOUT: '/api/users/logout',
+        STATUS: '/api/users/status',
+    },
+    URLS: {
+        CREATE: '/api/urls/manage/shorten',
+        LIST: '/api/urls/manage/user-urls',
+        DELETE: '/api/urls/manage/delete',
+        UPDATE: '/api/urls/manage/update',
+    },
+    ANALYTICS: {
+        DASHBOARD: '/api/users/getAll',
+        BROWSER: '/api/urls/clicks/getUserClicksByBrowser',
+        LOCATION: '/api/urls/clicks/getUserClicksByLocations',
+    }
+};
+
+export const STORAGE_KEYS = {
+    AUTH_TOKEN: 'auth_token',
+    USER_PREFERENCES: 'user_preferences',
+};
+
+export const NOTIFICATION_TYPES = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+};

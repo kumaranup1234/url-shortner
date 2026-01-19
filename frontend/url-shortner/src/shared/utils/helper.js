@@ -1,1 +1,28 @@
-export const validateEmail = (email) => {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n};\n\nexport const formatDate = (dateString) => {\n  const date = new Date(dateString);\n  return date.toLocaleDateString('en-US', {\n    year: 'numeric',\n    month: 'short',\n    day: 'numeric'\n  });\n};\n\nexport const truncateText = (text, maxLength = 50) => {\n  if (text.length <= maxLength) return text;\n  return text.substring(0, maxLength) + '...';\n};\n\nexport const copyToClipboard = async (text) => {\n  try {\n    await navigator.clipboard.writeText(text);\n    return true;\n  } catch (err) {\n    console.error('Failed to copy text: ', err);\n    return false;\n  }\n};
+export const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+export const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+};
+
+export const truncateText = (text, maxLength = 50) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+};
+
+export const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        return true;
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+        return false;
+    }
+};

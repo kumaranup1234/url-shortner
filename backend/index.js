@@ -67,14 +67,13 @@ mongoose.connect(process.env.MONGODB_URI, {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  bufferCommands: false,
-  bufferMaxEntries: 0
+  bufferCommands: false
 })
-.then(() => console.log('✅ MongoDB Connected'))
-.catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
-  process.exit(1);
-});
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 
 // Handle MongoDB connection events
 mongoose.connection.on('error', (err) => {
@@ -91,22 +90,23 @@ app.use('/api/users', userRoutes);
 // URL-related routes (for internal use)
 app.use('/api/urls/manage', urlRoutes);
 
-// Public API routes (for external users using API key)
-//app.use('/api', authenticateApiKey, apiRoutes);
-
 // Click analytics routes (for internal use, nested under URL management routes)
 app.use('/api/urls', authenticateUser, clickRoutes);
 
 // oneLink routes
 app.use('/api/onelink', oneLinkRoutes);
 
+// Public API routes (for external users using API key)
+// Place this AFTER specific /api/ routes to avoid middleware conflict
+app.use('/api', authenticateApiKey, apiRoutes);
+
 // URL redirection route (publicly accessible)
 app.use('/', redirectRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });

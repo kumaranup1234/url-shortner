@@ -27,11 +27,11 @@ const UrlSchema = new mongoose.Schema({
     },
     logo: {
         type: String,
-        maxlength: 500,
+        maxlength: 20000,
     },
     qrCode: {
         type: String,
-        maxlength: 500,
+        maxlength: 20000,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -76,7 +76,7 @@ UrlSchema.index({ user: 1, isActive: 1 });
 UrlSchema.index({ shortUrl: 1, isActive: 1 });
 
 // Virtual for click rate
-UrlSchema.virtual('clickRate').get(function() {
+UrlSchema.virtual('clickRate').get(function () {
     const daysSinceCreation = Math.max(1, Math.ceil((Date.now() - this.createdAt) / (1000 * 60 * 60 * 24)));
     return this.totalClicks / daysSinceCreation;
 });
@@ -85,7 +85,7 @@ UrlSchema.virtual('clickRate').get(function() {
 UrlSchema.methods.incrementClick = async function () {
     await mongoose.model('Url').updateOne(
         { _id: this._id },
-        { 
+        {
             $inc: { totalClicks: 1 },
             $set: { lastAccessed: new Date() }
         }
@@ -93,14 +93,22 @@ UrlSchema.methods.incrementClick = async function () {
 };
 
 // Static method for efficient user URL fetching
-UrlSchema.statics.getUserUrls = function(userId, page = 1, limit = 10) {
+UrlSchema.statics.getUserUrls = async function (userId, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
-    return this.find({ user: userId, isActive: true })
+    const query = {
+        user: userId,
+        $or: [{ isActive: true }, { isActive: { $exists: false } }],
+        isOneLink: { $ne: true }
+    };
+    console.log(`Debug: fetching URLs for user ${userId} with query:`, JSON.stringify(query));
+    const results = await this.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .select('-__v')
         .lean();
+    console.log(`Debug: Found ${results.length} URLs`);
+    return results;
 };
 
 const Url = mongoose.model("Url", UrlSchema);

@@ -1,24 +1,21 @@
-import { useRecoilValue } from "recoil";
-import { topDateState, topLocationState } from "../recoil/atoms.js";
-import TopPerformance from "../Cards/TopPerformance.jsx";
+import { useSelector } from "react-redux";
+import TopPerformance from "../../Cards/TopPerformance.jsx";
 
 const TopPerformanceParent = () => {
-    const topDate = useRecoilValue(topDateState);
-    const topLocation = useRecoilValue(topLocationState);
-
+    const { topPerformingDate, topPerformingLocation } = useSelector(state => state.analytics);
 
     return (
-        <div className="grid space-y-4 h-96">
+        <div className="grid grid-rows-2 h-full gap-6">
             <TopPerformance
                 heading="Top Performing Date"
-                name={topDate.date}
-                clicks={topDate.clicks}
+                name={topPerformingDate.date}
+                clicks={topPerformingDate.clicks}
                 location={false}
             />
             <TopPerformance
                 heading="Top Performing Location"
-                name={topLocation.name}
-                clicks={topLocation.clicks}
+                name={topPerformingLocation.name}
+                clicks={topPerformingLocation.clicks}
                 location={true}
             />
         </div>

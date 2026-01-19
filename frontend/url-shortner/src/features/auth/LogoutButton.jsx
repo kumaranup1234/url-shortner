@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
-import { logoutUser } from '../store/slices/authSlice';
-import { addNotification } from '../store/slices/uiSlice';
+import { logoutUser } from '../../store/slices/authSlice';
+import { addNotification } from '../../store/slices/uiSlice';
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,7 @@ const LogoutButton = ({ setShowDropdown }) => {
             className="flex items-center w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
             onClick={handleLogout}
         >
-            <FaSignOutAlt className="mr-3 text-gray-400" /> 
+            <FaSignOutAlt className="mr-3 text-gray-400" />
             Logout
         </button>
     );

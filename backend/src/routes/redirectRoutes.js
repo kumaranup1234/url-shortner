@@ -16,6 +16,9 @@ router.get('/:shortUrlId', async (req, res) => {
 
         if (!url) {
             url = await AnonymousUrl.findOne({ shortUrl: shortUrlId });
+            if (!url) {
+                return res.status(404).json({ success: false, message: 'URL not found' });
+            }
             return res.redirect(url.originalUrl);
         }
 

@@ -1,8 +1,8 @@
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import PasswordInput from "../Components/PasswordInput.jsx";
-import toast from "react-hot-toast";
-import axiosInstance from "../utils/axiosInstance.js";
+import PasswordInput from "../shared/components/ui/PasswordInput.jsx";
+import { toast } from 'sonner';
+import axiosInstance from "../shared/utils/axiosInstance.js";
 
 const Login = () => {
     const [password, setPassword] = useState("");
@@ -26,7 +26,7 @@ const Login = () => {
                     // Redirect to the login page after 2 seconds
                     setTimeout(() => {
                         toast.dismiss(toastId);
-                       navigate("/login");
+                        navigate("/login");
                     }, 2000);  // Delay redirect by 2 seconds
                 }, 2000);
             }

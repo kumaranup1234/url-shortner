@@ -1,16 +1,16 @@
 const Url = require("../models/Url");
 const User = require("../models/User");
 const OneLink = require("../models/OneLink");
-const {generate} = require("shortid");
-const {generateQRCodeForUrl} = require("../utils/generateQrCode");
-const {extractData} = require("../utils/extractMetaData");
-const {uploadToCloudinary} = require("../utils/cloudinaryUploader");
+const { generate } = require("shortid");
+const { generateQRCodeForUrl } = require("../utils/generateQrCode");
+const { extractData } = require("../utils/extractMetaData");
+const { uploadToCloudinary } = require("../utils/cloudinaryUploader");
 
 
 const createOneLink = async (req, res) => {
 
     const userId = req.user._id;
-    const { username, name, bio, templateId, links} = req.body;
+    const { username, name, bio, templateId, links } = req.body;
 
     try {
         const user = await User.findById(userId);
@@ -39,10 +39,10 @@ const createOneLink = async (req, res) => {
         const processedLinks = [];
         const newLinks = JSON.parse(links);
         if (newLinks && Array.isArray(newLinks)) {
-            for(let i = 0; i < newLinks.length; i++) {
+            for (let i = 0; i < newLinks.length; i++) {
                 const link = newLinks[i];
 
-                if (!link.url || !link.label){
+                if (!link.url || !link.label) {
                     continue;
                 }
 
@@ -56,8 +56,7 @@ const createOneLink = async (req, res) => {
 
                 const shortId = generate();
                 const qrCode = await generateQRCodeForUrl(link.url, shortId);
-                const { title, logo} = await extractData(link.url);
-                console.log(title, logo);
+                const { title, logo } = await extractData(link.url);
 
                 const urlData = {
                     originalUrl: link.url,
@@ -203,7 +202,6 @@ const updateOneLink = async (req, res) => {
                     const shortId = generate();
                     const qrCode = await generateQRCodeForUrl(link.url, shortId);
                     const { title, logo } = await extractData(link.url);
-                    console.log(title, logo);
 
                     const urlData = {
                         originalUrl: link.url,
@@ -311,14 +309,14 @@ const checkUserName = async (req, res) => {
     const { username } = req.body;
 
     try {
-        const check = await OneLink.findOne({ username});
+        const check = await OneLink.findOne({ username });
         if (check) {
             return res.status(400).json({ error: true, message: 'Username is already taken.' });
         }
 
         return res.status(200).json({ success: true, message: 'Username is available' });
 
-    } catch (error){
+    } catch (error) {
         console.error('Error tracking page view:', error);
         return res.status(500).json({ error: true, message: 'Internal server error.' });
     }

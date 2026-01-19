@@ -1,7 +1,11 @@
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { BASE_URL } from "../utils/constants.js";
-import MainFooter from "../Components/MainFooter.jsx";
+import { FaCopy, FaCheck } from "react-icons/fa";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import Confetti from "react-confetti";
+import Footer from "../shared/components/Footer";
+import MainFooter from "../shared/components/MainFooter.jsx";
+import { BASE_URL } from "../shared/utils/constants";
 
 const Shortened = () => {
     const location = useLocation();
@@ -29,62 +33,85 @@ const Shortened = () => {
     };
 
     return (
-        <>
-        <div className="px-4 sm:px-8 md:px-16 lg:px-32">
-            <div className="text-center p-4 mt-4">
-                <h1 className="text-2xl md:text-3xl text-gray-700 font-bold">Your shortened URL</h1>
-                <p className="mt-3 text-sm md:text-base">
-                    Copy the short link and share it in messages, texts, posts, websites, and other locations.
-                </p>
-            </div>
-
-            <div className="border border-gray-300 shadow-lg rounded-lg p-6 bg-white max-w-xl mx-auto mt-6">
-                <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-                    <form className="border-2 flex items-center w-full md:w-full">
-                        <input
-                            type="text"
-                            name="url"
-                            placeholder="Enter the link here"
-                            value={shortenedUrl}
-                            readOnly
-                            className="border-none focus:ring-2 focus:ring-blue-500 flex-grow h-12 md:h-14 px-4 text-sm md:text-base outline-none rounded-l-md"
-                        />
-                        <button
-                            className={`font-bold px-4 py-3 md:px-6 md:py-4 transition duration-200 ${buttonText === "Copied!" ? "bg-green-600 hover:bg-green-800 text-white" : "bg-blue-600 hover:bg-blue-800 text-white"}`}
-                            onClick={handleCopyClick}
-                        >
-                            {buttonText}
-                        </button>
-                    </form>
-                </div>
-
-                <div className="mt-8">
-                    <div className="flex flex-col md:flex-row gap-4 items-start">
-                        <p className="text-sm md:text-base font-medium">Long URL:</p>
-                        <a
-                            target="_blank"
-                            href={link}
-                            rel="noopener noreferrer"
-                            className="text-blue-700 cursor-pointer break-all whitespace-normal overflow-wrap max-w-full border-2 border-gray-300 p-2 bg-gray-100 rounded-lg text-sm md:text-base"
-                            title={link}
-                        >
-                            {link}
-                        </a>
+        <div className="flex flex-col min-h-screen bg-gray-50">
+            <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="w-full max-w-3xl space-y-8">
+                    <div className="text-center">
+                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                            <FaCheck className="h-8 w-8 text-green-600" />
+                        </div>
+                        <h2 className="text-3xl font-bold text-gray-900">Your URL has been shortened!</h2>
+                        <p className="mt-2 text-lg text-gray-600 max-w-2xl mx-auto">
+                            Copy your new link and share it anywhere. It's ready to track clicks.
+                        </p>
                     </div>
-                    <button
-                        className="w-full md:w-auto mt-6 bg-blue-600 text-white font-bold px-6 py-2 md:py-3 hover:bg-blue-800 transition duration-200 rounded"
-                        onClick={handleClick}
-                    >
-                        Shorten another URL
-                    </button>
-                    <p className="mt-4 text-xs text-gray-500">
-                        * Short URLs that do not have at least one click per month are disabled
+
+                    <div className="bg-white py-8 px-8 shadow-xl rounded-2xl border border-gray-100">
+                        <div className="space-y-6">
+                            {/* Shortened URL Input Group */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Shortened Link</label>
+                                <div className="flex rounded-xl shadow-sm">
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={shortenedUrl}
+                                        className="flex-1 min-w-0 block w-full px-4 py-4 rounded-l-xl border-gray-300 bg-gray-50 text-blue-600 text-lg font-medium focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleCopyClick}
+                                        className={`inline-flex items-center px-6 py-4 border border-transparent text-base font-bold rounded-r-xl text-white transition-all duration-200 ${buttonText === "Copied!"
+                                            ? "bg-green-600 hover:bg-green-700"
+                                            : "bg-blue-600 hover:bg-blue-700"
+                                            }`}
+                                    >
+                                        <FaCopy className="-ml-1 mr-2 h-5 w-5" />
+                                        {buttonText}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Long URL Display */}
+                            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                                    Original Destination
+                                </p>
+                                <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-900 break-all hover:text-blue-600 hover:underline transition-colors"
+                                >
+                                    {link}
+                                </a>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+                                <button
+                                    onClick={handleClick}
+                                    className="flex-1 bg-white text-gray-700 font-bold py-3 px-6 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                                >
+                                    Shorten Another
+                                </button>
+                                <button
+                                    onClick={() => navigate('/links')}
+                                    className="flex-1 bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-black transition-colors shadow-lg"
+                                >
+                                    Go to Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p className="text-center text-sm text-gray-500">
+                        * Inactive links may be removed after 30 days of standard inactivity.
                     </p>
                 </div>
             </div>
-        </div>
             <MainFooter />
-        </>
+        </div>
     );
 };
 

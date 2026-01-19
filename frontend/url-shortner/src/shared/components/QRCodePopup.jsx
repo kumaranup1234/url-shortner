@@ -1,6 +1,6 @@
 import { useState } from "react";
-import copyIcon from "../assets/copyIcon.svg";
-import downloadIcon from "../assets/downloadIcon.svg";
+import { toast } from 'sonner';
+import { FaTimes, FaCopy, FaDownload } from "react-icons/fa";
 import { BASE_URL } from "../utils/constants.js";
 
 const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
@@ -10,65 +10,72 @@ const QRCodePopup = ({ qrCode, onClose, shortUrl }) => {
     const handleCopy = () => {
         navigator.clipboard.writeText(fullUrl);
         setCopied(true);
+        toast.success("Link copied to clipboard!");
         setTimeout(() => setCopied(false), 2000);
     };
 
     const handleDownload = () => {
         const link = document.createElement("a");
         link.href = qrCode;
-        link.download = "QRCode.png";
+        link.download = `QRCode-${shortUrl}.png`;
         link.click();
+        toast.success("QR Code downloaded!");
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
-                <div className="flex justify-between items-center bg-teal-700 text-white p-4 rounded-t-lg">
-                    <a
-                        href={fullUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-yellow-300 truncate w-3/4 hover:underline"
-                    >
-                        <span className="text-white">Short URL: </span>
-                        {shortUrl}
-                    </a>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-scaleIn font-sans">
+
+                {/* Header - Dark Gray/Green to match theme */}
+                <div className="bg-gray-900 px-6 py-4 flex justify-between items-center border-b border-gray-800">
+                    <h3 className="text-white text-lg font-semibold tracking-wide">QR Code</h3>
                     <button
-                        className="text-xl font-bold focus:outline-none hover:text-red-500"
                         onClick={onClose}
+                        className="text-gray-400 hover:text-white transition-colors"
                     >
-                        &times;
+                        <FaTimes className="w-5 h-5" />
                     </button>
                 </div>
 
-                <div className="flex flex-col items-center p-6">
-                    <img
-                        src={qrCode}
-                        alt="QR Code"
-                        className="w-40 h-40 mb-4 border border-gray-300 rounded-lg"
-                    />
+                {/* Body */}
+                <div className="p-6 flex flex-col items-center">
 
-                    <div className="text-gray-700 text-center mb-4">
-                        <p className="text-sm">Scan the QR code or copy/download the link below:</p>
-                        <p className="text-sm font-medium text-gray-800 break-words mt-2">{fullUrl}</p>
+                    {/* QR Code Container */}
+                    <div className="p-4 bg-white border-2 border-dashed border-gray-200 rounded-2xl mb-6 shadow-sm hover:border-blue-400 transition-colors duration-300">
+                        <img
+                            src={qrCode}
+                            alt="QR Code"
+                            className="w-48 h-48 object-contain"
+                        />
                     </div>
 
-                    <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 w-full">
+                    {/* URL Display */}
+                    <div className="w-full bg-gray-50 rounded-lg p-3 mb-6 text-center border border-gray-100">
+                        <p className="text-gray-500 text-xs mb-1 uppercase tracking-wider font-semibold">Scan to visit</p>
+                        <p className="text-blue-600 font-medium text-sm truncate">{fullUrl}</p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex w-full gap-3">
                         <button
-                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg w-full"
-                            onClick={handleDownload}
-                        >
-                            <img src={downloadIcon} alt="Download Icon" className="h-5 w-5 mr-2" />
-                            Download QR Code
-                        </button>
-                        <button
-                            className={`flex items-center justify-center ${copied ? "bg-green-700" : "bg-green-600 hover:bg-green-700"} text-white px-4 py-2 rounded-lg w-full`}
                             onClick={handleCopy}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg font-medium transition-all ${copied
+                                    ? 'bg-gray-200 text-gray-800'
+                                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                }`}
                         >
-                            <img src={copyIcon} alt="Copy Icon" className="h-5 w-5 mr-2" />
-                            {copied ? "Copied!" : "Copy Link"}
+                            <FaCopy className="w-4 h-4" />
+                            {copied ? 'Copied' : 'Copy'}
+                        </button>
+                        <button
+                            onClick={handleDownload}
+                            className="flex-1 flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+                        >
+                            <FaDownload className="w-4 h-4" />
+                            Download
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>

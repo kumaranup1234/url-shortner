@@ -19,6 +19,9 @@ const analyticsSlice = createSlice({
     data: {},
     loading: {},
     error: null,
+    topPerformingDate: { date: "", clicks: 0 },
+    topPerformingLocation: { name: "", clicks: 0 },
+    totalClicks: 0,
   },
   reducers: {
     clearError: (state) => {
@@ -27,6 +30,15 @@ const analyticsSlice = createSlice({
     setLoading: (state, action) => {
       const { endpoint, loading } = action.payload;
       state.loading[endpoint] = loading;
+    },
+    setTopPerformingDate: (state, action) => {
+      state.topPerformingDate = action.payload;
+    },
+    setTopPerformingLocation: (state, action) => {
+      state.topPerformingLocation = action.payload;
+    },
+    setTotalClicks: (state, action) => {
+      state.totalClicks = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -49,5 +61,5 @@ const analyticsSlice = createSlice({
   },
 });
 
-export const { clearError, setLoading } = analyticsSlice.actions;
+export const { clearError, setLoading, setTopPerformingDate, setTopPerformingLocation, setTotalClicks } = analyticsSlice.actions;
 export default analyticsSlice.reducer;

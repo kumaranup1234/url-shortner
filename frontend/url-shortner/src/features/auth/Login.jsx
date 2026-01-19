@@ -3,10 +3,11 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../store/slices/authSlice';
 import { addNotification } from '../../store/slices/uiSlice';
-import PasswordInput from "../../Components/PasswordInput.jsx";
+import PasswordInput from "../../shared/components/ui/PasswordInput.jsx";
 import Button from "../../shared/components/ui/Button.jsx";
 import Input from "../../shared/components/ui/Input.jsx";
 import { validateEmail } from "../../shared/utils/helper.js";
+import tickIcon from "../../assets/icons8-checkmark.svg";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ const Login = () => {
         }
         if (!password) {
             dispatch(addNotification({
-                type: 'error', 
+                type: 'error',
                 message: 'Please enter a valid password!'
             }));
             return;
@@ -41,11 +42,17 @@ const Login = () => {
                     type: 'success',
                     message: 'Login successful!'
                 }));
-                navigate("/links");
+                navigate("/dashboard");
             } else {
+                // Safely extract error message to handle objects or strings
+                const errorPayload = result.payload;
+                const errorMessage = typeof errorPayload === 'string'
+                    ? errorPayload
+                    : errorPayload?.message || errorPayload?.error || 'Login failed';
+
                 dispatch(addNotification({
                     type: 'error',
-                    message: result.payload || 'Login failed'
+                    message: errorMessage
                 }));
             }
         } catch (error) {
@@ -58,59 +65,89 @@ const Login = () => {
         }
     }
 
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-            <div className="flex items-center justify-center w-full px-4 sm:px-6 md:px-8 lg:px-12">
-                <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8">
-                    <form onSubmit={handleLogin}>
-                        <h4 className="text-3xl font-bold mb-8 text-gray-800 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            Welcome Back
-                        </h4>
-                        
-                        <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            fullWidth
-                            className="mb-4"
-                            leftIcon={
-                                <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                </svg>
-                            }
-                        />
-                        
-                        <PasswordInput
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="mb-4"
-                        />
-                        
-                        <div className="text-right mb-6">
-                            <Link to="/reset" className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
-                                Forgot password?
-                            </Link>
-                        </div>
-                        
-                        <Button
-                            type="submit"
-                            loading={loading}
-                            fullWidth
-                            size="lg"
-                            className="mb-6"
-                        >
-                            Sign In
-                        </Button>
+    const features = [
+        "Track your Short Links with Detailed Analytics",
+        "Customizable and Trackable QR Codes",
+        "Update URLs whenever you need to change their Destination",
+        "Manage with ease",
+        "API Access"
+    ];
 
-                        <p className="text-sm text-center text-gray-600">
-                            Don't have an account?{" "}
-                            <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-800 transition-colors">
-                                Create Account
-                            </Link>
-                        </p>
-                    </form>
+    return (
+        <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 px-4 sm:px-8 lg:px-16">
+            <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 mb-8 lg:mb-0">
+                <form onSubmit={handleLogin}>
+                    <h4 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Welcome Back
+                    </h4>
+
+                    <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        fullWidth
+                        className="mb-4"
+                        leftIcon={
+                            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                            </svg>
+                        }
+                    />
+
+                    <PasswordInput
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="mb-4"
+                    />
+
+                    <div className="text-right mb-6">
+                        <Link to="/reset" className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                            Forgot password?
+                        </Link>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        loading={loading}
+                        fullWidth
+                        size="lg"
+                        className="mb-6"
+                    >
+                        Sign In
+                    </Button>
+
+                    <p className="text-sm text-center text-gray-600">
+                        Don't have an account?{" "}
+                        <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                            Create Account
+                        </Link>
+                    </p>
+                </form>
+            </div>
+
+            <div className="w-full max-w-md lg:ml-12 mt-8 lg:mt-0">
+                <div className="text-center lg:text-left mb-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            Trim.URL
+                        </span> Features
+                    </h2>
+                    <p className="text-gray-600">
+                        The best link management service to track, brand, and share short URLs
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    {features.map((feature, index) => (
+                        <div key={index} className="flex items-start space-x-3">
+                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                <img src={tickIcon} alt="✓" className="w-4 h-4" />
+                            </div>
+                            <p className="text-gray-700 leading-relaxed">{feature}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

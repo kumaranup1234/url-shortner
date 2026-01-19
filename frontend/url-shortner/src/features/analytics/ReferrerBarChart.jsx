@@ -1,17 +1,16 @@
-import axiosInstance from "../utils/axiosInstance.js";
-import React, {useEffect, useState} from "react";
-import {Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-import {InfinitySpin} from "react-loader-spinner";
-
-// Dummy data
-const dummyData = [
-    { name: "Direct Access", value: 14 },
-    { name: "http://localhost:5173/", value: 3 },
-    { name: "Google", value: 5 },
-    { name: "Facebook", value: 7 },
-    { name: "Twitter", value: 2 },
-    { name: "LinkedIn", value: 8 },
-];
+import axiosInstance from "../../shared/utils/axiosInstance.js";
+import React, { useEffect, useState } from "react";
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
+} from "recharts";
+import { InfinitySpin } from "react-loader-spinner";
 
 const ReferrerBarChart = ({ apiUrl }) => {
     const [referrerData, setReferrerData] = useState([]);
@@ -30,7 +29,6 @@ const ReferrerBarChart = ({ apiUrl }) => {
             }));
 
             setReferrerData(formattedData);
-            //setReferrerData(dummyData);
         } catch (error) {
             console.error('Error fetching referrer data:', error);
         } finally {
@@ -42,13 +40,17 @@ const ReferrerBarChart = ({ apiUrl }) => {
         getReferrerData();
     }, []);
 
-    // Custom Tooltip Component
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white border border-gray-300 p-2 rounded shadow-md text-center">
-                    <p className="font-medium">{label}</p>
-                    <p>{`Clicks: ${payload[0].value}`}</p>
+                <div className="bg-white/90 backdrop-blur-md border border-gray-100 p-3 rounded-xl shadow-xl">
+                    <p className="font-semibold text-gray-700 mb-1">{label}</p>
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <p className="text-gray-900 font-bold">
+                            {payload[0].value} <span className="text-xs font-normal text-gray-500">clicks</span>
+                        </p>
+                    </div>
                 </div>
             );
         }
@@ -56,62 +58,79 @@ const ReferrerBarChart = ({ apiUrl }) => {
     };
 
     return (
-        <>
-            {loading ? <div className="rounded-lg p-4 h-96 flex items-center justify-center">
-                <InfinitySpin
-                    visible={true}
-                    width="200"
-                    color="#4fa94d"
-                    ariaLabel="infinity-spin-loading"
-                />
-                <p>Preparing your graph data...</p>
+        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col">
+            <h2 className="text-lg font-bold text-gray-800 mb-6 text-center lg:text-left">
+                Referrer Source
+            </h2>
+
+            {loading ? (
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px]">
+                    <InfinitySpin
+                        visible={true}
+                        width="100"
+                        color="#3b82f6"
+                        ariaLabel="infinity-spin-loading"
+                    />
                 </div>
-                : referrerData.length > 0 ? <div className="p-2 rounded w-full">
-                    <h2 className="md:text-xl text-center font-bold mb-4">Clicks + scans by referrer</h2>
-                    <ResponsiveContainer width="100%" height={360}>
+            ) : referrerData.length > 0 ? (
+                <div className="flex-1 w-full h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             data={referrerData}
-                            margin={{top: 10, right: 5, left: -15, bottom: 10}}
-                            barGap={5} // Reduce gap between bars
-                            barSize={60} // Increase bar width
+                            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                            barSize={50}
                         >
-                            <CartesianGrid strokeDasharray="0" horizontal={true} vertical={false}/>
+                            <defs>
+                                <linearGradient id="colorReferrer" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.4} />
+                                </linearGradient>
+                                <linearGradient id="colorReferrerHover" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#60a5fa" stopOpacity={1} />
+                                    <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.6} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis
                                 dataKey="name"
-                                tick={{fontSize: 12}}
+                                tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
+                                axisLine={false}
+                                tickLine={false}
                                 tickMargin={4}
+                                dy={10}
                             />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tickCount={6}
+                                tickCount={5}
+                                tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
+                                allowDecimals={false}
                             />
-                            <Tooltip
-                                content={<CustomTooltip/>}
-                                cursor={false} // Disable background highlight on hover
-                            />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8fafc' }} />
                             <Bar
                                 dataKey="value"
+                                radius={[8, 8, 0, 0]}
                                 onMouseEnter={(data, index) => setHoveredBarIndex(index)}
                                 onMouseLeave={() => setHoveredBarIndex(null)}
                             >
                                 {referrerData.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
-                                        fill={index === hoveredBarIndex ? "#00C49F" : "#0088FE"} // Highlight the hovered bar
+                                        fill={index === hoveredBarIndex ? "url(#colorReferrerHover)" : "url(#colorReferrer)"}
                                     />
                                 ))}
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
-                </div> : <div className="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center">
-                    <p className="text-lg font-semibold">
-                        No data available.
-                    </p>
                 </div>
-            }
-        </>
-
+            ) : (
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px] bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <div className="text-4xl mb-2">🔗</div>
+                    <p className="text-gray-900 font-semibold text-sm">No Referrer Data</p>
+                    <p className="text-gray-500 text-xs text-center mt-1">Clicks from websites will appear here</p>
+                </div>
+            )}
+        </div>
     );
 }
 
