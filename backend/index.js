@@ -46,6 +46,7 @@ app.use(express.json({ limit: '10mb' }));
 const allowedOrigins = [
   "http://localhost:5173",
   "https://trimat.vercel.app",
+  "https://t-at.vercel.app",
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
