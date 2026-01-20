@@ -1,8 +1,8 @@
-import {Link, useNavigate} from "react-router-dom";
-import {useState} from "react";
-import {validateEmail} from "../utils/helper.js";
-import axiosInstance from "../utils/axiosInstance.js";
-import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { validateEmail } from "../shared/utils/helper.js";
+import axiosInstance from "../shared/utils/axiosInstance.js";
+import { toast } from 'sonner';
 
 
 const ForgotPassword = () => {
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
             const myPromise = axiosInstance.post('/api/users/reset', {
                 email: email,
             })
-            toast.promise(myPromise ,{
+            toast.promise(myPromise, {
                 loading: "Sending email. please wait...",
                 success: "Email sent successfully.",
                 error: (err) => err.response?.data?.message || "Error occurred. Please try again!"

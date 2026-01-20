@@ -1,13 +1,13 @@
 import React from "react";
 
 const Layout1 = ({
-                     username = "username",
-                     name = "Your Name",
-                     bio = "Your bio here",
-                     profilePhoto = "https://clipartcraft.com/images/assassins-creed-logo-gold.png",
-                     links = [],
-                     isClicked = false
-                 }) => {
+    username = "username",
+    name = "Your Name",
+    bio = "Your bio here",
+    profilePhoto = "https://clipartcraft.com/images/assassins-creed-logo-gold.png",
+    links = [],
+    isClicked = false
+}) => {
 
     const getBioSpacing = (bioText) => {
         if (!bioText || bioText.length < 50) return "mb-6";
@@ -16,7 +16,7 @@ const Layout1 = ({
     };
 
     return (
-        <div className={`border relative bg-gradient-to-br from-green-300 to-yellow-100 p-4 rounded-lg shadow-lg w-[310px] min-h-[390px] mx-auto flex flex-col
+        <div className={`border relative bg-gradient-to-br from-green-300 to-yellow-100 p-6 rounded-3xl shadow-lg w-[375px] min-h-[600px] mx-auto flex flex-col
         ${isClicked ? "border-blue-500 border-2" : "border-transparent"}`}>
 
             {/* Profile Photo */}

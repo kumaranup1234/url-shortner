@@ -19,12 +19,14 @@ const {
 const { authenticateUser } = require('../middleware/authenticate');
 const { checkAuthStatus } = require('../middleware/checkAuthStatus');
 const resetPasswordLimiter = require("../middleware/resetPasswordRateLimiter");
+const { validateEmail, sanitizeInput } = require('../middleware/validation');
+const { strictLimiter } = require('../middleware/rateLimiter');
 
 // User Registration
-router.post('/signup', handleSignup);
+router.post('/signup', strictLimiter, validateEmail, sanitizeInput, handleSignup);
 
 // User Login
-router.post('/login', handleLogin);
+router.post('/login', strictLimiter, validateEmail, sanitizeInput, handleLogin);
 
 // User Logout
 router.post("/logout", handleLogout);
@@ -36,21 +38,21 @@ router.get("/status", checkAuthStatus, handleStatus)
 router.get('/profile', authenticateUser, getUserProfile);
 
 // Update User Profile
-router.put('/profile', authenticateUser, updateUserProfile);
+router.put('/profile', authenticateUser, sanitizeInput, updateUserProfile);
 
 // Update Password Without Link
-router.post("/password-reset", resetPasswordLimiter, authenticateUser, resetPassword)
+router.post("/password-reset", resetPasswordLimiter, authenticateUser, sanitizeInput, resetPassword)
 
 // Update Password through Link
-router.post("/reset", resetPasswordLimiter, forgotPassword);
+router.post("/reset", resetPasswordLimiter, validateEmail, sanitizeInput, forgotPassword);
 
 // Update password through link
-router.post("/reset/:resetToken", forgotPasswordReset)
+router.post("/reset/:resetToken", resetPasswordLimiter, sanitizeInput, forgotPasswordReset)
 
 // Update User Image
 router.post('/profile-image', authenticateUser, updateProfileImage)
 
-// get APi key
+// get API key
 router.get('/get-api-key', authenticateUser, getApiKey);
 
 // Regenerate API Key

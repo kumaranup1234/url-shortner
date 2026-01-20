@@ -5,240 +5,257 @@ const AnonymousUrl = require("../models/AnonymousUrl");
 const { generateQRCodeForUrl } = require("../utils/generateQrCode");
 const { extractData } = require("../utils/extractMetaData");
 
-
-async function createShortUrlAnon(req, res){
-    const { url } = req.body;
-    if (!url) {
-        return res.status(400).json({ error: true, message: 'URL is required' });
-    }
-    const shortId = shortid.generate();
-
+async function createShortUrlAnon(req, res, next) {
     try {
-        const existingUrl = await Url.findOne({ originalUrl: url});
+        const { originalUrl } = req.body;
+
+        if (!originalUrl) {
+            return res.status(400).json({ error: 'URL is required' });
+        }
+
+        const shortId = shortid.generate();
+
+        // Check if URL already exists in anonymous URLs
+        const existingUrl = await AnonymousUrl.findOne({ originalUrl });
         if (existingUrl) {
             return res.status(200).json({
                 success: true,
                 message: 'URL already shortened',
-                data: {
-                    originalUrl: existingUrl.originalUrl,
-                    shortUrl: existingUrl.shortUrl,
-                }
+                originalUrl: existingUrl.originalUrl,
+                shortUrl: existingUrl.shortUrl,
             });
         }
 
         const newUrl = new AnonymousUrl({
-            originalUrl: url,
+            originalUrl,
             shortUrl: shortId,
-        })
-
-        await newUrl.save();
-        return res.status(200).json({
-            success: true,
-            message: 'URL shortened successfully',
-            originalUrl: newUrl.originalUrl,
-            shortUrl: newUrl.shortUrl,
-        })
-    } catch (error){
-        console.error('Error creating shortened URL:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
-        });
-    }
-}
-
-async function createShortUrl(req, res) {
-    const { url } = req.body;
-    if (!url) {
-        return res.status(400).json({ error: true, message: 'URL is required' });
-    }
-    const shortId = shortid.generate();
-
-    try {
-        // Check if the URL already exists for the user
-        const existingUrl = await Url.findOne({ originalUrl: url, user: req.user._id });
-        if (existingUrl) {
-            return res.status(200).json({
-                success: true,
-                message: 'URL already shortened',
-                data: {
-                    originalUrl: existingUrl.originalUrl,
-                    shortUrl: existingUrl.shortUrl,
-                }
-            });
-        }
-
-        const qrCode = await generateQRCodeForUrl(shortId);
-        const { title, logo } = await extractData(url);
-
-
-        // Create a new shortened URL entry
-        const newUrl = new Url({
-            originalUrl: url,
-            shortUrl: shortId,
-            user: req.user._id,
-            qrCode: qrCode,
-            title: title,
-            logo: logo,
         });
 
-        // Save the URL to the database
         await newUrl.save();
 
-        // Update the user's URLs array with the new URL ID
-        await User.findByIdAndUpdate(
-            req.user._id,
-            { $push: { urls: newUrl._id } },
-            { new: true } // Return the updated user document
-        );
-
-        // Respond with the shortened URL
-        return res.status(201).json({
+        res.status(201).json({
             success: true,
             message: 'URL shortened successfully',
+            _id: newUrl._id,
             originalUrl: newUrl.originalUrl,
             shortUrl: newUrl.shortUrl,
         });
     } catch (error) {
-        console.error('Error creating shortened URL:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
-        });
+        next(error);
     }
 }
 
-async function getUrlDetails(req, res) {
-    const shortId = req.params.shortUrlId;
-
+async function createShortUrl(req, res, next) {
     try {
-        const details = await Url.findOne({ shortUrl: shortId });
+        const { originalUrl } = req.body;
+        const userId = req.user._id;
 
-        return res.status(200).json({
-            error: false,
-            details
-        })
+        if (!originalUrl) {
+            return res.status(400).json({ error: 'URL is required' });
+        }
 
-    } catch (error){
-        console.error('Error getting URL details:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
-        });
-    }
-}
-
-async function UpdateUrl(req, res) {
-    const shortId = req.params.shortUrlId;
-
-    const { newUrl } = req.body;
-
-    try {
-        const updateUrl = await Url.updateOne(
-            {shortUrl: shortId,},
-            {$set: {originalUrl: newUrl}},
-        );
-
-        if (updateUrl.nModified === 0){
-            return res.status(404).json({
-                error: true,
-                message: 'URL not found or no changes made',
+        // Check if URL already exists for this user
+        const existingUrl = await Url.findOne({ originalUrl, user: userId, isActive: true });
+        if (existingUrl) {
+            return res.status(200).json({
+                success: true,
+                message: 'URL already shortened',
+                originalUrl: existingUrl.originalUrl,
+                shortUrl: existingUrl.shortUrl,
             });
         }
 
-        return res.status(200).json({
+        const shortId = shortid.generate();
+
+        // Generate QR code and extract metadata in parallel
+        const [qrCode, { title, logo }] = await Promise.all([
+            generateQRCodeForUrl(shortId),
+            extractData(originalUrl)
+        ]);
+
+        const newUrl = new Url({
+            originalUrl,
+            shortUrl: shortId,
+            user: userId,
+            qrCode,
+            title: title || 'Untitled',
+            logo,
+        });
+
+        await newUrl.save();
+
+        // Update user's URL count (optimized)
+        await User.findByIdAndUpdate(
+            userId,
+            { $push: { urls: newUrl._id } },
+            { new: false } // Don't return updated document
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'URL shortened successfully',
+            _id: newUrl._id,
+            originalUrl: newUrl.originalUrl,
+            shortUrl: newUrl.shortUrl,
+            qrCode: newUrl.qrCode,
+            title: newUrl.title,
+            logo: newUrl.logo,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function getUrlDetails(req, res, next) {
+    try {
+        const { shortUrlId } = req.params;
+
+        const urlDetails = await Url.findOne({
+            shortUrl: shortUrlId,
+            user: req.user._id,
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        }).select('-__v');
+
+        if (!urlDetails) {
+            return res.status(404).json({ error: 'URL not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            details: urlDetails
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function UpdateUrl(req, res, next) {
+    try {
+        const { shortUrlId } = req.params;
+        const { originalUrl: newUrl } = req.body;
+        const userId = req.user._id;
+
+        if (!newUrl) {
+            return res.status(400).json({ error: 'New URL is required' });
+        }
+
+        const updateResult = await Url.updateOne(
+            { shortUrl: shortUrlId, user: userId, isActive: true },
+            { $set: { originalUrl: newUrl, updatedAt: new Date() } }
+        );
+
+        if (updateResult.matchedCount === 0) {
+            return res.status(404).json({ error: 'URL not found' });
+        }
+
+        if (updateResult.modifiedCount === 0) {
+            return res.status(400).json({ error: 'No changes made' });
+        }
+
+        res.status(200).json({
             success: true,
             message: 'URL updated successfully',
         });
-    } catch (error){
-        console.log("Error updating the URL:", error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
-        });
+    } catch (error) {
+        next(error);
     }
 }
 
-
-async function deleteUrl(req, res){
-    const shortId = req.params.shortUrlId;
-    const userId = req.user._id;
-
+async function deleteUrl(req, res, next) {
     try {
-        const urlToDelete = await Url.findOne({ shortUrl: shortId });
+        const { shortUrlId } = req.params;
+        const userId = req.user._id;
 
-        // Delete the URL document
-        await Url.deleteOne({ shortUrl: shortId });
+        // Soft delete by setting isActive to false
+        const deleteResult = await Url.updateOne(
+            { shortUrl: shortUrlId, user: userId, isActive: true },
+            { $set: { isActive: false, deletedAt: new Date() } }
+        );
 
-        // delete the url from the user url array
-        await User.updateOne(
-            { _id: userId },
-            { $pull: { urls: urlToDelete._id } },
-        )
-        return res.status(200).json({
+        if (deleteResult.matchedCount === 0) {
+            return res.status(404).json({ error: 'URL not found' });
+        }
+
+        res.status(200).json({
             success: true,
-            message: "URL deleted successfully",
-        })
-
-    } catch (error){
-        console.error('Error getting URL details:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
+            message: 'URL deleted successfully',
         });
+    } catch (error) {
+        next(error);
     }
 }
 
-async function getUserUrls(req, res){
-    const userId = req.user._id;
-
+async function getUserUrls(req, res, next) {
     try {
-        // Fetch all URLs associated with the user
-        const userUrls = await Url.find({ user: userId, isOneLink: false });
+        const userId = req.user._id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
 
-        // If no URLs found
+        // Use the optimized static method
+        const userUrls = await Url.getUserUrls(userId, page, limit);
+
+        // Get total count for pagination
+        const totalUrls = await Url.countDocuments({
+            user: userId,
+            isOneLink: { $ne: true },
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        });
+
         if (!userUrls || userUrls.length === 0) {
-            return res.status(404).json({
-                error: true,
-                message: 'No URLs found for this user',
+            return res.status(200).json({
+                success: true,
+                userUrls: [],
+                pagination: {
+                    page,
+                    limit,
+                    total: totalUrls,
+                    pages: Math.ceil(totalUrls / limit)
+                }
             });
         }
-        //console.log(userUrls)
-        return res.status(200).json({
-            error: false,
-            userUrls
-        })
-    } catch (error){
-        console.error('Error getting URLs:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
+
+        res.status(200).json({
+            success: true,
+            userUrls,
+            pagination: {
+                page,
+                limit,
+                total: totalUrls,
+                pages: Math.ceil(totalUrls / limit)
+            }
         });
+    } catch (error) {
+        next(error);
     }
 }
 
-async function getClicksAnalytics(req, res) {
-    const shortId = req.params.shortUrlId;
-
+async function getClicksAnalytics(req, res, next) {
     try {
+        const { shortUrlId } = req.params;
+        const userId = req.user._id;
 
         const urlData = await Url.findOne({
-            shortUrl: shortId,
-        }).select('totalClicks');
+            shortUrl: shortUrlId,
+            user: userId,
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        }).select('totalClicks lastAccessed createdAt');
 
-        return res.status(200).json({
-            error:false,
-            urlData
-        })
+        if (!urlData) {
+            return res.status(404).json({ error: 'URL not found' });
+        }
 
-    }catch (error){
-        console.error('Error getting URL total clicks details:', error);
-        return res.status(500).json({
-            error: true,
-            message: 'Internal server error',
+        res.status(200).json({
+            success: true,
+            analytics: {
+                totalClicks: urlData.totalClicks,
+                lastAccessed: urlData.lastAccessed,
+                createdAt: urlData.createdAt,
+                clickRate: urlData.clickRate // Virtual field
+            }
         });
+    } catch (error) {
+        next(error);
     }
-
 }
 
 module.exports = {

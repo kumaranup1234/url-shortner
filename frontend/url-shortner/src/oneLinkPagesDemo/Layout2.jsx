@@ -1,9 +1,9 @@
 import React from "react";
-import {FaInstagram, FaYoutube} from "react-icons/fa";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Layout2 = ({ username = "username", name = "Oasis Wellness", bio = "Relax, refresh, restore", profilePhoto, links = [], isClicked = false }) => {
     return (
-        <div className={`border p-4 rounded-2xl shadow-md bg-gradient-to-b from-orange-50 to-white w-[310px] min-h-[390px] mx-auto flex flex-col ${isClicked ? "border-blue-500 border-2" : "border-transparent"}`}>
+        <div className={`border p-6 rounded-3xl shadow-md bg-gradient-to-b from-orange-50 to-white w-[375px] min-h-[600px] mx-auto flex flex-col ${isClicked ? "border-blue-500 border-2" : "border-transparent"}`}>
             <div className="flex justify-center mb-3">
                 <img src={profilePhoto || "https://i.imgur.com/vE5Xq7R.png"} alt="Profile" className="w-16 h-16 rounded-full border-4 border-white shadow" />
             </div>

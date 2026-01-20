@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const Url = require('../models/Url');
-const { v4: UUIDv4} = require("uuid")
+const { v4: UUIDv4 } = require("uuid")
 const cloudinary = require('../config/cloudinaryConfig');
 const upload = require('../utils/multerConfig');
-const {sendEmail} = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/sendEmail");
 
 // Do I need a new array? → Likely map or filter.
 // Do I need just one element? → Likely find.
@@ -75,8 +75,7 @@ async function handleSignup(req, res) {
             httpOnly: true,   // Prevents JavaScript access on the client side
             secure: process.env.NODE_ENV === 'production', // Ensure cookie is sent over HTTPS only in production
             maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days expiration time
-            sameSite: 'none' // 'none' for cross-domain, 'strict' for same-site
-            // strict for localHost
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
 
         return res.status(201).json({
@@ -144,8 +143,7 @@ async function handleLogin(req, res) {
             httpOnly: true,   // Prevents JavaScript access on the client side
             secure: process.env.NODE_ENV === 'production', // Ensure cookie is sent over HTTPS only in production
             maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days expiration time
-            sameSite: 'none' // 'none' for cross-domain, 'strict' for same-site
-            // strict for localHost
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
 
         return res.json({
@@ -245,7 +243,7 @@ async function handleLogout(req, res) {
     res.clearCookie('authToken', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
 
     res.status(200).json({ success: true, message: 'Logged out successfully' });
@@ -275,7 +273,7 @@ async function handleStatus(req, res) {
     }
 }
 
-async function getUserProfile(req, res){
+async function getUserProfile(req, res) {
     try {
         const userId = req.user._id;
         //console.log(userId);
@@ -287,7 +285,7 @@ async function getUserProfile(req, res){
 
         //console.log(user);
 
-        if (!user){
+        if (!user) {
             return res.status(404).json({ error: true, message: 'User not found' });
         }
 
@@ -301,7 +299,7 @@ async function getUserProfile(req, res){
                 urls: user.urls
             }
         })
-    } catch (error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
             error: true,
@@ -324,14 +322,14 @@ async function resetPassword(req, res) {
 
         const isValid = await user.validatePassword(currentPassword);
 
-        if(!isValid){
+        if (!isValid) {
             return res.status(400).json({
                 error: true,
                 message: 'Invalid password',
             })
         }
 
-       user.password = newPassword;
+        user.password = newPassword;
         await user.save();
 
         return res.status(200).json({
@@ -339,7 +337,7 @@ async function resetPassword(req, res) {
             message: 'Password updated successfully',
         });
 
-    } catch (error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
             error: true,
@@ -348,7 +346,7 @@ async function resetPassword(req, res) {
     }
 }
 
-async function updateUserProfile(req, res){
+async function updateUserProfile(req, res) {
     const userId = req.user._id;
     const updates = req.body;
 
@@ -359,9 +357,9 @@ async function updateUserProfile(req, res){
         })
     }
 
-    if (updates.email){
+    if (updates.email) {
         const email = updates.email;
-        const isPresent = await User.findOne({email});
+        const isPresent = await User.findOne({ email });
         if (isPresent) {
             return res.status(400).json({
                 error: true,
@@ -378,7 +376,7 @@ async function updateUserProfile(req, res){
             select: '-password -urls' // exclude the password and urls no need as of now
         });
 
-        if (!updatedUser){
+        if (!updatedUser) {
             return res.status(404).json({
                 error: true,
                 message: "User already exist"
@@ -492,17 +490,33 @@ async function getAllCount(req, res) {
             });
         }
 
-        const totalUrls = user.urls.length;
+        const totalUrls = await Url.countDocuments({
+            user: userId,
+            $or: [{ isActive: true }, { isActive: { $exists: false } }],
+            isOneLink: { $ne: true }
+        });
 
-        const totalClicks = await Url.find({ user: userId }).select('totalClicks');
-        const urls = await Url.find({user : userId});
-        const topUrl = urls.reduce((maxDoc, currentDoc) => {
+        // Calculate total clicks for ALL standard URLs (including inactive/deleted), but exclude OneLinks
+        // Using $ne: true to include documents where isOneLink is undefined (legacy data)
+        const allStandardUrls = await Url.find({
+            user: userId,
+            isOneLink: { $ne: true }
+        }).select('totalClicks');
+
+        const totalClicksSum = allStandardUrls.reduce((acc, url) => acc + (url.totalClicks || 0), 0);
+
+        // For top URL, we consider active URLs that are not OneLinks
+        // For top URL, we consider active URLs that are not OneLinks
+        const activeUrls = await Url.find({
+            user: userId,
+            $or: [{ isActive: true }, { isActive: { $exists: false } }],
+            isOneLink: { $ne: true }
+        });
+        const topUrl = activeUrls.reduce((maxDoc, currentDoc) => {
             return currentDoc.totalClicks > (maxDoc?.totalClicks || 0) ? currentDoc : maxDoc;
         }, null);
 
 
-        const totalClicksArray = totalClicks.map((doc) => doc.totalClicks);
-        const totalClicksSum = totalClicksArray.reduce((acc, clicks) => acc + clicks, 0);
 
         return res.status(200).json({
             error: false,

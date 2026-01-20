@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../shared/utils/axiosInstance";
 import templates from "../templates/templates";
 
 const PublicProfilePage = () => {
@@ -28,7 +28,7 @@ const PublicProfilePage = () => {
 
     const TemplateComponent = selectedTemplate.actualComponent;
     return <TemplateComponent profilePhoto={userData.data.profilePhotoUrl} name={userData.data.name}
-                              bio={userData.data.bio} links={userData.data.links} username={userData.data.username} />;
+        bio={userData.data.bio} links={userData.data.links} username={userData.data.username} />;
 };
 
 export default PublicProfilePage;

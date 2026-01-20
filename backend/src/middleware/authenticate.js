@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const ApiKey = require('../models/ApiKey');
+
 const authenticateUser = async (req, res, next) => {
     try {
         // Get the token from the cookies
@@ -34,6 +36,31 @@ const authenticateUser = async (req, res, next) => {
     }
 };
 
+const authenticateApiKey = async (req, res, next) => {
+    try {
+        const apiKey = req.header('x-api-key');
+        if (!apiKey) {
+            return res.status(401).json({ error: true, message: 'API key required' });
+        }
+
+        const keyRecord = await ApiKey.findOne({ key: apiKey }).populate('user');
+        if (!keyRecord) {
+            return res.status(401).json({ error: true, message: 'Invalid API key' });
+        }
+
+        if (keyRecord.expiresAt && keyRecord.expiresAt < new Date()) {
+            return res.status(401).json({ error: true, message: 'API key expired' });
+        }
+
+        req.user = keyRecord.user;
+        next();
+    } catch (error) {
+        console.error('API Key Auth Error:', error);
+        res.status(500).json({ error: true, message: 'Server error' });
+    }
+};
+
 module.exports = {
-    authenticateUser
+    authenticateUser,
+    authenticateApiKey
 }

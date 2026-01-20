@@ -10,23 +10,25 @@ const {
     createShortUrlAnon
 } = require('../controllers/urlController');
 const { authenticateUser } = require('../middleware/authenticate');
+const { validateUrl, sanitizeInput } = require('../middleware/validation');
+const { strictLimiter } = require('../middleware/rateLimiter');
 
-// Create Short URL ANon
-router.post('/anon/shorten', createShortUrlAnon);
+// Create Short URL Anonymous (with stricter rate limiting)
+router.post('/anon/shorten', strictLimiter, validateUrl, sanitizeInput, createShortUrlAnon);
 
-// Create Short URL
-router.post('/shorten', authenticateUser, createShortUrl);
+// Create Short URL (authenticated)
+router.post('/shorten', authenticateUser, validateUrl, sanitizeInput, createShortUrl);
 
 // Get URL Details
 router.get('/details/:shortUrlId', authenticateUser, getUrlDetails);
 
 // Update URL
-router.post('/update/:shortUrlId', authenticateUser, UpdateUrl);
+router.put('/update/:shortUrlId', authenticateUser, sanitizeInput, UpdateUrl);
 
 // Delete URL
 router.delete('/delete/:shortUrlId', authenticateUser, deleteUrl);
 
-// Get User's URLs
+// Get User's URLs with pagination
 router.get('/user-urls', authenticateUser, getUserUrls);
 
 // Get Total Clicks for a URL
