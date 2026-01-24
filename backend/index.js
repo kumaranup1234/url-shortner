@@ -39,6 +39,10 @@ app.use(helmet({
 app.use(compression());
 app.use(globalLimiter);
 
+// Ensure DB is connected before processing any requests
+const ensureDbConnection = require('./src/middleware/dbMiddleware');
+app.use(ensureDbConnection);
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
