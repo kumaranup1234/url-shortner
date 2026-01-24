@@ -46,6 +46,7 @@ app.use(express.json({ limit: '10mb' }));
 const allowedOrigins = [
   "http://localhost:5173",
   "https://trimat.vercel.app",
+  "https://t-at.vercel.app",
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -67,7 +68,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  bufferCommands: false
+  bufferCommands: true
 })
   .then(() => console.log('✅ MongoDB Connected'))
   .catch((err) => {

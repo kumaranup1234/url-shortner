@@ -11,7 +11,7 @@ export default defineConfig({
           router: ['react-router-dom'],
           redux: ['@reduxjs/toolkit', 'react-redux'],
           charts: ['highcharts', 'highcharts-react-official'],
-          ui: ['react-hot-toast', 'react-icons']
+          ui: ['react-icons']
         }
       }
     },
