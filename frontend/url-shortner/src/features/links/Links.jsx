@@ -42,13 +42,13 @@ const Links = () => {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen py-8">
+        <div className="bg-gray-50 dark:bg-gray-950 min-h-screen py-8 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
 
                 <div className="flex flex-col xl:flex-row gap-8 items-start relative">
                     {/* Links section */}
                     <div className="flex-1 w-full min-w-0">
-                        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-6">
                             <CreateNewLink onSuccess={handleRefresh} />
                         </div>
 

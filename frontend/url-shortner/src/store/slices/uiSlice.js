@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    theme: 'light',
+    theme: localStorage.getItem('theme') || 'light',
     sidebarOpen: false,
     notifications: [],
     loading: {
@@ -15,6 +15,7 @@ const uiSlice = createSlice({
   reducers: {
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', state.theme);
     },
     toggleSidebar: (state) => {
       state.sidebarOpen = !state.sidebarOpen;

@@ -34,11 +34,20 @@ import PublicProfilePage from "./Pages/PublicProfilePage.jsx";
 const App = () => {
     const dispatch = useDispatch();
     const { loading } = useSelector(state => state.auth);
+    const { theme } = useSelector(state => state.ui);
     const location = useLocation();
 
     useEffect(() => {
         dispatch(checkAuthStatus());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
 
     inject();
 

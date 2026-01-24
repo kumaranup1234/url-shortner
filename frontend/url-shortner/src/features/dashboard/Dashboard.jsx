@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDashboardData } from '../../store/slices/dashboardSlice';
+import { fetchUrls } from '../../store/slices/urlSlice';
 import { addNotification } from '../../store/slices/uiSlice';
 import { Link } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
+import { FaDownload } from "react-icons/fa";
+import { exportToCSV } from "../../shared/utils/csvExporter";
 
 import BrowserBarChart from "../analytics/BrowserBarChart.jsx";
 import ClicksLineChart from "../analytics/ClicksLineChart.jsx";
@@ -12,16 +15,19 @@ import ReferrerBarChart from "../analytics/ReferrerBarChart.jsx";
 import TopPerformanceParent from "../analytics/TopPerformanceParent.jsx";
 import LocationList from "../analytics/LocationList.jsx";
 import OsPieChart from "../analytics/OsPieChart.jsx";
-import SummaryCard from "../../Cards/SummaryCard.jsx";
+
 import WorldMap from "../analytics/WorldMap.jsx";
+import SummaryCard from "../../Cards/SummaryCard.jsx";
 import TopPerformingLink from "../../Cards/TopPerformingLink.jsx";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
     const { totalUrls, totalClicks, topUrl, loading, error } = useSelector(state => state.dashboard);
+    const { urls } = useSelector(state => state.urls);
 
     useEffect(() => {
         dispatch(fetchDashboardData());
+        dispatch(fetchUrls());
     }, [dispatch]);
 
     useEffect(() => {
@@ -32,6 +38,24 @@ const Dashboard = () => {
             }));
         }
     }, [error, dispatch]);
+
+    const handleExport = () => {
+        if (!urls || urls.length === 0) {
+            dispatch(addNotification({ type: 'info', message: 'No data to export' }));
+            return;
+        }
+
+        const csvData = urls.map(url => ({
+            'Title': url.title || 'Untitled',
+            'Short URL': url.shortUrl,
+            'Original URL': url.originalUrl,
+            'Total Clicks': url.totalClicks || 0,
+            'Created At': new Date(url.createdAt).toLocaleDateString(),
+            'Last Clicked': url.lastClicked ? new Date(url.lastClicked).toLocaleDateString() : 'Never'
+        }));
+
+        exportToCSV(csvData, `trim_url_export_${new Date().toISOString().split('T')[0]}.csv`);
+    };
 
     const chartComponents = [
         { component: BrowserBarChart, apiUrl: '/api/urls/clicks/getUserClicksByBrowser' },
@@ -45,19 +69,34 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="bg-gray-50 min-h-screen py-8">
+        <div className="bg-gray-50 dark:bg-gray-950 min-h-screen py-8 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header Row */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Overview of your links and performance</p>
+                    </div>
+                    <button
+                        onClick={handleExport}
+                        className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white px-4 py-2 rounded-lg shadow-sm transition-all font-medium text-sm"
+                    >
+                        <FaDownload className="text-gray-500 dark:text-gray-400" />
+                        Export CSV
+                    </button>
+                </div>
+
                 {/* Info Banner */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
                     <div className="flex items-start space-x-3">
-                        <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                         </svg>
                         <div>
-                            <p className="text-sm text-blue-800">
+                            <p className="text-sm text-blue-800 dark:text-blue-200">
                                 <span className="font-semibold">Analytics Overview:</span> This dashboard shows overall analytics for all your short URLs.
                                 For individual link analytics, visit{" "}
-                                <Link to="/links" className="font-semibold underline hover:text-blue-900 transition-colors">
+                                <Link to="/links" className="font-semibold underline hover:text-blue-900 dark:hover:text-blue-100 transition-colors">
                                     Your Links
                                 </Link>
                                 {" "}and click the stats button.
@@ -75,7 +114,7 @@ const Dashboard = () => {
 
                 {/* Top Performing Link */}
                 <div className="mb-8">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
                         {loading ? (
                             <div className="flex flex-col items-center justify-center py-12">
                                 <InfinitySpin
@@ -84,7 +123,7 @@ const Dashboard = () => {
                                     color="#0d9488"
                                     ariaLabel="Loading dashboard data"
                                 />
-                                <p className="mt-4 text-gray-600">Loading your analytics...</p>
+                                <p className="mt-4 text-gray-600 dark:text-gray-400">Loading your analytics...</p>
                             </div>
                         ) : topUrl ? (
                             <TopPerformingLink
@@ -114,7 +153,7 @@ const Dashboard = () => {
                     {chartComponents.map((chart, index) => {
                         const Component = chart.component;
                         return (
-                            <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <div key={index} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 transition-colors">
                                 <Component apiUrl={chart.apiUrl} />
                             </div>
                         );

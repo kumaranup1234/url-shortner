@@ -2,10 +2,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { FaChartBar, FaPalette, FaStar, FaQrcode } from "react-icons/fa";
 import MainFooter from "../shared/components/MainFooter.jsx";
 import { shortenPublicUrl, clearShortenedUrl } from "../store/slices/urlSlice";
 import MeshGradient from "../shared/components/ui/MeshGradient.jsx";
 import BentoGrid from "../shared/components/ui/BentoGrid.jsx";
+import FeatureShowcase from "../features/landing/FeatureShowcase.jsx";
 
 const LandingPage = () => {
     const [link, setLink] = useState("");
@@ -66,26 +68,27 @@ const LandingPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white flex flex-col font-sans text-gray-900 selection:bg-blue-100 selection:text-blue-900">
-            {/* Hero Section with Mesh Gradient */}
-            <div className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
-                <MeshGradient />
+        <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col font-sans text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-900 relative">
+            {/* Global Background Gradient for seamless flow */}
+            <MeshGradient />
 
+            {/* Hero Section */}
+            <div className="relative z-10 min-h-screen flex flex-col justify-center overflow-hidden pt-20">
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 flex flex-col items-center text-center">
 
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-blue-100 text-blue-700 text-sm font-semibold mb-10 animate-fadeIn hover:bg-white/80 transition-colors cursor-default shadow-sm">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 dark:bg-gray-800/60 backdrop-blur-md border border-blue-100 dark:border-gray-700 text-blue-700 dark:text-blue-300 text-sm font-semibold mb-10 animate-fadeIn hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors cursor-default shadow-sm">
                         <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
                         New: OneLink templates are here!
                     </div>
 
-                    <h1 className="text-6xl md:text-8xl font-black text-gray-900 tracking-tighter leading-[1.05] mb-8 drop-shadow-sm">
+                    <h1 className="text-6xl md:text-8xl font-black text-gray-900 dark:text-white tracking-tighter leading-[1.05] mb-8 drop-shadow-sm">
                         Shorten Links, <br className="hidden md:block" />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Expand Reach</span>
                     </h1>
 
-                    <p className="max-w-2xl text-xl text-gray-500 mb-12 leading-relaxed font-normal">
-                        Trim.URL provides <span className="text-gray-900 font-semibold">powerful analytics</span>, <span className="text-gray-900 font-semibold">custom branding</span>, and <span className="text-gray-900 font-semibold">QR codes</span> to help you manage your links like a pro.
+                    <p className="max-w-2xl text-xl text-gray-500 dark:text-gray-400 mb-12 leading-relaxed font-normal">
+                        Trim.URL provides <span className="text-gray-900 dark:text-white font-semibold">powerful analytics</span>, <span className="text-gray-900 dark:text-white font-semibold">custom branding</span>, and <span className="text-gray-900 dark:text-white font-semibold">QR codes</span> to help you manage your links like a pro.
                     </p>
 
                     {/* Glassmorphism Shortener Box */}
@@ -94,7 +97,7 @@ const LandingPage = () => {
                             {/* Glow effect behind the box */}
                             <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
 
-                            <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl p-4 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                            <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl p-4 border border-white/50 dark:border-gray-700 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
                                 <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3">
                                     <div className="flex-1 relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -105,7 +108,7 @@ const LandingPage = () => {
                                             placeholder="Paste your long URL here..."
                                             value={link}
                                             onChange={(e) => setLink(e.target.value)}
-                                            className="w-full pl-12 pr-6 py-5 text-lg text-gray-900 placeholder-gray-400 bg-white border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none rounded-xl transition-all font-medium shadow-inner"
+                                            className="w-full pl-12 pr-6 py-5 text-lg text-gray-900 dark:text-white placeholder-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none rounded-xl transition-all font-medium shadow-inner"
                                         />
                                     </div>
                                     <button
@@ -152,52 +155,65 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* Features Section with Bento Grid (White) */}
-            <div className="relative bg-white py-32 overflow-hidden border-t border-gray-100">
-                {/* Subtle Grid Pattern */}
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-70"></div>
+            {/* Features Section - transparent background to show MeshGradient */}
+            <div className="relative z-10 py-24 overflow-hidden">
+                {/* Subtle Grid Pattern - Darker in dark mode */}
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:24px_24px] opacity-70"></div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-24 max-w-3xl mx-auto">
-                        <h2 className="text-5xl font-bold text-gray-900 mb-8 tracking-tight">Everything you need to grow</h2>
-                        <p className="text-xl text-gray-500 leading-relaxed">
-                            Stop using basic link shorteners. Upgrade to a platform designed for <span className="text-blue-600 font-semibold">creators</span>, <span className="text-indigo-600 font-semibold">marketers</span>, and <span className="text-purple-600 font-semibold">businesses</span>.
+                        <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight">Everything you need to grow</h2>
+                        <p className="text-xl text-gray-500 dark:text-gray-400 leading-relaxed">
+                            Stop using basic link shorteners. Upgrade to a platform designed for <span className="text-blue-600 dark:text-blue-400 font-semibold">creators</span>, <span className="text-indigo-600 dark:text-indigo-400 font-semibold">marketers</span>, and <span className="text-purple-600 dark:text-purple-400 font-semibold">businesses</span>.
                         </p>
                     </div>
 
-                    <BentoGrid items={[
-                        { title: "Smart Analytics", desc: "Gain insights into who is clicking your links with detailed geographic and device data.", icon: "📊" },
-                        { title: "OneLink Bio", desc: "Create a beautiful, customizable Link-in-Bio page to showcase all your important content.", icon: "🎨" },
-                        { title: "Custom Branding", desc: "Build trust with your audience by using your own brand domain for shortened links.", icon: "✨" },
-                        { title: "QR Code Generator", desc: "Instantly generate QR codes for any link to bridge the offline-to-online gap accurately.", icon: "📱" },
-                    ]} />
+                    <FeatureShowcase />
 
                     {!isLoggedIn && (
-                        <div className="mt-32 relative">
-                            <div className="relative bg-gray-900 rounded-[2.5rem] p-16 text-center overflow-hidden group shadow-2xl">
-                                {/* Decorative blob */}
-                                <div className="absolute top-[-50%] left-[-20%] w-[80%] h-[100%] bg-blue-600/20 blur-[100px] rounded-full"></div>
-                                <div className="absolute bottom-[-50%] right-[-20%] w-[80%] h-[100%] bg-indigo-600/20 blur-[100px] rounded-full"></div>
+                        <div className="mt-32 relative max-w-4xl mx-auto">
+                            {/* Sleek CTA Card - Non-bulky */}
+                            <div className="relative rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl shadow-indigo-500/10">
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 dark:from-blue-900/10 dark:via-indigo-900/10 dark:to-purple-900/10 opacity-100"></div>
 
-                                <div className="relative z-10 max-w-3xl mx-auto">
-                                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">Ready to get started?</h2>
-                                    <p className="text-xl text-gray-300 mb-12 font-light">
-                                        Join thousands of users who are already managing their links effectively.
-                                    </p>
-                                    <button
-                                        onClick={handleCreateAccount}
-                                        className="bg-white text-gray-900 hover:bg-blue-50 px-12 py-5 rounded-full font-bold text-lg transition-all transform hover:-translate-y-1 shadow-[0_0_30px_rgba(255,255,255,0.15)]"
-                                    >
-                                        Create Free Account
-                                    </button>
+                                <div className="relative py-12 px-6 md:px-12 text-center flex flex-col md:flex-row items-center justify-between gap-8">
+                                    <div className="text-left max-w-lg">
+                                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">
+                                            Start Growing Today
+                                        </h2>
+                                        <p className="text-lg text-gray-500 dark:text-gray-400 font-medium">
+                                            Join thousands of creators who use Trim.URL.
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                                        <button
+                                            onClick={handleCreateAccount}
+                                            className="px-6 py-3 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold hover:scale-105 transition-all shadow-lg hover:shadow-xl whitespace-nowrap"
+                                        >
+                                            Get Started Free
+                                        </button>
+                                        <button
+                                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                                            className="px-6 py-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
+                                        >
+                                            Explore
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
+                            <p className="mt-4 text-center text-sm text-gray-400 dark:text-gray-500 font-medium">
+                                No credit card required · Free plan forever
+                            </p>
                         </div>
                     )}
                 </div>
             </div>
 
-            <MainFooter />
+            <div className="relative z-10">
+                <MainFooter />
+            </div>
         </div>
     );
 }

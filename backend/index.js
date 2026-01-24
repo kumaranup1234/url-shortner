@@ -63,27 +63,15 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-// Connect to MongoDB with proper configuration
-mongoose.connect(process.env.MONGODB_URI, {
-  maxPoolSize: 10,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  bufferCommands: true
-})
-  .then(() => console.log('✅ MongoDB Connected'))
+const connectDB = require('./src/config/db');
+
+// Connect to MongoDB
+connectDB()
+  .then(() => console.log('✅ Database connection initialized'))
   .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('❌ Database connection error:', err);
     process.exit(1);
   });
-
-// Handle MongoDB connection events
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
-});
 
 // User-related routes (for internal use)
 app.use('/api/users', userRoutes);

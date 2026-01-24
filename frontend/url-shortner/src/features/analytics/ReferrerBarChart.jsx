@@ -43,12 +43,12 @@ const ReferrerBarChart = ({ apiUrl }) => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white/90 backdrop-blur-md border border-gray-100 p-3 rounded-xl shadow-xl">
-                    <p className="font-semibold text-gray-700 mb-1">{label}</p>
+                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-gray-100 dark:border-gray-700 p-3 rounded-xl shadow-xl">
+                    <p className="font-semibold text-gray-700 dark:text-gray-200 mb-1">{label}</p>
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                        <p className="text-gray-900 font-bold">
-                            {payload[0].value} <span className="text-xs font-normal text-gray-500">clicks</span>
+                        <p className="text-gray-900 dark:text-white font-bold">
+                            {payload[0].value} <span className="text-xs font-normal text-gray-500 dark:text-gray-400">clicks</span>
                         </p>
                     </div>
                 </div>
@@ -58,8 +58,8 @@ const ReferrerBarChart = ({ apiUrl }) => {
     };
 
     return (
-        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col">
-            <h2 className="text-lg font-bold text-gray-800 mb-6 text-center lg:text-left">
+        <div className="rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-100 dark:border-gray-800 h-full flex flex-col transition-colors">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-6 text-center lg:text-left">
                 Referrer Source
             </h2>
 
@@ -90,7 +90,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
                                     <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.6} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" className="dark:stroke-gray-800" />
                             <XAxis
                                 dataKey="name"
                                 tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
@@ -106,7 +106,7 @@ const ReferrerBarChart = ({ apiUrl }) => {
                                 tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 500 }}
                                 allowDecimals={false}
                             />
-                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8fafc' }} />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
                             <Bar
                                 dataKey="value"
                                 radius={[8, 8, 0, 0]}
@@ -124,10 +124,10 @@ const ReferrerBarChart = ({ apiUrl }) => {
                     </ResponsiveContainer>
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center flex-1 h-[300px] bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="flex flex-col items-center justify-center flex-1 h-[300px] bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
                     <div className="text-4xl mb-2">🔗</div>
-                    <p className="text-gray-900 font-semibold text-sm">No Referrer Data</p>
-                    <p className="text-gray-500 text-xs text-center mt-1">Clicks from websites will appear here</p>
+                    <p className="text-gray-900 dark:text-white font-semibold text-sm">No Referrer Data</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs text-center mt-1">Clicks from websites will appear here</p>
                 </div>
             )}
         </div>

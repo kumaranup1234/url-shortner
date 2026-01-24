@@ -74,8 +74,8 @@ const OsPieChart = ({ apiUrl }) => {
     };
 
     return (
-        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col">
-            <h2 className="text-lg font-bold text-gray-800 mb-6 text-center lg:text-left">OS Distribution</h2>
+        <div className="rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-100 dark:border-gray-800 h-full flex flex-col transition-colors duration-300">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-6 text-center lg:text-left">OS Distribution</h2>
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center flex-1 h-[300px]">
@@ -120,8 +120,8 @@ const OsPieChart = ({ apiUrl }) => {
                         {/* Center Text */}
                         {activeIndex === null && (
                             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span className="text-3xl font-bold text-gray-800">{totalClicks}</span>
-                                <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold mt-1">Total</span>
+                                <span className="text-3xl font-bold text-gray-800 dark:text-white">{totalClicks}</span>
+                                <span className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mt-1">Total</span>
                             </div>
                         )}
                     </div>
@@ -131,16 +131,16 @@ const OsPieChart = ({ apiUrl }) => {
                         {osData.map((entry, index) => {
                             const percentage = ((entry.value / totalClicks) * 100).toFixed(1);
                             return (
-                                <div key={index} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors group cursor-default">
+                                <div key={index} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group cursor-default">
                                     <div className="flex items-center gap-3">
                                         <div
-                                            className="w-3 h-3 rounded-full ring-2 ring-white shadow-sm"
+                                            className="w-3 h-3 rounded-full ring-2 ring-white dark:ring-gray-700 shadow-sm"
                                             style={{ backgroundColor: COLORS[index % COLORS.length] }}
                                         />
-                                        <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{entry.name}</span>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-sm font-bold text-gray-900">{entry.value}</div>
+                                        <div className="text-sm font-bold text-gray-900 dark:text-white">{entry.value}</div>
                                         <div className="text-xs text-gray-400 font-medium">{percentage}%</div>
                                     </div>
                                 </div>
@@ -149,10 +149,10 @@ const OsPieChart = ({ apiUrl }) => {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center h-[300px] bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="flex flex-col items-center justify-center h-[300px] bg-gray-50 dark:bg-gray-800 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
                     <div className="text-4xl mb-2">💻</div>
-                    <p className="text-gray-900 font-semibold">No OS Data</p>
-                    <p className="text-gray-500 text-sm">Waiting for clicks...</p>
+                    <p className="text-gray-900 dark:text-white font-semibold">No OS Data</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Waiting for clicks...</p>
                 </div>
             )}
         </div>

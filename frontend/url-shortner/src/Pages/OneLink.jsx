@@ -67,13 +67,13 @@ const OneLink = () => {
     }, [])
 
     return (
-        <div className="bg-gray-50 min-h-screen py-8">
+        <div className="bg-gray-50 dark:bg-gray-950 min-h-screen py-8 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col xl:flex-row gap-8 items-start">
                     {/* Main Content */}
                     <div className="flex-1 w-full min-w-0 space-y-6">
                         {/* Notice Banner */}
-                        <div className="bg-blue-50 border border-blue-100 text-blue-800 rounded-xl p-4 flex items-start gap-3">
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/30 text-blue-800 dark:text-blue-200 rounded-xl p-4 flex items-start gap-3 transition-colors">
                             <span className="text-xl">ℹ️</span>
                             <p className="text-sm pt-0.5 leading-relaxed">
                                 <span className="font-semibold">Note:</span> Currently, each user can create one unique OneLink page.
@@ -83,35 +83,22 @@ const OneLink = () => {
 
                         {/* Create Button */}
                         {!oneLinkData && (
-                            <div className="bg-white rounded-xl shadow-sm p-8 text-center border border-gray-100">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Start your Bio Page</h3>
-                                <p className="text-gray-500 mb-6">Create a single hub for all your important links.</p>
+                            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-8 text-center border border-gray-100 dark:border-gray-800 transition-colors">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Start your Bio Page</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6">Create a single hub for all your important links.</p>
                                 <button
-                                    className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-black transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                                    className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium hover:bg-black dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                                     onClick={() => navigate('/createOneLink')}
                                 >
-                                    <img src={add} alt="" className="h-5 w-5 invert" />
+                                    <img src={add} alt="" className="h-5 w-5 invert dark:invert-0" />
                                     <span>Create OneLink</span>
                                 </button>
                             </div>
                         )}
 
-                        {/* Only show "Create OneLink" button if data exists IF user wants to create another? 
-                            The original code showed the button even if data exists? 
-                            Logic: "Currently one user can only make one OneLink page".
-                            So if data exists, hide button? 
-                            Original code: Showed button ALWAYS.
-                            Wait, "currently one user can only make one OneLink page". 
-                            I'll keep the button logic as is but maybe disable it if data exists? 
-                            Actually, the user can DELETE then CREATE. 
-                            Let's keep the button but style it nicely.
-                        */}
-
                         {oneLinkData && (
                             <>
                                 <div className="mb-2">  {/* Just a spacer now, removed the box */}
-                                    {/* <h2 className="text-xl font-bold text-gray-900 mb-4">Your OneLink Page</h2> */}
-                                    {/* Removed "Your OneLink Page" header box entirely as the Card itself has the title now */}
                                 </div>
                                 <OneLinkCard
                                     oneLinkUrl={`${window.location.origin}/onelink/${oneLinkData.username}`}

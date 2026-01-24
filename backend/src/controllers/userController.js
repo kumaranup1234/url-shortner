@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const ApiKey = require('../models/ApiKey');
+const mongoose = require('mongoose'); // Added missing import
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -492,31 +493,38 @@ async function getAllCount(req, res) {
 
         const totalUrls = await Url.countDocuments({
             user: userId,
-            $or: [{ isActive: true }, { isActive: { $exists: false } }],
-            isOneLink: { $ne: true }
+            isOneLink: { $ne: true },
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
         });
 
-        // Calculate total clicks for ALL standard URLs (including inactive/deleted), but exclude OneLinks
-        // Using $ne: true to include documents where isOneLink is undefined (legacy data)
-        const allStandardUrls = await Url.find({
+        // Optimized: Use Aggregation to sum totalClicks (Server-side calculation)
+        const totalClicksResult = await Url.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(userId),
+                    isOneLink: { $ne: true }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalClicks: { $sum: "$totalClicks" }
+                }
+            }
+        ]);
+        const totalClicksSum = totalClicksResult.length > 0 ? totalClicksResult[0].totalClicks : 0;
+
+        // Optimized: Use DB Sort and Limit to find Top URL (Avoids fetching all docs)
+        const topUrlArray = await Url.find({
             user: userId,
-            isOneLink: { $ne: true }
-        }).select('totalClicks');
+            isOneLink: { $ne: true },
+            $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        })
+            .sort({ totalClicks: -1 })
+            .limit(1)
+            .lean(); // Use lean for performance
 
-        const totalClicksSum = allStandardUrls.reduce((acc, url) => acc + (url.totalClicks || 0), 0);
-
-        // For top URL, we consider active URLs that are not OneLinks
-        // For top URL, we consider active URLs that are not OneLinks
-        const activeUrls = await Url.find({
-            user: userId,
-            $or: [{ isActive: true }, { isActive: { $exists: false } }],
-            isOneLink: { $ne: true }
-        });
-        const topUrl = activeUrls.reduce((maxDoc, currentDoc) => {
-            return currentDoc.totalClicks > (maxDoc?.totalClicks || 0) ? currentDoc : maxDoc;
-        }, null);
-
-
+        const topUrl = topUrlArray.length > 0 ? topUrlArray[0] : null;
 
         return res.status(200).json({
             error: false,

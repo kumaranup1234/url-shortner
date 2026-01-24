@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaCopy, FaCheck } from "react-icons/fa";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Confetti from "react-confetti";
-import Footer from "../shared/components/Footer";
 import MainFooter from "../shared/components/MainFooter.jsx";
 import { BASE_URL } from "../shared/utils/constants";
 
