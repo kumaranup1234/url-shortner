@@ -20,7 +20,7 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
 
     const handleEditSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!originalUrl.trim()) {
             dispatch(addNotification({
                 type: 'error',
@@ -31,10 +31,10 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
 
         setLoading(true);
         try {
-            const response = await axiosInstance.put(`/api/urls/manage/update/${link.shortUrlId}`, { 
-                originalUrl: originalUrl.trim() 
+            const response = await axiosInstance.put(`/api/urls/manage/update/${link.shortUrlId}`, {
+                originalUrl: originalUrl.trim()
             });
-            
+
             if (response.data.success) {
                 dispatch(addNotification({
                     type: 'success',
@@ -56,8 +56,8 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-auto border border-transparent dark:border-gray-700">
                 <div className="flex justify-between items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white p-6 rounded-t-xl">
                     <h2 className="text-xl font-semibold">Edit Link</h2>
                     <button
@@ -93,7 +93,7 @@ const EditLink = ({ isOpen, onClose, link, onEditSuccess }) => {
                         value={fullUrl}
                         readOnly
                         fullWidth
-                        className="bg-gray-50 text-gray-600"
+                        className="bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-400"
                         leftIcon={
                             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />

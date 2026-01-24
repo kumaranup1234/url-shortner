@@ -67,12 +67,12 @@ async function getAllClicks(req, res) {
         // Create an array of objects with dates and counts for the frontend
         const clicksByDate = Object.keys(dateCounts).map((date) => {
             const totalClicks = dateCounts[date];
-            if (totalClicks > maxClick){
+            if (totalClicks > maxClick) {
                 maxClick = totalClicks;
                 maxClicksDate = date;
             }
 
-            return{
+            return {
                 date,
                 count: totalClicks
             }
@@ -95,7 +95,7 @@ async function getAllClicks(req, res) {
 }
 
 // get All clicks for a user in a span of 10 days
-async function getUserClicks (req, res) {
+async function getUserClicks(req, res) {
     const userId = req.user._id;
 
     try {
@@ -157,12 +157,12 @@ async function getUserClicks (req, res) {
         // Create an array of objects with dates and counts for the frontend
         const clicksByDate = Object.keys(dateCounts).map((date) => {
             const totalClicks = dateCounts[date];
-            if (totalClicks > maxClick){
+            if (totalClicks > maxClick) {
                 maxClick = totalClicks;
                 maxClicksDate = date;
             }
 
-            return{
+            return {
                 date,
                 count: totalClicks
             }
@@ -197,12 +197,15 @@ async function getClicksByDevice(req, res) {
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
-        // Count the occurrences of each deviceType
-        const deviceTypeCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.deviceType || 'Unknown'; // Default to 'Unknown' if deviceType is missing
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        // Optimized: Use Aggregation instead of Find + Reduce
+        const deviceStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            { $group: { _id: "$deviceType", count: { $sum: 1 } } }
+        ]);
+
+        const deviceTypeCounts = deviceStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
 
@@ -241,12 +244,14 @@ async function getUserDeviceClicks(req, res) {
             });
         }
 
-        const clicks = await Click.find({ url: { $in: urlArray } });
+        // Optimized: Use Aggregation
+        const deviceStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            { $group: { _id: "$deviceType", count: { $sum: 1 } } }
+        ]);
 
-        // Count the occurrences of each deviceType
-        const deviceTypeCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.deviceType || 'Unknown';
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        const deviceTypeCounts = deviceStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
 
@@ -265,13 +270,11 @@ async function getUserDeviceClicks(req, res) {
 }
 
 
-async function getClicksByBrowser(req, res){
+async function getClicksByBrowser(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        // Find the URL document to get the ObjectId
         const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
-
         if (!urlDoc) {
             return res.status(404).json({
                 error: true,
@@ -280,13 +283,15 @@ async function getClicksByBrowser(req, res){
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
+        // Optimized: Aggregation
+        const browserStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            { $group: { _id: "$browser", count: { $sum: 1 } } }
+        ]);
 
-        // Count the occurrences of each deviceType
-        const browserTypeCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.browser || 'Unknown'; // Default to 'Unknown' if browser is missing
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        const browserTypeCounts = browserStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
 
@@ -303,10 +308,7 @@ async function getClicksByBrowser(req, res){
     }
 }
 
-// Get clicks by browser For all urls
-
-
-async function getUserClicksByBrowser(req, res){
+async function getUserClicksByBrowser(req, res) {
     const userId = req.user._id;
 
     try {
@@ -319,21 +321,21 @@ async function getUserClicksByBrowser(req, res){
         }
 
         const urlArray = user.urls;
-        // Check if user has any URLs
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                browserTypeCounts: {}, // No URLs, so return empty result
+                browserTypeCounts: {},
             });
         }
 
-        const clicks = await Click.find({ url: { $in: urlArray }});
+        // Optimized: Aggregation
+        const browserStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            { $group: { _id: "$browser", count: { $sum: 1 } } }
+        ]);
 
-
-        // Count the occurrences of each deviceType
-        const browserTypeCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.browser || 'Unknown'; // Default to 'Unknown' if browser is missing
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        const browserTypeCounts = browserStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
 
@@ -355,9 +357,7 @@ async function getClicksByLocation(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        // Find the URL document to get the ObjectId
         const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
-
         if (!urlDoc) {
             return res.status(404).json({
                 error: true,
@@ -366,30 +366,28 @@ async function getClicksByLocation(req, res) {
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
-        // Aggregate the locations by country and city
-        const locationCounts = clicks.reduce((acc, click) => {
-            const country = getName(click.location?.country) || 'Unknown Country';
-            const city = click.location?.city || 'Unknown City';
-
-            const locationKey = `${country}, ${city}`;
-
-            if (!acc[locationKey]) {
-                acc[locationKey] = 0;
+        // Optimized: Aggregation
+        const locationStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            {
+                $group: {
+                    _id: {
+                        country: "$location.country",
+                        city: "$location.city"
+                    },
+                    count: { $sum: 1 }
+                }
             }
+        ]);
 
-            acc[locationKey]++;
+        const locationCounts = locationStats.reduce((acc, curr) => {
+            const country = getName(curr._id.country) || curr._id.country || 'Unknown Country';
+            const city = curr._id.city || 'Unknown City';
+            const locationKey = `${country}, ${city}`;
+            acc[locationKey] = curr.count;
             return acc;
         }, {});
-
-        // Check if any clicks are found
-        if (Object.keys(locationCounts).length === 0) {
-            return res.status(404).json({
-                error: true,
-                message: 'No clicks found for the given URL',
-            });
-        }
 
         return res.status(200).json({
             error: false,
@@ -404,14 +402,11 @@ async function getClicksByLocation(req, res) {
     }
 }
 
-// Get country clicks for map
-async function getClicksByCountry (req, res){
+async function getClicksByCountry(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        // Find the URL document to get the ObjectId
         const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
-
         if (!urlDoc) {
             return res.status(404).json({
                 error: true,
@@ -420,28 +415,18 @@ async function getClicksByCountry (req, res){
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
-        // Aggregate the locations by country and city
-        const countryCounts = clicks.reduce((acc, click) => {
-            const country = click.location?.country || 'Unknown Country';
+        // Optimized: Aggregation
+        const countryStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            { $group: { _id: "$location.country", count: { $sum: 1 } } }
+        ]);
 
-            const locationKey = `${country}`;
-
-            if (!acc[locationKey]) {
-                acc[locationKey] = 0;
-            }
-
-            acc[locationKey]++;
+        const countryCounts = countryStats.reduce((acc, curr) => {
+            const country = curr._id || 'Unknown Country';
+            acc[country] = curr.count;
             return acc;
         }, {});
-
-        // Check if any clicks are found
-        if (Object.keys(countryCounts).length === 0) {
-            return res.status(404).json({
-                message: 'No clicks found for the given URL',
-            });
-        }
 
         return res.status(200).json({
             error: false,
@@ -456,10 +441,7 @@ async function getClicksByCountry (req, res){
     }
 }
 
-// Get all users clicks for country for map
-
-async function getUserClicksByCountry (req, res) {
-
+async function getUserClicksByCountry(req, res) {
     const userId = req.user._id;
 
     try {
@@ -472,44 +454,29 @@ async function getUserClicksByCountry (req, res) {
         }
 
         const urlArray = user.urls;
-
-        // Check if user has any URLs
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                countryCounts: {}, // No URLs, so return empty result
+                countryCounts: {},
             });
         }
 
-        const clicks = await Click.find({ url: { $in: urlArray }});
+        // Optimized: Aggregation
+        const countryStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            { $group: { _id: "$location.country", count: { $sum: 1 } } }
+        ]);
 
-        // Aggregate the locations by country
-        const countryCounts = clicks.reduce((acc, click) => {
-            const country = click.location?.country || 'Unknown Country';
-
-            const locationKey = `${country}`;
-
-            if (!acc[locationKey]) {
-                acc[locationKey] = 0;
-            }
-
-            acc[locationKey]++;
+        const countryCounts = countryStats.reduce((acc, curr) => {
+            const country = curr._id || 'Unknown Country';
+            acc[country] = curr.count;
             return acc;
         }, {});
-
-        // Check if any clicks are found
-        if (Object.keys(countryCounts).length === 0) {
-            return res.status(404).json({
-                error: true,
-                message: 'No clicks found for the given URL',
-            });
-        }
 
         return res.status(200).json({
             error: false,
             countryCounts
         });
-
     } catch (error) {
         console.log("Error fetching the clicks:", error);
         return res.status(500).json({
@@ -519,8 +486,6 @@ async function getUserClicksByCountry (req, res) {
     }
 }
 
-
-// Get all clicks by location for a user
 async function getUserClicksByLocation(req, res) {
     const userId = req.user._id;
 
@@ -534,38 +499,34 @@ async function getUserClicksByLocation(req, res) {
         }
 
         const urlArray = user.urls;
-        // Check if user has any URLs
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                locationCounts: {}, // No URLs, so return empty result
+                locationCounts: {},
             });
         }
 
-        const clicks = await Click.find({ url: {$in : urlArray }});
-
-        // Aggregate the locations by country and city
-        const locationCounts = clicks.reduce((acc, click) => {
-            const country = getName(click.location?.country) || 'Unknown Country';
-            const city = click.location?.city || 'Unknown City';
-
-            const locationKey = `${country}, ${city}`;
-
-            if (!acc[locationKey]) {
-                acc[locationKey] = 0;
+        // Optimized: Aggregation
+        const locationStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            {
+                $group: {
+                    _id: {
+                        country: "$location.country",
+                        city: "$location.city"
+                    },
+                    count: { $sum: 1 }
+                }
             }
+        ]);
 
-            acc[locationKey]++;
+        const locationCounts = locationStats.reduce((acc, curr) => {
+            const country = getName(curr._id.country) || curr._id.country || 'Unknown Country';
+            const city = curr._id.city || 'Unknown City';
+            const locationKey = `${country}, ${city}`;
+            acc[locationKey] = curr.count;
             return acc;
         }, {});
-
-        // Check if any clicks are found
-        if (Object.keys(locationCounts).length === 0) {
-            return res.status(404).json({
-                error: true,
-                message: 'No clicks found for the given URL',
-            });
-        }
 
         return res.status(200).json({
             error: false,
@@ -583,13 +544,11 @@ async function getUserClicksByLocation(req, res) {
 
 
 
-async function getClicksByReferrer(req, res){
+async function getClicksByReferrer(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        // Find the URL document to get the ObjectId
         const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
-
         if (!urlDoc) {
             return res.status(404).json({
                 error: true,
@@ -598,16 +557,17 @@ async function getClicksByReferrer(req, res){
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
-        // Count the occurrences of each deviceType
-        const referrerCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.referrer || 'Unknown'; // Default to 'Unknown' if browser is missing
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        // Optimized: Aggregation
+        const referrerStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            { $group: { _id: "$referrer", count: { $sum: 1 } } }
+        ]);
+
+        const referrerCounts = referrerStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
-
-        // console.log("Retrieved clicks:", referrerCounts);
 
         return res.status(200).json({
             error: false,
@@ -622,8 +582,7 @@ async function getClicksByReferrer(req, res){
     }
 }
 
-// Get all clicks by referrer for a user
-async function getUserClicksByReferrer(req, res){
+async function getUserClicksByReferrer(req, res) {
     const userId = req.user._id;
 
     try {
@@ -636,24 +595,23 @@ async function getUserClicksByReferrer(req, res){
         }
 
         const urlArray = user.urls;
-        // Check if user has any URLs
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                referrerCounts: {}, // No URLs, so return empty result
+                referrerCounts: {},
             });
         }
 
-        const clicks = await Click.find({ url: {$in : urlArray }});
+        // Optimized: Aggregation
+        const referrerStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            { $group: { _id: "$referrer", count: { $sum: 1 } } }
+        ]);
 
-        // Count the occurrences of each deviceType
-        const referrerCounts = clicks.reduce((acc, click) => {
-            const deviceType = click.referrer || 'Unknown'; // Default to 'Unknown' if browser is missing
-            acc[deviceType] = (acc[deviceType] || 0) + 1;
+        const referrerCounts = referrerStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
-
-        // console.log("Retrieved clicks:", referrerCounts);
 
         return res.status(200).json({
             error: false,
@@ -672,9 +630,7 @@ async function getClicksByOs(req, res) {
     const shortUrlId = req.params.shortUrlId;
 
     try {
-        // Find the URL document to get the ObjectId
         const urlDoc = await Url.findOne({ shortUrl: shortUrlId }).select('_id');
-
         if (!urlDoc) {
             return res.status(404).json({
                 error: true,
@@ -683,16 +639,17 @@ async function getClicksByOs(req, res) {
         }
 
         const objectId = urlDoc._id;
-        const clicks = await Click.find({ url: objectId });
 
-        // Count the occurrences of each deviceType
-        const osCounts = clicks.reduce((acc, click) => {
-            const osType = click.os || 'Unknown'; // Default to 'Unknown' if os is missing
-            acc[osType] = (acc[osType] || 0) + 1;
+        // Optimized: Aggregation
+        const osStats = await Click.aggregate([
+            { $match: { url: objectId } },
+            { $group: { _id: "$os", count: { $sum: 1 } } }
+        ]);
+
+        const osCounts = osStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
-
-        // console.log("Retrieved clicks:", osCounts);
 
         return res.status(200).json({
             error: false,
@@ -707,8 +664,6 @@ async function getClicksByOs(req, res) {
     }
 }
 
-// Get all clicks by os for a user
-
 async function getUserClicksByOs(req, res) {
     const userId = req.user._id;
 
@@ -722,20 +677,21 @@ async function getUserClicksByOs(req, res) {
         }
 
         const urlArray = user.urls;
-        // Check if user has any URLs
         if (urlArray.length === 0) {
             return res.status(200).json({
                 error: false,
-                osCounts: {}, // No URLs, so return empty result
+                osCounts: {},
             });
         }
 
-        const clicks = await Click.find({ url: {$in : urlArray }});
+        // Optimized: Aggregation
+        const osStats = await Click.aggregate([
+            { $match: { url: { $in: urlArray } } },
+            { $group: { _id: "$os", count: { $sum: 1 } } }
+        ]);
 
-        // Count the occurrences of each deviceType
-        const osCounts = clicks.reduce((acc, click) => {
-            const osType = click.os || 'Unknown'; // Default to 'Unknown' if os is missing
-            acc[osType] = (acc[osType] || 0) + 1;
+        const osCounts = osStats.reduce((acc, curr) => {
+            acc[curr._id || 'Unknown'] = curr.count;
             return acc;
         }, {});
 

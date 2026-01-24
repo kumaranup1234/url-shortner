@@ -34,10 +34,10 @@ const LogoutButton = ({ setShowDropdown }) => {
 
     return (
         <button
-            className="flex items-center w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex items-center w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-400 transition-colors group"
             onClick={handleLogout}
         >
-            <FaSignOutAlt className="mr-3 text-gray-400" />
+            <FaSignOutAlt className="mr-3 text-gray-400 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
             Logout
         </button>
     );

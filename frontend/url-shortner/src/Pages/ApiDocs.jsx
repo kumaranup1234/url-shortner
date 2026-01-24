@@ -110,40 +110,40 @@ const ApiDocs = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
             <div className="max-w-5xl mx-auto space-y-12">
 
                 {/* Header */}
                 <div className="text-center space-y-4">
-                    <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-2xl mb-4 text-blue-600">
+                    <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl mb-4 text-blue-600 dark:text-blue-400 transition-colors">
                         <FaCode className="w-8 h-8" />
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
-                        Developer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">API</span>
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight transition-colors">
+                        Developer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">API</span>
                     </h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed transition-colors">
                         Integrate our powerful URL shortening service directly into your applications using our simple, secure, and robust REST API.
                     </p>
                 </div>
 
                 {/* Authentication Card */}
-                <div className="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-gray-100 overflow-hidden relative">
-                    <div className="absolute top-0 right-0 p-32 bg-blue-50/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                    <div className="p-8 border-b border-gray-100 bg-white/50 backdrop-blur-sm relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl shadow-blue-900/5 border border-gray-100 dark:border-gray-800 overflow-hidden relative transition-colors">
+                    <div className="absolute top-0 right-0 p-32 bg-blue-50/50 dark:bg-blue-900/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    <div className="p-8 border-b border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2 transition-colors">
                                 <FaKey className="text-yellow-500" /> Authentication
                             </h2>
-                            <p className="text-gray-500 mt-1">Include your unique API key in the <code className="text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded font-mono text-sm">x-api-key</code> header.</p>
+                            <p className="text-gray-500 dark:text-gray-400 mt-1 transition-colors">Include your unique API key in the <code className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded font-mono text-sm transition-colors">x-api-key</code> header.</p>
                         </div>
-                        <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-xs uppercase tracking-wide border border-blue-100">
+                        <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-bold text-xs uppercase tracking-wide border border-blue-100 dark:border-blue-800 transition-colors">
                             <FaServer className="w-3 h-3" />
                             Production Ready
                         </span>
                     </div>
 
-                    <div className="p-8 bg-gray-50/50">
-                        <div className="bg-gray-900 rounded-xl p-1 shadow-inner border border-gray-800 flex items-center justify-between group transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+                    <div className="p-8 bg-gray-50/50 dark:bg-gray-800/20 transition-colors">
+                        <div className="bg-gray-900 dark:bg-black rounded-xl p-1 shadow-inner border border-gray-800 flex items-center justify-between group transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
                             <div className="flex-1 px-4 py-3 overflow-hidden">
                                 <span className="text-xs text-gray-500 font-mono block mb-1">YOUR SECRET KEY</span>
                                 <code className="text-green-400 font-mono text-sm md:text-base break-all tracking-wide">
@@ -174,7 +174,7 @@ const ApiDocs = () => {
                 </div>
 
                 {/* Base URL */}
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 shadow-lg text-white flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 shadow-lg text-white flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden transition-colors">
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
                     <div className="relative z-10">
                         <h3 className="text-xl font-bold flex items-center gap-2">
@@ -189,43 +189,43 @@ const ApiDocs = () => {
 
                 {/* Endpoints */}
                 <div className="space-y-4">
-                    <h2 className="text-3xl font-bold text-gray-900 pb-2">EndpointsReference</h2>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white pb-2 transition-colors">Endpoints Reference</h2>
 
                     <div className="grid gap-8">
                         {endpoints.map((endpoint, index) => (
-                            <div key={index} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
-                                <div className="p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/30">
+                            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-md transition-all duration-300">
+                                <div className="p-6 border-b border-gray-50 dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/30 dark:bg-gray-800/30 transition-colors">
                                     <div className="flex items-center gap-4">
                                         <span className={`px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm min-w-[80px] text-center tracking-wide
-                                            ${endpoint.method === 'GET' ? 'bg-blue-50 text-blue-700 border border-blue-100' : ''}
-                                            ${endpoint.method === 'POST' ? 'bg-green-50 text-green-700 border border-green-100' : ''}
-                                            ${endpoint.method === 'PUT' ? 'bg-yellow-50 text-yellow-700 border border-yellow-100' : ''}
-                                            ${endpoint.method === 'DELETE' ? 'bg-red-50 text-red-700 border border-red-100' : ''}
+                                            ${endpoint.method === 'GET' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800' : ''}
+                                            ${endpoint.method === 'POST' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-100 dark:border-green-800' : ''}
+                                            ${endpoint.method === 'PUT' ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border border-yellow-100 dark:border-yellow-800' : ''}
+                                            ${endpoint.method === 'DELETE' ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800' : ''}
                                         `}>
                                             {endpoint.method}
                                         </span>
-                                        <code className="text-lg font-mono text-gray-700 font-semibold">{endpoint.path}</code>
+                                        <code className="text-lg font-mono text-gray-700 dark:text-gray-200 font-semibold transition-colors">{endpoint.path}</code>
                                     </div>
-                                    <p className="text-sm text-gray-500 font-medium">{endpoint.description}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium transition-colors">{endpoint.description}</p>
                                 </div>
 
                                 <div className="p-6 md:p-8 grid lg:grid-cols-2 gap-8">
                                     <div className="space-y-6">
                                         <div>
-                                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                            <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1 transition-colors">
                                                 Request Headers
                                             </h4>
-                                            <pre className="bg-[#1e293b] rounded-xl p-4 text-xs font-mono text-blue-300 overflow-x-auto shadow-inner border border-gray-800 custom-scrollbar">
+                                            <pre className="bg-[#1e293b] dark:bg-black rounded-xl p-4 text-xs font-mono text-blue-300 overflow-x-auto shadow-inner border border-gray-800 custom-scrollbar transition-colors">
                                                 {JSON.stringify(endpoint.headers, null, 2)}
                                             </pre>
                                         </div>
 
                                         {endpoint.body && (
                                             <div>
-                                                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                                <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1 transition-colors">
                                                     Request Body
                                                 </h4>
-                                                <pre className="bg-[#1e293b] rounded-xl p-4 text-xs font-mono text-yellow-300 overflow-x-auto shadow-inner border border-gray-800 custom-scrollbar">
+                                                <pre className="bg-[#1e293b] dark:bg-black rounded-xl p-4 text-xs font-mono text-yellow-300 overflow-x-auto shadow-inner border border-gray-800 custom-scrollbar transition-colors">
                                                     {JSON.stringify(endpoint.body, null, 2)}
                                                 </pre>
                                             </div>
@@ -233,10 +233,10 @@ const ApiDocs = () => {
                                     </div>
 
                                     <div>
-                                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                        <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1 transition-colors">
                                             <FaCheckCircle className="text-green-500" /> Example Response
                                         </h4>
-                                        <pre className="bg-[#0f172a] rounded-xl p-4 text-xs font-mono text-green-300 overflow-x-auto h-full shadow-inner border border-gray-800 custom-scrollbar">
+                                        <pre className="bg-[#0f172a] dark:bg-gray-950 rounded-xl p-4 text-xs font-mono text-green-300 overflow-x-auto h-full shadow-inner border border-gray-800 custom-scrollbar transition-colors">
                                             {JSON.stringify(endpoint.response, null, 2)}
                                         </pre>
                                     </div>

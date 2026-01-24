@@ -54,10 +54,10 @@ const TemplateSelection = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50 p-6 pt-12 justify-start items-center">
+        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 p-6 pt-12 justify-start items-center transition-colors duration-300">
             <div className="text-center mb-10">
-                <h1 className="text-4xl font-extrabold text-teal-900 mb-2">Select a Template</h1>
-                <p className="text-lg text-gray-600">You can add links and bio later.</p>
+                <h1 className="text-4xl font-extrabold text-teal-900 dark:text-teal-400 mb-2">Select a Template</h1>
+                <p className="text-lg text-gray-600 dark:text-gray-400">You can add links and bio later.</p>
             </div>
 
             <div className="w-full max-w-6xl px-12">
@@ -66,6 +66,17 @@ const TemplateSelection = () => {
                         color: #115e59; 
                         font-size: 30px;
                     }
+                    /* Dark mode override for arrows */
+                    @media (prefers-color-scheme: dark) {
+                        .slick-prev:before, .slick-next:before {
+                            color: #2dd4bf; 
+                        }
+                    }
+                    /* We can also add a class-based override if 'dark' class is on html/body */
+                    :global(.dark) .slick-prev:before, :global(.dark) .slick-next:before {
+                         color: #2dd4bf !important;
+                    }
+
                     .slick-list {
                         padding-top: 20px;
                         padding-bottom: 40px;
@@ -74,6 +85,9 @@ const TemplateSelection = () => {
                         font-size: 12px;
                         color: #115e59;
                     }
+                    :global(.dark) .slick-dots li button:before {
+                        color: #2dd4bf !important;
+                    }
                 `}</style>
                 <Slider {...settings}>
                     {templates.map((template) => {
@@ -81,24 +95,24 @@ const TemplateSelection = () => {
                         return (
                             <div key={template.id} className="px-4"> {/* Padding between slides */}
                                 <div
-                                    className={`relative rounded-2xl transition-all duration-300 cursor-pointer border-2 bg-white
+                                    className={`relative rounded-2xl transition-all duration-300 cursor-pointer border-2 bg-white dark:bg-gray-900
                                         ${template.id === selectedTemplate
-                                            ? "border-teal-600 shadow-xl scale-95 z-10"
-                                            : "border-gray-200 shadow-lg hover:shadow-xl hover:scale-100"
+                                            ? "border-teal-600 dark:border-teal-500 shadow-xl scale-95 z-10"
+                                            : "border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl hover:scale-100"
                                         }`}
                                     onClick={() => handleTemplateSelect(template.id)}
                                 >
-                                    <div className="h-[450px] flex items-center justify-center bg-gray-50 rounded-xl m-2 overflow-hidden">
+                                    <div className="h-[450px] flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-xl m-2 overflow-hidden transition-colors">
                                         {/* Scale down to fit nicely */}
                                         <div className="transform scale-[0.6] origin-center pointer-events-none">
                                             <TemplateComponent isClicked={template.id === selectedTemplate} />
                                         </div>
                                     </div>
 
-                                    <div className="text-center py-4 border-t border-gray-100">
-                                        <p className="font-bold text-gray-800 text-lg">{template.name}</p>
+                                    <div className="text-center py-4 border-t border-gray-100 dark:border-gray-800">
+                                        <p className="font-bold text-gray-800 dark:text-gray-200 text-lg">{template.name}</p>
                                         {template.id === selectedTemplate && (
-                                            <span className="text-xs font-bold text-teal-600 uppercase tracking-widest mt-1 block">
+                                            <span className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest mt-1 block">
                                                 Selected
                                             </span>
                                         )}
@@ -110,18 +124,18 @@ const TemplateSelection = () => {
                 </Slider>
             </div>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-12 pb-12">
                 <button
                     onClick={handleConfirmSelection}
                     disabled={selectedTemplate === null}
-                    className={`px-10 py-3 rounded-full font-bold text-lg shadow-lg transition-all transform hover:-translate-y-1
+                    className={`px-10 py-3.5 rounded-xl font-bold text-lg shadow-lg transition-all transform hover:-translate-y-1
                         ${selectedTemplate === null
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-teal-900 text-white hover:bg-teal-800 hover:shadow-teal-900/30"
+                            ? "bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-transparent"
+                            : "bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-200 hover:shadow-xl"
                         }
                     `}
                 >
-                    Continue
+                    Continue to Editor
                 </button>
             </div>
         </div>

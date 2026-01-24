@@ -135,7 +135,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
     }, [showDropdown]);
 
     return (
-        <div className="w-full bg-white border border-gray-100 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 mb-4 relative group">
+        <div className="w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 mb-4 relative group">
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
 
                 {/* Left Section: Icon & Info */}
@@ -145,7 +145,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                         <img
                             src={logo}
                             alt="Link Logo"
-                            className="h-12 w-12 object-contain rounded-full bg-gray-50 border border-gray-100 p-1"
+                            className="h-12 w-12 object-contain rounded-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-1"
                         />
                     </div>
 
@@ -153,7 +153,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                     <div className="flex flex-col flex-1 min-w-0 w-0">
                         {/* Title & Short URL line */}
                         <div className="flex flex-wrap items-baseline gap-2 mb-1 min-w-0">
-                            <h3 className="text-lg font-semibold text-gray-900 truncate max-w-full" title={title || "Untitled Link"}>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate max-w-full" title={title || "Untitled Link"}>
                                 {title || "Untitled Link"}
                             </h3>
                         </div>
@@ -163,7 +163,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                             href={fullUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 font-medium hover:text-blue-700 hover:underline truncate text-base mb-1 block max-w-full"
+                            className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 hover:underline truncate text-base mb-1 block max-w-full"
                             title={fullUrl}
                         >
                             {fullUrl}
@@ -174,7 +174,7 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                             href={originalUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 text-sm hover:text-gray-600 truncate mb-3 block max-w-full"
+                            className="text-gray-400 dark:text-gray-500 text-sm hover:text-gray-600 dark:hover:text-gray-400 truncate mb-3 block max-w-full"
                             title={originalUrl}
                         >
                             {originalUrl}
@@ -183,38 +183,38 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                         {/* Metrics & Actions Row */}
                         <div className="flex flex-wrap items-center gap-4 mt-auto">
                             {/* Clicks */}
-                            <Link to={`/analytics/${shortenedUrl}`} className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors bg-gray-50 px-2 py-1 rounded-md">
-                                <img src={graphIcon} alt="Clicks" className="w-4 h-4 mr-1.5 opacity-70" />
+                            <Link to={`/analytics/${shortenedUrl}`} className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md">
+                                <img src={graphIcon} alt="Clicks" className="w-4 h-4 mr-1.5 opacity-70 dark:invert" />
                                 <span className="font-medium">{totalClicks}</span>
                                 <span className="ml-1 text-gray-400 font-normal">clicks</span>
                             </Link>
 
                             {/* Date */}
-                            <div className="flex items-center text-sm text-gray-400 px-2 py-1">
-                                <img src={calendarIcon} alt="Date" className="w-4 h-4 mr-1.5 opacity-70" />
+                            <div className="flex items-center text-sm text-gray-400 dark:text-gray-500 px-2 py-1">
+                                <img src={calendarIcon} alt="Date" className="w-4 h-4 mr-1.5 opacity-70 dark:invert" />
                                 <span>{date}</span>
                             </div>
 
                             {/* Divider for desktop */}
-                            <div className="hidden md:block h-4 w-px bg-gray-200"></div>
+                            <div className="hidden md:block h-4 w-px bg-gray-200 dark:bg-gray-700"></div>
 
                             {/* Action Buttons (Visible on desktop, condensed on mobile) */}
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={handleCopy}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-900 rounded-md transition-colors border border-gray-100"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white rounded-md transition-colors border border-gray-100 dark:border-gray-700"
                                 >
-                                    <img src={copyIcon} alt="" className="w-4 h-4 opacity-70" />
+                                    <img src={copyIcon} alt="" className="w-4 h-4 opacity-70 dark:invert" />
                                     Copy
                                 </button>
 
                                 {qrCode && (
                                     <button
                                         onClick={handleQrIconClick}
-                                        className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                                        className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
                                         title="Show QR Code"
                                     >
-                                        <img src={qrIcon} alt="QR" className="w-5 h-5 opacity-70" />
+                                        <img src={qrIcon} alt="QR" className="w-5 h-5 opacity-70 dark:invert" />
                                     </button>
                                 )}
                             </div>
@@ -226,28 +226,28 @@ const LinkCard = ({ originalUrl, shortenedUrl, date, qrCode, title, logo, totalC
                 <div ref={dropdownRef} className="absolute top-4 right-4 md:relative md:top-auto md:right-auto self-start">
                     <button
                         onClick={toggleDropdown}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors focus:outline-none"
+                        className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none"
                     >
-                        <img src={threeDotsIcon} alt="More" className="h-5 w-5" />
+                        <img src={threeDotsIcon} alt="More" className="h-5 w-5 dark:invert" />
                     </button>
 
                     {showDropdown && (
-                        <div ref={dropDownDirection} className={`absolute right-0 w-48 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-20 ${isDropdownUpward ? "bottom-full mb-2" : "top-full mt-2"}`}>
+                        <div ref={dropDownDirection} className={`absolute right-0 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-20 ${isDropdownUpward ? "bottom-full mb-2" : "top-full mt-2"}`}>
                             <div className="py-1">
-                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleCopy}>
-                                    <img src={copyIcon} className="h-4 w-4 opacity-70" />
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2" onClick={handleCopy}>
+                                    <img src={copyIcon} className="h-4 w-4 opacity-70 dark:invert" />
                                     Copy Link
                                 </button>
-                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleShareModalClick}>
-                                    <img src={shareIcon} className="h-4 w-4 opacity-70" />
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2" onClick={handleShareModalClick}>
+                                    <img src={shareIcon} className="h-4 w-4 opacity-70 dark:invert" />
                                     Share Link
                                 </button>
-                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2" onClick={handleEditClick}>
-                                    <img src={editIcon} className="h-4 w-4 opacity-70" />
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2" onClick={handleEditClick}>
+                                    <img src={editIcon} className="h-4 w-4 opacity-70 dark:invert" />
                                     Edit Details
                                 </button>
-                                <div className="h-px bg-gray-100 my-1"></div>
-                                <button className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2" onClick={handleDeleteClick}>
+                                <div className="h-px bg-gray-100 dark:bg-gray-700 my-1"></div>
+                                <button className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2" onClick={handleDeleteClick}>
                                     <img src={deleteIcon} className="h-4 w-4 opacity-70" />
                                     Delete Link
                                 </button>

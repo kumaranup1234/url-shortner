@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/slices/authSlice';
+import { toggleTheme } from '../store/slices/uiSlice';
 import Logo from "../shared/components/ui/Logo";
-import { FaBars, FaTimes, FaUserCircle, FaChevronDown, FaCog, FaSignOutAlt, FaChartBar, FaLink, FaMagic, FaHome } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUserCircle, FaChevronDown, FaCog, FaSignOutAlt, FaChartBar, FaLink, FaMagic, FaHome, FaMoon, FaSun } from 'react-icons/fa';
 import NotificationBell from "../shared/components/ui/NotificationBell";
 import LogoutButton from "../features/auth/LogoutButton.jsx";
 import useOutsideClick from "../shared/hooks/useOutsideClick.js";
@@ -11,8 +12,10 @@ import hamburger from "../assets/hamburger-menu.svg";
 import close from "../assets/close-button.svg";
 
 const Navbar = () => {
+    const dispatch = useDispatch();
     const [showDropdown, setShowDropdown] = useState(false);
     const { isLoggedIn, user } = useSelector(state => state.auth);
+    const { theme } = useSelector(state => state.ui);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const navigate = useNavigate();
@@ -22,12 +25,12 @@ const Navbar = () => {
     // Check if we are on the landing page
     const isLandingPage = location.pathname === "/";
 
-    // Navbar classes - Logic restored to handle Landing Page vs App Pages
+    // Navbar classes - Dark mode added
     const navbarClasses = `
         top-0 left-0 right-0 z-50 transition-all duration-300
         ${isLandingPage
-            ? `fixed ${scrolled ? "bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm py-2" : "bg-transparent py-4 border-b border-transparent"}`
-            : "sticky bg-white border-b border-gray-100 py-3 shadow-sm" // Sticky for dashboard so it stays visible but doesn't overlap content
+            ? `fixed ${scrolled ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm py-2" : "bg-transparent py-4 border-b border-transparent"}`
+            : "sticky bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 py-3 shadow-sm"
         }
     `;
 
@@ -60,9 +63,9 @@ const Navbar = () => {
             onClick={onClick}
             className={({ isActive }) =>
                 `transition-all duration-200 ${isActive
-                    ? "text-blue-600 font-bold"
-                    : "text-gray-600 hover:text-gray-900"
-                } ${mobile ? "text-xl py-2 block text-center text-gray-900" : "text-sm font-semibold tracking-wide"}`
+                    ? "text-blue-600 dark:text-blue-400 font-bold"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                } ${mobile ? "text-xl py-2 block text-center text-gray-900 dark:text-white" : "text-sm font-semibold tracking-wide"}`
             }
         >
             {label}
@@ -78,13 +81,13 @@ const Navbar = () => {
                         <div className="flex items-center space-x-4">
                             <button
                                 onClick={toggleMobileMenu}
-                                className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                 aria-label="Toggle menu"
                             >
                                 <img
                                     src={showMobileMenu ? close : hamburger}
                                     alt={showMobileMenu ? "Close menu" : "Open menu"}
-                                    className="w-5 h-5 opacity-80"
+                                    className="w-5 h-5 opacity-80 dark:invert"
                                 />
                             </button>
 
@@ -103,7 +106,7 @@ const Navbar = () => {
                                 </div>
 
                                 {/* Logo Text */}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700 group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
                                     Trim<span className="text-blue-600 group-hover:text-indigo-600 transition-colors">.URL</span>
                                 </span>
                             </button>
@@ -120,23 +123,35 @@ const Navbar = () => {
 
                     {/* Right: Profile/Auth */}
                     <div className="flex items-center space-x-4">
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={() => dispatch(toggleTheme())}
+                            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors focus:outline-none"
+                            aria-label="Toggle Theme"
+                        >
+                            {theme === 'dark' ? (
+                                <FaSun className="w-5 h-5 text-yellow-500" />
+                            ) : (
+                                <FaMoon className="w-5 h-5 text-gray-600" />
+                            )}
+                        </button>
                         {!isLoggedIn ? (
                             <div className="hidden md:flex items-center space-x-4">
-                                <NavLink to="/login" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">Login</NavLink>
-                                <NavLink to="/signup" className="text-sm font-bold bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-black transition-all shadow-lg shadow-gray-900/20 hover:shadow-gray-900/30">Sign Up</NavLink>
+                                <NavLink to="/login" className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</NavLink>
+                                <NavLink to="/signup" className="text-sm font-bold bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-2.5 rounded-full hover:bg-black dark:hover:bg-gray-100 transition-all shadow-lg shadow-gray-900/20 hover:shadow-gray-900/30">Sign Up</NavLink>
                             </div>
                         ) : (
                             <div ref={dropdownRef} className="relative">
                                 <button
                                     onClick={toggleDropdown}
-                                    className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 transition-colors p-1.5 rounded-lg hover:bg-gray-100"
+                                    className="flex items-center space-x-3 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                                     aria-label="User menu"
                                 >
                                     {user?.profileImage ? (
                                         <img
                                             src={user.profileImage}
                                             alt="Profile"
-                                            className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-100"
+                                            className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-700"
                                         />
                                     ) : (
                                         <FaUserCircle className="w-8 h-8 text-gray-400" />
@@ -150,21 +165,21 @@ const Navbar = () => {
                                 </button>
 
                                 {showDropdown && (
-                                    <div className="absolute right-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-2xl py-2 z-50 ring-1 ring-black ring-opacity-5 transform origin-top-right transition-all">
-                                        <div className="px-4 py-3 border-b border-gray-50">
+                                    <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-2xl py-2 z-50 ring-1 ring-black ring-opacity-5 transform origin-top-right transition-all">
+                                        <div className="px-4 py-3 border-b border-gray-50 dark:border-gray-800">
                                             <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Signed in as</p>
-                                            <p className="text-sm font-bold text-gray-900 truncate">{user?.email}</p>
+                                            <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.email}</p>
                                         </div>
                                         <div className="py-1">
                                             <button
                                                 onClick={() => handleDropdownLinkClick("/settings")}
-                                                className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                                                className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                             >
                                                 <FaCog className="mr-3 text-gray-400 group-hover:text-blue-500" />
                                                 Settings
                                             </button>
                                         </div>
-                                        <div className="my-1 border-t border-gray-100"></div>
+                                        <div className="my-1 border-t border-gray-100 dark:border-gray-800"></div>
                                         <LogoutButton setShowDropdown={setShowDropdown} />
                                     </div>
                                 )}
@@ -177,7 +192,7 @@ const Navbar = () => {
             {/* Mobile Menu Overlay */}
             {
                 showMobileMenu && (
-                    <div className="md:hidden fixed inset-0 z-40 bg-white/98 backdrop-blur-xl flex flex-col pt-24 px-6 space-y-6 animate-fadeIn">
+                    <div className="md:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl flex flex-col pt-24 px-6 space-y-6 animate-fadeIn transition-colors">
                         {isLoggedIn ? (
                             navLinks.map(link => (
                                 <NavLinkComponent

@@ -78,8 +78,8 @@ const SignUp = () => {
     ];
 
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 px-4 sm:px-8 lg:px-16">
-            <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 mb-8 lg:mb-0">
+        <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-950 px-4 sm:px-8 lg:px-16 transition-colors duration-300">
+            <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-xl dark:shadow-2xl border border-transparent dark:border-gray-700 p-8 mb-8 lg:mb-0 transition-all">
                 <form onSubmit={handleSignUp}>
                     <h4 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Join Trim.URL
@@ -131,9 +131,9 @@ const SignUp = () => {
                         Create Account
                     </Button>
 
-                    <p className="text-sm text-center text-gray-600">
+                    <p className="text-sm text-center text-gray-600 dark:text-gray-400">
                         Already have an account?{" "}
-                        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-800 dark:hover:text-blue-400 transition-colors">
                             Sign In
                         </Link>
                     </p>
@@ -142,12 +142,12 @@ const SignUp = () => {
 
             <div className="w-full max-w-md lg:ml-12 mt-8 lg:mt-0">
                 <div className="text-center lg:text-left mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                         <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             Trim.URL
                         </span> Features
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                         The best link management service to track, brand, and share short URLs
                     </p>
                 </div>
@@ -155,10 +155,10 @@ const SignUp = () => {
                 <div className="space-y-4">
                     {features.map((feature, index) => (
                         <div key={index} className="flex items-start space-x-3">
-                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                <img src={tickIcon} alt="✓" className="w-4 h-4" />
+                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mt-0.5">
+                                <img src={tickIcon} alt="✓" className="w-4 h-4 dark:invert" />
                             </div>
-                            <p className="text-gray-700 leading-relaxed">{feature}</p>
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{feature}</p>
                         </div>
                     ))}
                 </div>

@@ -12,18 +12,15 @@ const geoip = require('geoip-lite');
 router.get('/:shortUrlId', async (req, res) => {
     try {
         const { shortUrlId } = req.params;
-        let url = await Url.findOne({ shortUrl: shortUrlId });
+        // Optimized: Use .lean() for faster read (we don't need hydration here since we manually update later)
+        let url = await Url.findOne({ shortUrl: shortUrlId }).lean();
 
         if (!url) {
-            url = await AnonymousUrl.findOne({ shortUrl: shortUrlId });
+            url = await AnonymousUrl.findOne({ shortUrl: shortUrlId }).lean();
             if (!url) {
                 return res.status(404).json({ success: false, message: 'URL not found' });
             }
             return res.redirect(url.originalUrl);
-        }
-
-        if (!url) {
-            return res.status(404).json({ success: false, message: 'URL not found' });
         }
 
         // Get the real IP address
@@ -57,7 +54,10 @@ router.get('/:shortUrlId', async (req, res) => {
             }
         }
 
-        // Record the click with all available data
+        // Parallelize writes for speed
+        const writePromises = [];
+
+        // 1. Record the click
         const click = new Click({
             url: url._id,
             timestamp: new Date(),
@@ -69,10 +69,19 @@ router.get('/:shortUrlId', async (req, res) => {
             location,
             referrer: req.get('Referrer') || 'Direct Access',
         });
+        writePromises.push(click.save());
 
-        await click.save();
+        // 2. Increment URL stats (Direct DB update instead of document method)
+        writePromises.push(Url.updateOne(
+            { _id: url._id },
+            {
+                $inc: { totalClicks: 1 },
+                $set: { lastAccessed: new Date() }
+            }
+        ));
 
-        await url.incrementClick();
+        // Await both writes in parallel
+        await Promise.all(writePromises);
 
         // Redirect to the original URL
         res.redirect(url.originalUrl);

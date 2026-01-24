@@ -12,7 +12,7 @@ const CreateNewLink = ({ onSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!originalUrl.trim()) {
             dispatch(addNotification({
                 type: 'error',
@@ -60,10 +60,10 @@ const CreateNewLink = ({ onSuccess }) => {
     return (
         <div className="w-full">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Shorten a long URL</h2>
-                <p className="text-gray-600">Paste your long URL below to create a short link</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">Shorten a long URL</h2>
+                <p className="text-gray-600 dark:text-gray-400 transition-colors">Paste your long URL below to create a short link</p>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1">
                     <Input
@@ -80,7 +80,7 @@ const CreateNewLink = ({ onSuccess }) => {
                         }
                     />
                 </div>
-                
+
                 <Button
                     type="submit"
                     loading={loading}

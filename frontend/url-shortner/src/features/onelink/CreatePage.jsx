@@ -29,13 +29,13 @@ const CreatePage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-xl w-full bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+            <div className="max-w-xl w-full bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-8 border border-gray-100 dark:border-gray-800 transition-colors">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                         Claim your link
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                         Create a unique, beautiful profile to house all your links.
                     </p>
                 </div>
@@ -44,7 +44,7 @@ const CreatePage = () => {
                     <div className="flex flex-col sm:flex-row gap-3">
                         <div className="flex-1 relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span className="text-gray-500 font-medium">trim.url/</span>
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">trim.url/</span>
                             </div>
                             <input
                                 type="text"
@@ -53,12 +53,12 @@ const CreatePage = () => {
                                 placeholder="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="block w-full pl-20 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                className="block w-full pl-20 pr-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400 dark:placeholder-gray-500"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="py-3 px-6 bg-gray-900 text-white font-bold rounded-xl hover:bg-black transition-colors shadow-lg whitespace-nowrap"
+                            className="py-3 px-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl hover:bg-black dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl hover:scale-105 whitespace-nowrap"
                         >
                             Create Page
                         </button>
@@ -66,7 +66,7 @@ const CreatePage = () => {
                 </form>
 
                 {message && (
-                    <div className={`p-4 mb-6 rounded-xl flex items-start gap-3 ${message.includes('taken') ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-green-50 text-green-700 border border-green-100'}`}>
+                    <div className={`p-4 mb-6 rounded-xl flex items-start gap-3 ${message.includes('taken') ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800/50' : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-800/50'}`}>
                         <img
                             src={message.includes('taken') ? warning : success}
                             alt="status"
@@ -78,14 +78,14 @@ const CreatePage = () => {
                     </div>
                 )}
 
-                <div className="border-t border-gray-100 pt-6 space-y-4">
+                <div className="border-t border-gray-100 dark:border-gray-800 pt-6 space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                        <p className="text-sm text-gray-600">
-                            <span className="font-semibold text-gray-900">1 free OneLink page</span> included in your plan.
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <span className="font-semibold text-gray-900 dark:text-white">1 free OneLink page</span> included in your plan.
                         </p>
                     </div>
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    <p className="text-sm text-gray-500 dark:text-gray-500 leading-relaxed">
                         OneLink pages are the simplest way to aggregate your content. Perfect for social media bios, portfolios, and more.
                     </p>
                 </div>

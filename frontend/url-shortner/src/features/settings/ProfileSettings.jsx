@@ -125,8 +125,8 @@ const ProfileSettings = () => {
     return (
         <div className="max-w-2xl mx-auto space-y-8">
             {/* Profile Photo Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-t-xl">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-black dark:to-gray-900 text-white p-6 rounded-t-xl transition-colors">
                     <h2 className="text-xl font-semibold">Profile Photo</h2>
                     <p className="text-gray-400 text-sm mt-1">Update your profile picture</p>
                 </div>
@@ -137,7 +137,7 @@ const ProfileSettings = () => {
                             <img
                                 src={selectedImage || user?.profileImage || userIcon}
                                 alt="Profile"
-                                className="w-20 h-20 rounded-full object-cover border-4 border-gray-200"
+                                className="w-20 h-20 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
                             />
                             {selectedImage && (
                                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -153,9 +153,9 @@ const ProfileSettings = () => {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 dark:file:bg-blue-900/30 file:text-blue-700 dark:file:text-blue-300 hover:file:bg-blue-100 dark:hover:file:bg-blue-900/50 transition-colors"
                             />
-                            <p className="text-xs text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
                         </div>
 
                         <Button
@@ -170,8 +170,8 @@ const ProfileSettings = () => {
             </div>
 
             {/* Contact Information Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-t-xl">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-black dark:to-gray-900 text-white p-6 rounded-t-xl transition-colors">
                     <h2 className="text-xl font-semibold">Contact Information</h2>
                     <p className="text-gray-400 text-sm mt-1">Update your personal details</p>
                 </div>

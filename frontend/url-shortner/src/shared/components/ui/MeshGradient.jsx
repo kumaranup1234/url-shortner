@@ -2,7 +2,7 @@ const MeshGradient = () => {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {/* Base light background */}
-            <div className="absolute inset-0 bg-white"></div>
+            <div className="absolute inset-0 bg-white dark:bg-gray-950 transition-colors duration-500"></div>
 
             {/* Gradient Blobs - Softer Pastels */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-100/50 rounded-full blur-[120px] animate-pulse-slow"></div>

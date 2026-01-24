@@ -57,7 +57,7 @@ const WorldMap = ({ apiUrl }) => {
                         align: 'right',
                         verticalAlign: 'bottom',
                         theme: {
-                            fill: 'white',
+                            fill: 'rgba(255, 255, 255, 0.9)',
                             'stroke-width': 1,
                             stroke: '#e5e7eb',
                             r: 4,
@@ -76,9 +76,9 @@ const WorldMap = ({ apiUrl }) => {
                     min: 0,
                     max: maxValue,
                     stops: [
-                        [0, '#e0f2fe'],   // Very light blue
-                        [0.5, '#3b82f6'], // Blue 500
-                        [1, '#1e3a8a']    // Blue 900
+                        [0, '#e0f2fe'],   // Lightest Blue
+                        [0.5, '#3b82f6'], // Medium Blue
+                        [1, '#1e3a8a']    // Darkest Blue
                     ],
                     labels: {
                         style: {
@@ -91,6 +91,9 @@ const WorldMap = ({ apiUrl }) => {
                     align: 'center',
                     verticalAlign: 'bottom',
                     symbolHeight: 10,
+                    itemStyle: {
+                        color: '#9ca3af'
+                    }
                 },
                 series: [{
                     data: formattedData,
@@ -103,7 +106,7 @@ const WorldMap = ({ apiUrl }) => {
                             borderColor: '#b45309',
                         },
                     },
-                    borderColor: '#CBD5E1',
+                    borderColor: '#9ca3af', // Neutral border for better visibility in both modes
                     borderWidth: 0.5,
                     dataLabels: {
                         enabled: false,
@@ -133,8 +136,8 @@ const WorldMap = ({ apiUrl }) => {
     }, []);
 
     return (
-        <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full flex flex-col min-h-[400px]">
-            <h2 className="text-lg font-bold text-gray-800 mb-4 text-center lg:text-left">Geographic Distribution</h2>
+        <div className="rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-100 dark:border-gray-800 h-full flex flex-col min-h-[400px] transition-colors duration-300">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4 text-center lg:text-left">Geographic Distribution</h2>
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center flex-1">
@@ -156,10 +159,10 @@ const WorldMap = ({ apiUrl }) => {
                     />
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center flex-1 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="flex flex-col items-center justify-center flex-1 bg-gray-50 dark:bg-gray-800 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
                     <div className="text-4xl mb-2">🗺️</div>
-                    <p className="text-gray-900 font-semibold">No Location Data</p>
-                    <p className="text-gray-500 text-sm">Waiting for global clicks...</p>
+                    <p className="text-gray-900 dark:text-white font-semibold">No Location Data</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Waiting for global clicks...</p>
                 </div>
             )}
         </div>
